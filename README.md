@@ -15,10 +15,10 @@ swift build
 .build/debug/ReferenceEngine
 ```
 
-The app locates a `reference-engine` checkout by walking up from its own binary, or you can pin one explicitly:
+The app locates a `spis` checkout by walking up from its own binary, or you can pin one explicitly:
 
 ```bash
-REFERENCE_ENGINE_ROOT=~/Documents/CodingProjects/Wisent/reference-engine .build/debug/ReferenceEngine
+REFERENCE_ENGINE_ROOT=~/Documents/CodingProjects/Wisent/spis .build/debug/ReferenceEngine
 ```
 
 Requires macOS 14+ and Swift 6 toolchain. The Python CLI must be executable (`chmod +x bin/reference` inside the engine checkout).

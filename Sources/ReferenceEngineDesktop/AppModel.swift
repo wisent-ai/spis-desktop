@@ -22,7 +22,7 @@ final class AppModel {
 
     func load() {
         guard let root = repository.locate() else {
-            loadError = "No reference-engine checkout found. Set REFERENCE_ENGINE_ROOT to the repository path."
+            loadError = "No spis checkout found. Set REFERENCE_ENGINE_ROOT to the repository path."
             return
         }
         self.root = root
