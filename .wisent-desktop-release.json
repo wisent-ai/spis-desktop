@@ -1,0 +1,11 @@
+{
+  "$schema": "https://github.com/wisent-ai/wisent-desktop-update/raw/main/release-manifest.schema.json",
+  "schema": 1,
+  "product": "Spis",
+  "bundle_id": "ai.wisent.spis.desktop",
+  "bundle_path": ".build/Spis.app",
+  "build_command": "SPIS_INSTALL_AFTER_BUILD=no ./Scripts/build-app.sh",
+  "archive_name": "Spis-{version}.zip",
+  "feed_url": "https://github.com/wisent-ai/spis-desktop/releases/latest/download/appcast.xml",
+  "minimum_system_version": "14.0"
+}

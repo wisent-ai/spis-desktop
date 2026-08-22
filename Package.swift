@@ -3,17 +3,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "ReferenceEngineDesktop",
+    name: "SpisDesktop",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "ReferenceEngine", targets: ["ReferenceEngineDesktop"])
+        .executable(name: "Spis", targets: ["SpisDesktop"])
     ],
     targets: [
         .executableTarget(
-            name: "ReferenceEngineDesktop",
-            path: "Sources/ReferenceEngineDesktop"
+            name: "SpisDesktop",
+            path: "Sources/SpisDesktop"
         )
     ]
 )
