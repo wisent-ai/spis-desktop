@@ -3,15 +3,39 @@ import SwiftUI
 @main
 struct ReferenceApp: App {
     @State private var model = AppModel()
+    @State private var manageModel = ManageModel()
 
     var body: some Scene {
-        WindowGroup("Reference Engine") {
-            ContentView()
+        WindowGroup("Spis") {
+            AppRootView()
                 .environment(model)
-                .frame(minWidth: 980, minHeight: 640)
-                .task { model.load() }
+                .environment(manageModel)
+                .frame(minWidth: 1080, minHeight: 680)
+                .task { model.load(); manageModel.reloadTypes() }
         }
         .windowToolbarStyle(.unified)
+    }
+}
+
+struct AppRootView: View {
+    @State private var surface = "browse"
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Picker("Surface", selection: $surface) {
+                Text("Browse").tag("browse")
+                Text("Manage").tag("manage")
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(8)
+
+            if surface == "browse" {
+                ContentView()
+            } else {
+                ManageView()
+            }
+        }
     }
 }
 
