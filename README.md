@@ -1,6 +1,6 @@
 # Spis Desktop
 
-A macOS application over [`Spis`](https://github.com/wisent-ai/spis)(https://github.com/wisent-ai/spis) corpus: browse every catalog and its measured state, read the evidence contract, and run the corpus's read-only commands from one window.
+A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evidence-grade reference corpus: browse every catalog and its measured state, read the evidence contract, and run the corpus's read-only commands from one window.
 
 ## What it shows
 
