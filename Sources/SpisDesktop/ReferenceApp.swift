@@ -1,9 +1,11 @@
 import SwiftUI
+import WisentDesktopUpdate
 
 @main
 struct ReferenceApp: App {
     @State private var model = AppModel()
     @State private var manageModel = ManageModel()
+    @StateObject private var updater = WisentUpdater()
 
     var body: some Scene {
         WindowGroup("Spis") {

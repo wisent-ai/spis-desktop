@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "releases": true,
+  "type": "macos-sparkle-application",
+  "manifest": ".wisent-desktop-release.json",
+  "publisher": ["sparkle", "stado-release-channel", "github-releases"]
+}
