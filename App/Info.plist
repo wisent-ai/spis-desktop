@@ -5,6 +5,7 @@
 <key>CFBundleDisplayName</key><string>Spis</string>
 <key>CFBundleExecutable</key><string>Spis</string>
 <key>CFBundleIdentifier</key><string>ai.wisent.spis.desktop</string>
+<key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleShortVersionString</key><string>1.0.0</string>

@@ -2,6 +2,8 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ICON_PRODUCT=spis-desktop
 APP="$ROOT/.build/Spis.app"
 INSTALLED=${SPIS_INSTALL_APP_PATH:-"$HOME/Applications/Spis.app"}
 CONTENTS="$APP/Contents"
@@ -17,6 +19,11 @@ rm -rf "$APP"
 mkdir -p "$MACOS" "$FRAMEWORKS" "$RESOURCES"
 install -m 0644 "$ROOT/App/Info.plist" "$CONTENTS/Info.plist"
 install -m 0755 "$BIN_DIR/Spis" "$MACOS/Spis"
+if [ -f "$ROOT/App/AppIcon.icns" ]; then
+  install -m 0644 "$ROOT/App/AppIcon.icns" "$RESOURCES/AppIcon.icns"
+else
+  sh "$SCRIPT_DIR/import-brand-icon.sh" "$ICON_PRODUCT" "$RESOURCES/AppIcon.icns"
+fi
 
 IDENTITY=${WISENT_CODESIGN_IDENTITY:-}
 if [ -z "$IDENTITY" ]; then
