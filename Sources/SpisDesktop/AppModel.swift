@@ -1,4 +1,5 @@
 import SwiftUI
+import WisentErrors
 
 @MainActor
 @Observable
@@ -47,6 +48,16 @@ final class AppModel {
             let base = try await backend.endpoint()
             let outcome = try await SpisClient(baseURL: base).run(operation, catalog: selectedCatalog?.slug)
             runState = .finished(outcome)
+            // The outcome panel's source: a refusal becomes user-visible
+            // state here, so it reports here.
+            if let refusal = outcome.refusal {
+                WisentFailureReporter.shared.report(
+                    failurePoint: "spis.browse",
+                    code: "unknown",
+                    service: "spis",
+                    detail: refusal
+                )
+            }
         } catch {
             runState = .finished(SpisOutcome(
                 operation: operation.displayName,
@@ -54,6 +65,13 @@ final class AppModel {
                 output: "",
                 refusal: error.localizedDescription
             ))
+            let backendError = error as? SpisBackendError
+            WisentFailureReporter.shared.report(
+                failurePoint: backendError == nil ? "spis.browse" : "spis.backend-start",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                service: "spis",
+                detail: error.localizedDescription
+            )
         }
     }
 }

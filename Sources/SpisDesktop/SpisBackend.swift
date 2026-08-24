@@ -218,4 +218,15 @@ enum SpisBackendError: LocalizedError {
             return "The Spis backend could not start. \(reason)"
         }
     }
+
+    /// Whether the failure is a missing or incomplete install — our
+    /// deployment, never a process that ran and died.
+    var isMissingInstall: Bool {
+        switch self {
+        case .checkoutMissing, .backendMissing:
+            return true
+        case .failedToStart:
+            return false
+        }
+    }
 }

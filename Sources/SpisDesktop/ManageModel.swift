@@ -1,4 +1,5 @@
 import Foundation
+import WisentErrors
 
 /// One product-type entry decoded from the generated `example-catalogs.json`.
 struct TypeEntry: Identifiable, Decodable, Hashable {
@@ -131,6 +132,15 @@ final class ManageModel {
                 if let slug = selectedCatalogSlug {
                     loadReferences(for: slug)
                 }
+            } else if let refusal = outcome.refusal {
+                // The outcome panel's source: a refusal becomes user-visible
+                // state here, so it reports here.
+                WisentFailureReporter.shared.report(
+                    failurePoint: "spis.manage",
+                    code: "unknown",
+                    service: "spis",
+                    detail: refusal
+                )
             }
         } catch {
             output = SpisOutcome(
@@ -138,6 +148,13 @@ final class ManageModel {
                 status: 1,
                 output: "",
                 refusal: error.localizedDescription
+            )
+            let backendError = error as? SpisBackendError
+            WisentFailureReporter.shared.report(
+                failurePoint: backendError == nil ? "spis.manage" : "spis.backend-start",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                service: "spis",
+                detail: error.localizedDescription
             )
         }
     }
