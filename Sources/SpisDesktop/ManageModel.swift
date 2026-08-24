@@ -36,7 +36,7 @@ final class ManageModel {
     var types: [TypeEntry] = []
     var references: [ReferenceEntry] = []
     var selectedCatalogSlug: String?
-    var output: ReferenceCLI.Result?
+    var output: SpisOutcome?
     var running = false
     var statusText = ""
 
@@ -79,23 +79,66 @@ final class ManageModel {
         references = decoded.references
     }
 
-    /// Runs a mutating CLI command, then refreshes local state.
-    func run(_ arguments: [String]) async {
-        guard let root = repository.locate() else { return }
+    private let backend = SpisBackendProcess()
+
+    func addReference(
+        slug: String,
+        name: String,
+        sourceURL: String,
+        category: String,
+        selectionNote: String,
+        visual: String
+    ) async {
+        await perform(operation: "Add record") { client in
+            try await client.addReference(
+                slug: slug,
+                name: name,
+                sourceURL: sourceURL,
+                category: category,
+                selectionNote: selectionNote,
+                visual: visual
+            )
+        }
+    }
+
+    func removeReference(slug: String, number: Int) async {
+        await perform(operation: "Remove record") { client in
+            try await client.removeReference(slug: slug, number: number)
+        }
+    }
+
+    func deriveGuidelines(slug: String) async {
+        await perform(operation: "Derive guidelines draft") { client in
+            try await client.deriveGuidelines(slug: slug)
+        }
+    }
+
+    /// Runs one mutating operation through the backend, then refreshes local
+    /// state. Refusals surface with the product's own sentence, verbatim.
+    private func perform(
+        operation: String,
+        _ request: (SpisClient) async throws -> SpisOutcome
+    ) async {
         running = true
-        statusText = "spis " + arguments.joined(separator: " ")
-        let result = await Task.detached(priority: .userInitiated) {
-            ReferenceCLI.run(root: root, arguments: arguments)
-        }.value
-        output = result
-        running = false
-        if result.succeeded {
-            if arguments.first == "type", arguments.count > 1, ["add", "edit", "remove"].contains(arguments[1]) {
+        statusText = operation
+        defer { running = false }
+        do {
+            let base = try await backend.endpoint()
+            let outcome = try await request(SpisClient(baseURL: base))
+            output = outcome
+            if outcome.succeeded {
                 reloadTypes()
+                if let slug = selectedCatalogSlug {
+                    loadReferences(for: slug)
+                }
             }
-            if let slug = selectedCatalogSlug {
-                loadReferences(for: slug)
-            }
+        } catch {
+            output = SpisOutcome(
+                operation: operation,
+                status: 1,
+                output: "",
+                refusal: error.localizedDescription
+            )
         }
     }
 }

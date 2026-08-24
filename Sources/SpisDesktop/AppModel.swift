@@ -13,7 +13,7 @@ final class AppModel {
     enum RunState: Equatable {
         case idle
         case running(String)
-        case finished(ReferenceCLI.Result)
+        case finished(SpisOutcome)
     }
 
     var runState: RunState = .idle
@@ -22,7 +22,7 @@ final class AppModel {
 
     func load() {
         guard let root = repository.locate() else {
-            loadError = "No spis checkout found. Set REFERENCE_ENGINE_ROOT to the repository path."
+            loadError = "No spis checkout was found on this Mac."
             return
         }
         self.root = root
@@ -37,13 +37,23 @@ final class AppModel {
         }
     }
 
-    func run(_ arguments: [String]) async {
-        guard let root else { return }
-        runState = .running("reference " + arguments.joined(separator: " "))
-        let rootForRun = root
-        let result = await Task.detached(priority: .userInitiated) {
-            ReferenceCLI.run(root: rootForRun, arguments: arguments)
-        }.value
-        runState = .finished(result)
+    private let backend = SpisBackendProcess()
+
+    /// Runs one read-only operation through the backend, then reports the
+    /// outcome. The operation name is user language; no command line exists.
+    func run(_ operation: SpisOperation) async {
+        runState = .running(operation.displayName)
+        do {
+            let base = try await backend.endpoint()
+            let outcome = try await SpisClient(baseURL: base).run(operation, catalog: selectedCatalog?.slug)
+            runState = .finished(outcome)
+        } catch {
+            runState = .finished(SpisOutcome(
+                operation: operation.displayName,
+                status: 1,
+                output: "",
+                refusal: error.localizedDescription
+            ))
+        }
     }
 }

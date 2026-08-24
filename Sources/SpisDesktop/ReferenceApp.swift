@@ -24,16 +24,17 @@ struct AppRootView: View {
         VStack(spacing: 0) {
             Picker("Surface", selection: $surface) {
                 Text("Browse").tag("browse")
+                Text("Docs").tag("docs")
                 Text("Manage").tag("manage")
             }
             .pickerStyle(.segmented)
             .labelsHidden()
             .padding(8)
 
-            if surface == "browse" {
-                ContentView()
-            } else {
-                ManageView()
+            switch surface {
+            case "browse": ContentView()
+            case "docs": DocsCorpusView()
+            default: ManageView()
             }
         }
     }
@@ -181,34 +182,24 @@ struct LabeledRow: View {
 
 struct RunConsole: View {
     @Environment(AppModel.self) private var model
-    @State private var commandID = "catalogs"
-    @State private var extraFlags = ""
-
-    private let commands = [
-        ("catalogs", "catalogs --check", "consistency gate over index and records"),
-        ("drift", "drift", "upstream README and URL drift report"),
-        ("verify", "verify", "measure stored evidence (dry run)"),
-        ("capture-list", "capture --list", "what own-product capture can run here"),
-    ]
+    @State private var operation: SpisOperation = .catalogsCheck
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Picker("Command", selection: $commandID) {
-                    ForEach(commands, id: \.0) { id, label, description in
-                        Text(label).tag(id)
+                Picker("Operation", selection: $operation) {
+                    ForEach(SpisOperation.allCases) { operation in
+                        Text(operation.displayName).tag(operation)
                     }
                 }
-                .frame(width: 260)
-                TextField("extra flags", text: $extraFlags)
-                    .font(.system(.body, design: .monospaced))
-                    .textFieldStyle(.roundedBorder)
-                    .frame(maxWidth: 220)
+                .labelsHidden()
+                .frame(width: 240)
+                Text(operation.summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
                 Button("Run") {
-                    var arguments = commands.first { $0.0 == commandID }?.1.split(separator: " ").map(String.init) ?? []
-                    let extras = extraFlags.split(separator: " ").map(String.init)
-                    arguments += extras
-                    Task { await model.run(arguments) }
+                    Task { await model.run(operation) }
                 }
                 .disabled(model.runState.isRunning)
                 Spacer()
@@ -216,28 +207,28 @@ struct RunConsole: View {
 
             switch model.runState {
             case .idle:
-                Text("Run a read-only command against the corpus. Nothing here mutates records.")
+                Text("Read-only checks against the corpus. Nothing here changes records.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-            case .running(let command):
+            case .running(let name):
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
-                    Text("running \(command)…")
-                        .font(.system(.caption, design: .monospaced))
+                    Text("\(name)…")
+                        .font(.caption)
                 }
-            case .finished(let result):
+            case .finished(let outcome):
                 ScrollView {
-                    Text(result.output.isEmpty ? "(no output)" : result.output)
+                    Text(outcome.output.isEmpty ? "(no output)" : outcome.output)
                         .font(.system(.caption, design: .monospaced))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .textSelection(.enabled)
                 }
                 .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
                 HStack {
-                    Image(systemName: result.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(result.succeeded ? .green : .red)
-                    Text("\(result.command) — exit \(result.exitCode)")
-                        .font(.system(.caption, design: .monospaced))
+                    Image(systemName: outcome.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .foregroundStyle(outcome.succeeded ? .green : .red)
+                    Text(outcome.refusal ?? "\(outcome.operation) finished")
+                        .font(.caption)
                 }
             }
         }

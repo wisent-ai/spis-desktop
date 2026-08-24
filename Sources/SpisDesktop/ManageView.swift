@@ -51,14 +51,14 @@ struct ReferencesManager: View {
                     TextField("Image path", text: $newImagePath).frame(width: 200)
                     Button("Add record") {
                         Task {
-                            await model.run([
-                                "reference", "add", slug,
-                                "--name", newName,
-                                "--source-url", newURL,
-                                "--category", newCategory.isEmpty ? "uncategorized" : newCategory,
-                                "--selection-note", newNote.isEmpty ? "operator-added" : newNote,
-                                "--visual", newImagePath,
-                            ])
+                            await model.addReference(
+                                slug: slug,
+                                name: newName,
+                                sourceURL: newURL,
+                                category: newCategory.isEmpty ? "uncategorized" : newCategory,
+                                selectionNote: newNote.isEmpty ? "operator-added" : newNote,
+                                visual: newImagePath
+                            )
                             newName = ""; newURL = ""; newCategory = ""; newNote = ""; newImagePath = ""
                         }
                     }
@@ -67,7 +67,7 @@ struct ReferencesManager: View {
                 HStack {
                     TextField("Type title / description / rename", text: .constant("")).frame(width: 0)
                     Button("Derive guidelines draft") {
-                        Task { await model.run(["guidelines", slug]) }
+                        Task { await model.deriveGuidelines(slug: slug) }
                     }
                     Spacer()
                 }
@@ -88,7 +88,7 @@ struct ReferencesManager: View {
                     Text("\(reference.evidenceGapCount) gaps")
                         .font(.caption).foregroundStyle(.secondary)
                     Button("Remove") {
-                        Task { await model.run(["reference", "remove", slug, "\(reference.number)", "--force"]) }
+                        Task { await model.removeReference(slug: slug, number: reference.number) }
                     }
                     .buttonStyle(.link)
                 }
@@ -123,11 +123,11 @@ struct ConsoleOutput: View {
                 HStack {
                     Image(systemName: result.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundStyle(result.succeeded ? .green : .red)
-                    Text("\(result.command) — exit \(result.exitCode)")
-                        .font(.system(.caption, design: .monospaced))
+                    Text(result.refusal ?? "\(result.operation) finished")
+                        .font(.caption)
                 }
             } else {
-                Text("Mutating actions run the real `spis` CLI against the checkout and refresh state afterwards.")
+                Text("Changes apply to the checked-out corpus and state refreshes afterwards.")
                     .font(.caption).foregroundStyle(.secondary)
             }
         }

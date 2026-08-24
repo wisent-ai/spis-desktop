@@ -43,12 +43,21 @@ struct CorpusRepository {
 
     func locate() -> URL? {
         if let root, FileManager.default.fileExists(atPath: root.path) { return root }
+        if let fromEnv = ProcessInfo.processInfo.environment["SPIS_ROOT"],
+           FileManager.default.fileExists(atPath: fromEnv) {
+            return URL(fileURLWithPath: fromEnv)
+        }
         // Walk up from the executable: build products live several levels deep.
         var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
         for _ in 0...8 {
             url.deleteLastPathComponent()
             if FileManager.default.fileExists(atPath: url.appendingPathComponent("example-catalogs.json").path) {
                 return url
+            }
+            // Sibling checkout layout: <parent>/spis next to <parent>/spis-desktop.
+            let sibling = url.appendingPathComponent("spis")
+            if FileManager.default.fileExists(atPath: sibling.appendingPathComponent("example-catalogs.json").path) {
+                return sibling
             }
         }
         return nil
@@ -62,39 +71,5 @@ struct CorpusRepository {
 
     func contractText(from root: URL) -> String? {
         try? String(contentsOf: root.appendingPathComponent("full-reference-contract.md"), encoding: .utf8)
-    }
-}
-
-/// Runs `bin/reference` subcommands and captures their output.
-struct ReferenceCLI {
-    struct Result: Equatable {
-        let command: String
-        let output: String
-        let exitCode: Int32
-        var succeeded: Bool { exitCode == 0 }
-    }
-
-    static func run(root: URL, arguments: [String]) -> Result {
-        let joined = arguments.joined(separator: " ")
-        let cli = root.appendingPathComponent("bin/reference").path
-        guard FileManager.default.isExecutableFile(atPath: cli) else {
-            return Result(command: joined, output: "missing \(cli)", exitCode: 1)
-        }
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        process.arguments = ["python3", cli] + arguments
-        process.currentDirectoryURL = root
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-        do {
-            try process.run()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
-            let text = String(data: data, encoding: .utf8) ?? "(undecodable output)"
-            return Result(command: "reference " + joined, output: text, exitCode: process.terminationStatus)
-        } catch {
-            return Result(command: "reference " + joined, output: "\(error)", exitCode: 1)
-        }
     }
 }
