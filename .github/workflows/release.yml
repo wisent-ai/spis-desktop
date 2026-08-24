@@ -10,5 +10,5 @@ permissions:
 
 jobs:
   release:
-    uses: wisent-ai/wisent-desktop-update/.github/workflows/macos-sparkle-release.yml@62fabc740ac736fb3f29455a1b3c186ae46d29f2
+    uses: wisent-ai/wisent-desktop-update/.github/workflows/macos-sparkle-release.yml@6f402c3c245f5df21f905397b6aec6451df55de8
     secrets: inherit
