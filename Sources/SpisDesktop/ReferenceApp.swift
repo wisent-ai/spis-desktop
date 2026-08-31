@@ -13,6 +13,22 @@ struct ReferenceApp: App {
                 .environment(model)
                 .environment(manageModel)
                 .frame(minWidth: 1080, minHeight: 680)
+                // Every fact Spis reports is selectable, and therefore
+                // copyable. This app exists to state things a person then
+                // quotes somewhere else — a corpus path, a page URL, the
+                // stdout of a check, a refusal sentence — and SwiftUI's
+                // `Text` refuses selection on macOS unless a view asks, which
+                // left 46 of 51 text sites in this window dead to Cmd-C while
+                // five had been fixed one at a time.
+                //
+                // `.textSelection` travels through the environment, so one
+                // call on the window's own content covers all three surfaces
+                // the picker switches between — Browse, Docs, Manage — and
+                // every screen added after this one. It sits here rather than
+                // inside `AppRootView` or on a `NavigationSplitView` column
+                // because those are branches: each would answer the question
+                // for itself and leave its siblings unselectable.
+                .textSelection(.enabled)
                 .task { model.load(); manageModel.reloadTypes() }
         }
         .windowToolbarStyle(.unified)
@@ -177,7 +193,6 @@ struct LabeledRow: View {
             Spacer()
             Text(value)
                 .font(.system(.caption, design: .monospaced))
-                .textSelection(.enabled)
         }
     }
 }
@@ -223,7 +238,6 @@ struct RunConsole: View {
                     Text(outcome.output.isEmpty ? "(no output)" : outcome.output)
                         .font(.system(.caption, design: .monospaced))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .textSelection(.enabled)
                 }
                 .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
                 HStack {

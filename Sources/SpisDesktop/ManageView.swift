@@ -117,7 +117,6 @@ struct ConsoleOutput: View {
                     Text(result.output.isEmpty ? "(no output)" : result.output)
                         .font(.system(.caption, design: .monospaced))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .textSelection(.enabled)
                 }
                 .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
                 HStack {

@@ -426,7 +426,6 @@ struct DocsReaderPane: View {
                             .foregroundStyle(.link)
                             .lineLimit(1)
                             .truncationMode(.middle)
-                            .textSelection(.enabled)
                         HStack(spacing: 10) {
                             ForEach(page.detailRows, id: \.0) { key, value in
                                 Text("\(key): \(value)")
@@ -444,7 +443,6 @@ struct DocsReaderPane: View {
                         Text(page.text)
                             .font(.system(.body, design: .serif))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .textSelection(.enabled)
                             .padding(20)
                     }
                 }
