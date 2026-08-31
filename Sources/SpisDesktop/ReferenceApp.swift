@@ -285,10 +285,10 @@ struct RunConsole: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             case .running(let name):
-                HStack(spacing: 8) {
-                    ProgressView().controlSize(.small)
+                VStack(alignment: .leading, spacing: 8) {
                     Text("\(name)…")
                         .font(.caption)
+                    WisentSkeletonText(lines: 4, label: "Running \(name)")
                 }
             case .finished(let outcome):
                 ScrollView {

@@ -1,4 +1,5 @@
 import SwiftUI
+import WisentDesignSystem
 import WisentErrors
 
 // MARK: - Decoding
@@ -261,7 +262,10 @@ struct DocsSidebar: View {
     var body: some View {
         Group {
             if model.sites.isEmpty && model.sitesLoading {
-                ProgressView("Loading sites…")
+                WisentSkeletonList(rows: 8, lines: 2, media: false, label: "Loading sites")
+                    .padding(12)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .navigationSplitViewColumnWidth(min: 240, ideal: 280)
             } else {
                 List(model.sites) { site in
                     VStack(alignment: .leading, spacing: 4) {
@@ -292,9 +296,11 @@ struct DocsSidebar: View {
         .refreshable { await model.loadSites() }
         .overlay(alignment: .bottom) {
             if model.sitesLoading {
-                ProgressView()
-                    .controlSize(.small)
-                    .padding(6)
+                WisentSkeletonGroup(label: "Refreshing sites") {
+                    WisentSkeleton(.pill, width: 96, height: 10)
+                }
+                .fixedSize()
+                .padding(6)
             }
         }
     }
@@ -317,7 +323,10 @@ struct DocsSearchPane: View {
                         .onSubmit { model.queryChanged() }
                         .onChange(of: model.query) { _, _ in model.queryChanged() }
                     if model.searching {
-                        ProgressView().controlSize(.small)
+                        WisentSkeletonGroup(label: "Searching the corpus") {
+                            WisentSkeleton(.pill, width: 48, height: 10)
+                        }
+                        .fixedSize()
                     } else if !model.query.isEmpty {
                         Button {
                             model.query = ""
@@ -413,8 +422,14 @@ struct DocsReaderPane: View {
     var body: some View {
         Group {
             if model.pageLoading {
-                ProgressView("Loading page…")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                VStack(alignment: .leading, spacing: 10) {
+                    WisentSkeleton(.heading, width: 280, height: 20)
+                    WisentSkeleton(.line, width: 220)
+                    Divider()
+                    WisentSkeletonText(lines: 9, label: "Loading page")
+                }
+                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             } else if let page = model.page {
                 VStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 4) {

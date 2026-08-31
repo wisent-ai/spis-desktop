@@ -1,4 +1,5 @@
 import SwiftUI
+import WisentDesignSystem
 
 struct ManageView: View {
     @Environment(ManageModel.self) private var model
@@ -108,9 +109,9 @@ struct ConsoleOutput: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if model.running {
-                HStack(spacing: 8) {
-                    ProgressView().controlSize(.small)
+                VStack(alignment: .leading, spacing: 8) {
                     Text(model.statusText).font(.system(.caption, design: .monospaced))
+                    WisentSkeletonText(lines: 4, label: model.statusText)
                 }
             } else if let result = model.output {
                 ScrollView {
