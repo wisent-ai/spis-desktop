@@ -262,10 +262,15 @@ struct DocsSidebar: View {
     var body: some View {
         Group {
             if model.sites.isEmpty && model.sitesLoading {
-                WisentSkeletonList(rows: 8, lines: 2, media: false, label: "Loading sites")
-                    .padding(12)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .navigationSplitViewColumnWidth(min: 240, ideal: 280)
+                // Inside a scroll view, like the list it stands in for: the
+                // skeleton's own bars measure their nearest scrolling
+                // container, and with none they would measure the window.
+                ScrollView {
+                    WisentSkeletonList(rows: 8, lines: 2, media: false, label: "Loading sites")
+                        .padding(12)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .navigationSplitViewColumnWidth(min: 240, ideal: 280)
             } else {
                 List(model.sites) { site in
                     VStack(alignment: .leading, spacing: 4) {
@@ -422,13 +427,25 @@ struct DocsReaderPane: View {
     var body: some View {
         Group {
             if model.pageLoading {
-                VStack(alignment: .leading, spacing: 10) {
-                    WisentSkeleton(.heading, width: 280, height: 20)
-                    WisentSkeleton(.line, width: 220)
+                // The same three zones the loaded page draws — header, rule,
+                // scrolling body — so nothing moves when the text lands, and
+                // so the body's bars measure the scroll view rather than the
+                // window.
+                VStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        WisentSkeleton(.heading, width: 280, height: 20)
+                        WisentSkeleton(.line, width: 220)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+
                     Divider()
-                    WisentSkeletonText(lines: 9, label: "Loading page")
+
+                    ScrollView {
+                        WisentSkeletonText(lines: 9, label: "Loading page")
+                            .padding(20)
+                    }
                 }
-                .padding(20)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             } else if let page = model.page {
                 VStack(spacing: 0) {

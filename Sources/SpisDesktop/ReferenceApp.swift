@@ -285,11 +285,16 @@ struct RunConsole: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             case .running(let name):
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("\(name)…")
-                        .font(.caption)
+                Text("\(name)…")
+                    .font(.caption)
+                // The same scrolling box the output lands in, so the console
+                // keeps its shape and the bars measure it rather than the
+                // window.
+                ScrollView {
                     WisentSkeletonText(lines: 4, label: "Running \(name)")
+                        .padding(8)
                 }
+                .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
             case .finished(let outcome):
                 ScrollView {
                     Text(outcome.output.isEmpty ? "(no output)" : outcome.output)
