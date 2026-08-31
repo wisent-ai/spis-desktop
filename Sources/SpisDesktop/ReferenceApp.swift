@@ -6,6 +6,11 @@ import WisentDesktopUpdate
 @main
 struct ReferenceApp: App {
     @NSApplicationDelegateAdaptor(SpisAppDelegate.self) private var delegate
+
+    /// The app's one updater: it drives the scheduled feed checks and backs the
+    /// three items `WisentCheckForUpdatesCommand` puts under the app menu. A
+    /// second instance would give the menu its own `SPUUpdater`, so the toggles
+    /// would report and change settings that the checking updater never reads.
     @StateObject private var updater = WisentUpdater()
 
     var body: some Scene {
@@ -13,6 +18,11 @@ struct ReferenceApp: App {
             SpisRootContent(model: delegate.model, manageModel: delegate.manageModel)
         }
         .windowToolbarStyle(.unified)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                WisentCheckForUpdatesCommand(updater: updater)
+            }
+        }
     }
 }
 

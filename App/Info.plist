@@ -16,4 +16,7 @@
 <key>SUFeedURL</key><string>https://github.com/wisent-ai/spis-desktop/releases/latest/download/appcast.xml</string>
 <key>SUPublicEDKey</key><string>nVhrC8RzFwDX1ISaXvePqPTSxBEhPhIIGZcSrL6uKKw=</string>
 <key>SUEnableAutomaticChecks</key><true/>
+<key>SUScheduledCheckInterval</key><integer>86400</integer>
+<key>SUAllowsAutomaticUpdates</key><true/>
+<key>SUAutomaticallyUpdate</key><false/>
 </dict></plist>
