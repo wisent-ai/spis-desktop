@@ -1,37 +1,84 @@
+import AppKit
 import SwiftUI
+import WisentDesignSystem
 import WisentDesktopUpdate
 
 @main
 struct ReferenceApp: App {
-    @State private var model = AppModel()
-    @State private var manageModel = ManageModel()
+    @NSApplicationDelegateAdaptor(SpisAppDelegate.self) private var delegate
     @StateObject private var updater = WisentUpdater()
 
     var body: some Scene {
         WindowGroup("Spis") {
-            AppRootView()
-                .environment(model)
-                .environment(manageModel)
-                .frame(minWidth: 1080, minHeight: 680)
-                // Every fact Spis reports is selectable, and therefore
-                // copyable. This app exists to state things a person then
-                // quotes somewhere else — a corpus path, a page URL, the
-                // stdout of a check, a refusal sentence — and SwiftUI's
-                // `Text` refuses selection on macOS unless a view asks, which
-                // left 46 of 51 text sites in this window dead to Cmd-C while
-                // five had been fixed one at a time.
-                //
-                // `.textSelection` travels through the environment, so one
-                // call on the window's own content covers all three surfaces
-                // the picker switches between — Browse, Docs, Manage — and
-                // every screen added after this one. It sits here rather than
-                // inside `AppRootView` or on a `NavigationSplitView` column
-                // because those are branches: each would answer the question
-                // for itself and leave its siblings unselectable.
-                .textSelection(.enabled)
-                .task { model.load(); manageModel.reloadTypes() }
+            SpisRootContent(model: delegate.model, manageModel: delegate.manageModel)
         }
         .windowToolbarStyle(.unified)
+    }
+}
+
+/// Guarantees that Spis owns a window at launch. SwiftUI declines to open a
+/// fresh window when it has persistent state to restore but the saved view tree
+/// no longer exists, and every change to the window's root view invalidates that
+/// tree — the `.textSelection` rule below is one such change. The app then comes
+/// up alive with `window=0x0` and nothing on screen, which from the outside is
+/// indistinguishable from a crash on launch. `wisentEnsureWindow` opens the same
+/// content in a plain window whenever the scene has produced none, and answers
+/// `nil` on a normal launch; the result is retained because releasing it would
+/// close the only window the operator has.
+///
+/// Both models live here rather than in the `App` struct so the scene and the
+/// fallback window read one instance each: a second `AppModel` would give the
+/// fallback window its own catalogs, corpus root and run log.
+@MainActor
+final class SpisAppDelegate: NSObject, NSApplicationDelegate {
+    let model = AppModel()
+    let manageModel = ManageModel()
+    private var fallbackWindow: NSWindow?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        DispatchQueue.main.async { [self] in
+            fallbackWindow = wisentEnsureWindow(
+                title: "Spis",
+                size: CGSize(width: 1080, height: 680)
+            ) {
+                SpisRootContent(model: model, manageModel: manageModel)
+            }
+        }
+    }
+}
+
+/// The one description of Spis's window contents, rendered by both the
+/// `WindowGroup` scene and the delegate's fallback window so the two can never
+/// disagree about what the window holds or which surface is on screen.
+private struct SpisRootContent: View {
+    let model: AppModel
+    let manageModel: ManageModel
+
+    var body: some View {
+        AppRootView()
+            .environment(model)
+            .environment(manageModel)
+            .frame(minWidth: 1080, minHeight: 680)
+            // Every fact Spis reports is selectable, and therefore
+            // copyable. This app exists to state things a person then
+            // quotes somewhere else — a corpus path, a page URL, the
+            // stdout of a check, a refusal sentence — and SwiftUI's
+            // `Text` refuses selection on macOS unless a view asks, which
+            // left 46 of 51 text sites in this window dead to Cmd-C while
+            // five had been fixed one at a time.
+            //
+            // `.textSelection` travels through the environment, so one
+            // call at the root of the window's content covers all three
+            // surfaces the picker switches between — Browse, Docs, Manage —
+            // and every screen added after this one. It sits here rather
+            // than inside `AppRootView` or on a `NavigationSplitView` column
+            // because those are branches: each would answer the question
+            // for itself and leave its siblings unselectable. And because
+            // this description is what both the scene and the fallback
+            // window render, the rule holds in whichever window the operator
+            // ends up with, from a single call site.
+            .textSelection(.enabled)
+            .task { model.load(); manageModel.reloadTypes() }
     }
 }
 
