@@ -7,14 +7,17 @@ struct SpisCrawlClient: Sendable {
     // MARK: - Crawl operations (spis crawl start/status/resume/import)
     
     /// Start a new crawl operation with catalog, host, and optional admission URL.
-    func crawlStart(catalogs: [String], host: String, record: String? = nil, admissionUrl: String? = nil, workingDirectory: URL? = nil) async throws -> CrawlOperation {
+    /// Start a new crawl operation with optional catalog selection (empty = all families) and optional host override.
+    func crawlStart(catalogs: [String], host: String? = nil, record: String? = nil, admissionUrl: String? = nil, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         var args = ["crawl", "start"]
         for catalog in catalogs {
             args.append("--catalog")
             args.append(catalog)
         }
-        args.append("--host")
-        args.append(host)
+        if let host = host, !host.trimmingCharacters(in: .whitespaces).isEmpty {
+            args.append("--host")
+            args.append(host)
+        }
         if let record = record {
             args.append("--record")
             args.append(record)

@@ -28,9 +28,9 @@ final class AppModel {
         }
         self.root = root
         do {
-            let index = try repository.loadIndex(from: root)
-            catalogs = index.catalogs.sorted { $0.slug < $1.slug }
+            _ = try repository.loadIndex(from: root)
             selectedCatalog = catalogs.first
+            selectedCatalogForCrawl = catalogs.first
             contractText = repository.contractText(from: root)
             loadError = nil
         } catch {
@@ -111,11 +111,11 @@ final class AppModel {
 
     func startCrawl() {
         guard let catalog = selectedCatalogForCrawl else { return }
-        guard let host = crawlHost?.trimmingCharacters(in: .whitespaces), !host.isEmpty else { return }
         guard let root = root else { return }
 
         let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
         let trimmedRecord = record?.isEmpty == true ? nil : record
+        let trimmedHost = crawlHost?.trimmingCharacters(in: .whitespaces).isEmpty == true ? nil : crawlHost?.trimmingCharacters(in: .whitespaces)
         let trimmedAdmissionUrl = crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces).isEmpty == false ? crawlAdmissionUrl : nil
 
         crawlState = .loading
@@ -123,7 +123,7 @@ final class AppModel {
             do {
                 let result = try await crawlClient.crawlStart(
                     catalogs: [catalog.slug],
-                    host: host,
+                    host: trimmedHost,
                     record: trimmedRecord,
                     admissionUrl: trimmedAdmissionUrl,
                     workingDirectory: root
@@ -181,5 +181,14 @@ final class AppModel {
                 crawlState = .failed(error.localizedDescription)
             }
         }
+    }
+    
+    func resetCrawl() {
+        crawlState = .idle
+        currentRunId = nil
+        selectedCatalogForCrawl = catalogs.first
+        crawlRecord = nil
+        crawlHost = nil
+        crawlAdmissionUrl = nil
     }
 }
