@@ -3,6 +3,7 @@ import SwiftUI
 struct CrawlersView: View {
     @Environment(AppModel.self) private var model
     @State private var refreshTimer: Timer?
+    @State private var existingRunId = ""
 
     var body: some View {
         if let error = model.loadError {
@@ -115,17 +116,15 @@ struct CrawlersView: View {
     
     @ViewBuilder
     private func loadExistingSection() -> some View {
-        @State var runId = ""
-        
-        TextField("Run ID (optional)", text: $runId)
+        TextField("Run ID (optional)", text: $existingRunId)
             .help("Paste a run ID to manually reattach to a crawl session and check its status. Persisted runs are identified by Spis core.")
         
         HStack {
             Button(action: {
-                let trimmed = runId.trimmingCharacters(in: .whitespaces)
+                let trimmed = existingRunId.trimmingCharacters(in: .whitespaces)
                 if !trimmed.isEmpty {
                     model.currentRunId = trimmed
-                    Task { await model.checkCrawlStatus() }
+                    model.checkCrawlStatus()
                 }
             }) {
                 HStack {
@@ -135,10 +134,10 @@ struct CrawlersView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(runId.trimmingCharacters(in: .whitespaces).isEmpty)
+            .disabled(existingRunId.trimmingCharacters(in: .whitespaces).isEmpty)
             
-            if !runId.isEmpty {
-                Button(action: { runId = "" }) {
+            if !existingRunId.isEmpty {
+                Button(action: { existingRunId = "" }) {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .buttonStyle(.plain)
@@ -214,7 +213,7 @@ struct CrawlersView: View {
             refreshTimer = nil
             if isRunning(op) {
                 refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-                    Task { await model.checkCrawlStatus() }
+                    Task { @MainActor in model.checkCrawlStatus() }
                 }
             }
         }
@@ -223,7 +222,7 @@ struct CrawlersView: View {
             refreshTimer = nil
             if isRunning(op) {
                 refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-                    Task { await model.checkCrawlStatus() }
+                    Task { @MainActor in model.checkCrawlStatus() }
                 }
             }
         }
@@ -543,6 +542,19 @@ struct CrawlersView: View {
                                 .foregroundColor(stateColor(record.state))
                         }
                         
+                        if record.states != nil || record.interactions != nil || record.media != nil {
+                            HStack {
+                                Text([
+                                    record.states.map { "\($0) states" },
+                                    record.interactions.map { "\($0) interactions" },
+                                    record.media.map { "\($0) media" }
+                                ].compactMap { $0 }.joined(separator: " · "))
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
+                        }
+                        
                         if let gaps = record.gaps, !gaps.isEmpty {
                             HStack(alignment: .top, spacing: 4) {
                                 Image(systemName: "exclamationmark.circle")
@@ -614,7 +626,7 @@ struct CrawlersView: View {
         HStack(spacing: 12) {
             if isRunning(op) {
                 Button(action: {
-                    Task { await model.checkCrawlStatus() }
+                    model.checkCrawlStatus()
                 }) {
                     HStack {
                         Image(systemName: "arrow.clockwise")
@@ -721,7 +733,7 @@ struct CrawlersView: View {
         }
         
         // For partial/failed/lost, check if there are importable records or artifacts
-        if ["partial", "failed", "lost"].contains(s) {
+        if ["partial", "failed", "lost", "cancelled", "submission_failed"].contains(s) {
             if let catalogs = op.catalogs {
                 for catalog in catalogs {
                     // Check for artifact_uri or output_uri
