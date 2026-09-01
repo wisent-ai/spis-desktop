@@ -137,7 +137,7 @@ final class DocsCorpusModel {
         searchError = nil
         hits = []
         scannedPages = 0
-        progressText = "preparing…"
+        progressText = "Preparing…"
         defer { searching = false }
 
         let client: SpisClient
@@ -162,7 +162,7 @@ final class DocsCorpusModel {
             if hits.count >= Self.maxHits { break }
             let remaining = Self.maxHits - hits.count
             let limit = min(Self.perSiteLimit, remaining)
-            progressText = "scanning \(site.name)…"
+            progressText = "Searching \(site.name)…"
             do {
                 let data = try await client.docsSearch(query: trimmed, site: site.slug, limit: limit)
                 if Task.isCancelled { return }
@@ -174,7 +174,7 @@ final class DocsCorpusModel {
                 continue
             }
         }
-        progressText = Task.isCancelled ? "" : "done — \(hits.count) hit\(hits.count == 1 ? "" : "s") across \(sites.count) sites"
+        progressText = Task.isCancelled ? "" : "Search complete"
     }
 
     func select(_ hit: DocsSearchHit) {
@@ -232,7 +232,7 @@ struct DocsCorpusView: View {
         } detail: {
             if let error = model.loadError {
                 ContentUnavailableView(
-                    "Docs corpus unavailable",
+                    "Documentation unavailable",
                     systemImage: "questionmark.folder",
                     description: Text(error)
                 )
@@ -282,10 +282,10 @@ struct DocsSidebar: View {
                             if site.done {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.green)
-                                    .help("Inventory fully crawled")
+                                    .help("Complete")
                             }
                         }
-                        Text("\(site.cumulativeOK) ok · \(site.seen) seen · \(site.inventoryURLCount) in inventory")
+                        Text("\(site.cumulativeOK) available · \(site.inventoryURLCount) total")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         ProgressView(value: site.progress)
@@ -328,7 +328,7 @@ struct DocsSearchPane: View {
                         .onSubmit { model.queryChanged() }
                         .onChange(of: model.query) { _, _ in model.queryChanged() }
                     if model.searching {
-                        WisentSkeletonGroup(label: "Searching the corpus") {
+                        WisentSkeletonGroup(label: "Searching") {
                             WisentSkeleton(.pill, width: 48, height: 10)
                         }
                         .fixedSize()
@@ -355,7 +355,7 @@ struct DocsSearchPane: View {
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                         Spacer()
-                        Text("\(model.hits.count) hits · \(model.scannedPages.formatted()) pages scanned")
+                        Text("\(model.hits.count) result\(model.hits.count == 1 ? "" : "s")")
                             .font(.caption)
                             .monospacedDigit()
                             .foregroundStyle(.secondary)
@@ -365,14 +365,19 @@ struct DocsSearchPane: View {
                 }
 
                 if model.hits.isEmpty {
-                    VStack(spacing: 6) {
-                        ContentUnavailableView(
-                            model.searching ? "Searching…" : "No results yet",
-                            systemImage: "text.magnifyingglass",
-                            description: Text(model.searching
-                                ? "Streaming through the corpus site by site."
-                                : "Type a query to stream matches out of the full-text docs corpus.")
-                        )
+                    Group {
+                        if model.searching {
+                            ContentUnavailableView(
+                                "Searching…",
+                                systemImage: "text.magnifyingglass"
+                            )
+                        } else {
+                            ContentUnavailableView(
+                                "No results yet",
+                                systemImage: "text.magnifyingglass",
+                                description: Text("Enter at least 2 characters to search.")
+                            )
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -482,7 +487,7 @@ struct DocsReaderPane: View {
                 ContentUnavailableView(
                     "Could not load page",
                     systemImage: "exclamationmark.triangle",
-                    description: Text("The corpus has no readable text for \(hit.url).")
+                    description: Text("No readable text is available for \(hit.url).")
                 )
             } else {
                 ContentUnavailableView(

@@ -211,11 +211,11 @@ enum SpisBackendError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .checkoutMissing:
-            return "The Spis backend could not start. No spis checkout was found on this Mac."
+            return "Spis is not installed. Install Spis, then try again."
         case .backendMissing:
-            return "The Spis backend could not start. The checkout does not contain the backend at bin/spis-serve."
-        case .failedToStart(let reason):
-            return "The Spis backend could not start. \(reason)"
+            return "Spis is not installed correctly. Reinstall Spis, then try again."
+        case .failedToStart:
+            return "Spis could not start. Try again."
         }
     }
 

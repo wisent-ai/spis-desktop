@@ -95,10 +95,12 @@ struct ReferencesManager: View {
                 }
             }
 
-            Divider()
-            ConsoleOutput()
-                .padding(.horizontal).padding(.bottom, 12)
-                .frame(height: 170)
+            if model.running || model.output != nil {
+                Divider()
+                ConsoleOutput()
+                    .padding(.horizontal).padding(.bottom, 12)
+                    .frame(height: 170)
+            }
         }
     }
 }
@@ -131,9 +133,6 @@ struct ConsoleOutput: View {
                     Text(result.refusal ?? "\(result.operation) finished")
                         .font(.caption)
                 }
-            } else {
-                Text("Changes apply to the checked-out corpus and state refreshes afterwards.")
-                    .font(.caption).foregroundStyle(.secondary)
             }
         }
     }

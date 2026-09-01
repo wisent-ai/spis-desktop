@@ -124,7 +124,7 @@ struct ContentView: View {
         } detail: {
             if let error = model.loadError {
                 ContentUnavailableView(
-                    "No corpus found",
+                    "Spis unavailable",
                     systemImage: "questionmark.folder",
                     description: Text(error)
                 )
@@ -281,9 +281,7 @@ struct RunConsole: View {
 
             switch model.runState {
             case .idle:
-                Text("Read-only checks against the corpus. Nothing here changes records.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                EmptyView()
             case .running(let name):
                 Text("\(name)…")
                     .font(.caption)

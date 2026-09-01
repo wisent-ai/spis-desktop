@@ -30,7 +30,7 @@ enum SpisOperation: String, CaseIterable, Identifiable, Sendable {
         case .catalogsCheck: return "Consistency check"
         case .drift: return "Upstream drift report"
         case .verify: return "Verify stored evidence"
-        case .captureDryRun: return "Capture plan dry run"
+        case .captureDryRun: return "Preview changes"
         }
     }
 
@@ -38,8 +38,8 @@ enum SpisOperation: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .catalogsCheck: return "validates the index against every record"
         case .drift: return "reports upstream README and URL drift"
-        case .verify: return "measures stored evidence without rewriting records"
-        case .captureDryRun: return "shows what a width capture would enqueue for the selected catalog"
+        case .verify: return "checks saved results"
+        case .captureDryRun: return "previews changes without saving them"
         }
     }
 }
@@ -52,9 +52,9 @@ enum SpisClientError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notHTTP:
-            return "The Spis backend sent a response the app could not read."
+            return "Spis returned an unreadable response. Try again."
         case .streamClosedEarly:
-            return "The Spis backend closed the stream before reporting a result."
+            return "The operation ended unexpectedly. Try again."
         case .refusal(let sentence):
             return sentence
         }
@@ -153,7 +153,7 @@ struct SpisClient: Sendable {
             let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
             throw SpisClientError.refusal(
                 (object?["error"] as? String)
-                    ?? "The Spis backend answered with status \(http.statusCode)."
+                    ?? "The request failed. Try again."
             )
         }
         return data
@@ -180,12 +180,11 @@ struct SpisClient: Sendable {
                 status: 1,
                 output: "",
                 refusal: (object?["error"] as? String)
-                    ?? "The Spis backend answered with status \(http.statusCode)."
+                    ?? "The request failed. Try again."
             )
         }
 
         var output = ""
-        var stderrText = ""
         var resultStatus: Int?
         var resultObject: [String: Any]?
         for try await line in bytes.lines {
@@ -198,7 +197,6 @@ struct SpisClient: Sendable {
             case "log":
                 let chunk = event["chunk"] as? String ?? ""
                 output += chunk
-                if event["stream"] as? String == "stderr" { stderrText += chunk }
             case "result":
                 resultStatus = event["status"] as? Int
                 resultObject = event["json"] as? [String: Any]
@@ -214,10 +212,7 @@ struct SpisClient: Sendable {
         } else if let sentence = resultObject?["error"] as? String, !sentence.isEmpty {
             refusal = sentence
         } else {
-            let trimmed = stderrText.trimmingCharacters(in: .whitespacesAndNewlines)
-            refusal = trimmed.isEmpty
-                ? "The Spis backend reported status \(status)."
-                : trimmed
+            refusal = "The operation failed. Review the output and try again."
         }
         return SpisOutcome(
             operation: operation,

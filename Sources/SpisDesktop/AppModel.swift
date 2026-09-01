@@ -23,7 +23,7 @@ final class AppModel {
 
     func load() {
         guard let root = repository.locate() else {
-            loadError = "No spis checkout was found on this Mac."
+            loadError = "Spis is not installed. Install Spis, then try again."
             return
         }
         self.root = root
@@ -34,7 +34,7 @@ final class AppModel {
             contractText = repository.contractText(from: root)
             loadError = nil
         } catch {
-            loadError = "\(error)"
+            loadError = "Spis data could not be loaded. Try again."
         }
     }
 
