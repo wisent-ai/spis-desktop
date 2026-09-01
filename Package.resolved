@@ -1,5 +1,5 @@
 {
-  "originHash" : "d5677278f6a9df438dfca2e0bfb85f9e826526a687c319b72bbe2feed159da21",
+  "originHash" : "0ee8f2c8dda16520d2c972afbefa53c2f5614a748fc5546627ab38b64fcbcd79",
   "pins" : [
     {
       "identity" : "sparkle",
@@ -15,7 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/wisent-ai/wisent-components.git",
       "state" : {
-        "revision" : "e52cdda9036b8d44c7ebf51626fcde606e6859b6"
+        "revision" : "f88802e242de766816c914b5480ac21ac9588948",
+        "version" : "0.7.0"
       }
     },
     {
