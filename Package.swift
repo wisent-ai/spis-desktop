@@ -13,7 +13,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/wisent-ai/wisent-errors.git", revision: "b01a0c99766b5c6378ecdbf3921108420ba058f1"),
         .package(url: "https://github.com/wisent-ai/wisent-desktop-update.git", exact: "0.2.0"),
-        // Named by version, not by commit: `wisent-components` 0.7.0 is a
+        // Named by version, not by commit: `wisent-components` 0.7.1 is a
         // tagged release that declares no dependencies of its own, so an exact
         // version requirement is legal here and every consumer in the fleet
         // names the same one. Spis takes no screens from this package — only
@@ -21,7 +21,7 @@ let package = Package(
         // shared skeleton views (`WisentSkeleton`, `WisentSkeletonText`,
         // `WisentSkeletonGroup`, `WisentSkeletonList`) that stand in for a
         // panel while it loads.
-        .package(url: "https://github.com/wisent-ai/wisent-components.git", exact: "0.7.0"),
+        .package(url: "https://github.com/wisent-ai/wisent-components.git", exact: "0.7.1"),
     ],
     targets: [
         .executableTarget(
