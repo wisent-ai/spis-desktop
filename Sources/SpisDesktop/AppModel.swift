@@ -150,7 +150,7 @@ final class AppModel {
         guard let runId = currentRunId else { return }
         guard let root = root else { return }
 
-        crawlState = .loading
+        crawlState = .running(operation: "Checking status")
         Task {
             do {
                 let record = crawlRecord?.trimmingCharacters(in: .whitespaces)

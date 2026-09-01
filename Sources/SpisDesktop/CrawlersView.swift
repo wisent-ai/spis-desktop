@@ -140,7 +140,7 @@ struct CrawlerStartView: View {
                         Text("Run ID: \(op.run_id ?? "unknown")")
                             .font(.caption)
                             .monospaced()
-                        Text("State: \(stateLabel(op.statusDisplay))")
+                        Text("State: \(stateLabel(op.state ?? "unknown"))")
                             .font(.caption)
                         if let updated = op.updated_at {
                             Text("Updated: \(updated)")
@@ -227,7 +227,7 @@ struct CrawlerStatusView: View {
                 HStack {
                     Text("Status")
                     Spacer()
-                    Text(statusLabel(operation.statusDisplay))
+                    Text(statusLabel(operation.state ?? "unknown"))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(operation.isError ? .red : .green)

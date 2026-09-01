@@ -20,7 +20,44 @@ struct CrawlOperation: Codable, Sendable {
         let artifact_uri: String?
         let output_uri: String?
         let error: String?
+        let preflight: PreflightDiagnostic?
         let records: [CrawlRecord]?
+
+        struct PreflightDiagnostic: Codable, Sendable {
+            let schema: String?
+            let catalog: String?
+            let engine: String?
+            let host: String?
+            let ready: Bool?
+            let checks: [Check]?
+            let records: [RecordPreflightCheck]?
+            let weles: WelesInfo?
+            let no_permission_prompts_requested: Bool?
+            
+            struct Check: Codable, Sendable {
+                let command: [String]?
+                let ready: Bool?
+                let stdout: String?
+                let stderr: String?
+                let error: String?
+            }
+            
+            struct WelesInfo: Codable, Sendable {
+                let admission_url: String?
+                let admission_transport_ready: Bool?
+                let account_binding: String?
+            }
+            
+            struct RecordPreflightCheck: Codable, Sendable {
+                let record: String?
+                let name: String?
+                let required_runtime_product: String?
+                let account_binding: String?
+                let ready: Bool?
+                let checks: [Check]?
+                let diagnostic: String?
+            }
+        }
 
         struct CrawlRecord: Codable, Sendable {
             let record: String
@@ -40,11 +77,7 @@ struct CrawlOperation: Codable, Sendable {
 
     var isError: Bool {
         guard let state = state else { return false }
-        return ["failed", "submission_failed"].contains(state)
-    }
-
-    var statusDisplay: String {
-        state?.replacingOccurrences(of: "_", with: " ").capitalized ?? "unknown"
+        return ["failed", "submission_failed", "preflight_failed"].contains(state)
     }
 
     func countForState(_ state: String) -> Int {
