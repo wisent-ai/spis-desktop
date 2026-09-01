@@ -12,24 +12,25 @@ struct CrawlersView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Crawlers")
                             .font(.headline)
-                        Text("Run evidence capture for all interface families")
+                        Text("Run evidence capture for interface families")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                     Spacer()
                 }
 
-                Text("This surface will coordinate real crawlers across Stado when the core CLI is ready. Available families:")
+                Text("All families from the evidence corpus:")
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Group {
-                        Text("Mobile: iOS apps, Android apps").font(.caption)
-                        Text("Desktop: macOS apps, desktop apps").font(.caption)
-                        Text("Web: 8 families (apps, dashboards, onboarding, stores, design systems, reports, pricing, landing)").font(.caption)
-                        Text("Terminal & CLI: PTY-based crawlers").font(.caption)
-                        Text("Documentation: HTTP-based corpus crawl").font(.caption)
+                        Text("iOS apps, Android apps").font(.caption)
+                        Text("macOS apps, desktop apps").font(.caption)
+                        Text("Web apps (8 families)").font(.caption)
+                        Text("Terminal applications").font(.caption)
+                        Text("Command-line tools").font(.caption)
+                        Text("Documentation sites").font(.caption)
                     }
                     .foregroundColor(.secondary)
                 }
@@ -38,11 +39,6 @@ struct CrawlersView: View {
                     Button(action: { model.load() }) {
                         Label("Reload Catalogs", systemImage: "arrow.clockwise")
                     }
-
-                    Button(action: {}) {
-                        Label("Start Crawl", systemImage: "play.circle")
-                    }
-                    .disabled(true)
 
                     Spacer()
                 }
@@ -55,20 +51,15 @@ struct CrawlersView: View {
 
             if model.catalogs.isEmpty {
                 VStack(spacing: 12) {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "hourglass")
                         .font(.title2)
                         .foregroundColor(.secondary)
-                    Text("No catalogs loaded")
+                    Text("Awaiting implementation")
                         .font(.headline)
-                    if let error = model.loadError {
-                        Text(error)
-                            .font(.caption)
-                            .foregroundColor(.red)
-                    } else {
-                        Text("Tap Reload Catalogs to load available families")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                    Text("Crawler execution requires `spis crawl start/status/resume/import` in core CLI")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(3)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(.controlBackgroundColor))
