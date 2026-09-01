@@ -1,6 +1,15 @@
 {
-  "originHash" : "660e74844e512ce9c6d77f48d89eceacf4f2b8349ac9ef3c1ea6e84c484a540c",
+  "originHash" : "1d7a4d975ae5f1872d3a90e48f8c334e92fde51aa0bca1330758bfa325b70c12",
   "pins" : [
+    {
+      "identity" : "echo",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wisent-ai/echo.git",
+      "state" : {
+        "revision" : "7c4677dbc2cff315110510447dafbd69d1128792",
+        "version" : "0.1.2"
+      }
+    },
     {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",

@@ -61,6 +61,21 @@ if [ -f "$ROOT/App/AppIcon.icns" ]; then
 else
   sh "$SCRIPT_DIR/import-brand-icon.sh" "$ICON_PRODUCT" "$RESOURCES/AppIcon.icns"
 fi
+# SwiftPM emits one resource bundle per target that declares resources, and
+# this script copied none of them. `SpisDesktop_SpisDesktop.bundle` carries the
+# first-run walkthrough's journey definition and
+# `WisentComponents_WisentDesignSystem.bundle` carries the fleet's fonts, so
+# every resource lookup in a packaged Spis resolved against a bundle that was
+# not in the app at all — while running from `.build`, where the bundles sit
+# beside the binary, resolved fine and hid it.
+#
+# They go in `Contents/Resources`, which is what `Bundle.main.resourceURL`
+# names in a packaged app, and they are copied before signing so `codesign
+# --deep` covers them.
+for BUNDLE in "$BIN_DIR"/*.bundle; do
+  [ -d "$BUNDLE" ] || continue
+  ditto "$BUNDLE" "$RESOURCES/$(basename "$BUNDLE")"
+done
 if [ -d "$BIN_DIR/Sparkle.framework" ]; then
   ditto "$BIN_DIR/Sparkle.framework" "$FRAMEWORKS/Sparkle.framework"
   if ! otool -l "$MACOS/Spis" | grep -q '@executable_path/../Frameworks'; then

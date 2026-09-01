@@ -26,6 +26,12 @@ let package = Package(
         // `WisentSkeletonGroup`, `WisentSkeletonList`) that stand in for a
         // panel while it loads.
         .package(url: "https://github.com/wisent-ai/wisent-components.git", exact: "0.8.1"),
+        // Echo 0.1.2 is the fleet's onboarding library, and the only thing
+        // Spis takes from it is `WisentOnboarding`: the first-run walkthrough's
+        // journey client, its device-scoped storage, and the router that
+        // validates the bundled definition. Named by version like every other
+        // consumer in the fleet.
+        .package(url: "https://github.com/wisent-ai/echo.git", exact: "0.1.2"),
     ],
     targets: [
         .executableTarget(
@@ -34,8 +40,12 @@ let package = Package(
                 .product(name: "WisentErrors", package: "wisent-errors"),
                 .product(name: "WisentDesktopUpdate", package: "wisent-desktop-update"),
                 .product(name: "WisentDesignSystem", package: "wisent-components"),
+                .product(name: "WisentOnboarding", package: "echo"),
             ],
-            path: "Sources/SpisDesktop"
+            path: "Sources/SpisDesktop",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
