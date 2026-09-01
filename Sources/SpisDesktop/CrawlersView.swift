@@ -68,7 +68,24 @@ struct CrawlerStartView: View {
 
     var body: some View {
         Form {
-            Section("Configuration") {
+            Section("Load Existing Run (After Restart)") {
+                HStack {
+                    TextField("Run ID", text: Binding(
+                        get: { model.currentRunId ?? "" },
+                        set: { newValue in
+                            let trimmed = newValue.trimmingCharacters(in: .whitespaces)
+                            model.currentRunId = trimmed.isEmpty ? nil : trimmed
+                        }
+                    ))
+                    Button(action: model.checkCrawlStatus) {
+                        Image(systemName: "arrow.forward.circle")
+                    }
+                    .disabled(model.currentRunId == nil || model.currentRunId?.isEmpty == true)
+                }
+                .help("Paste a previous run ID to check its status")
+            }
+
+            Section("Start New Crawl") {
                 Picker("Catalog", selection: Binding(
                     get: { model.selectedCatalogForCrawl ?? model.catalogs.first },
                     set: { model.selectedCatalogForCrawl = $0 }
