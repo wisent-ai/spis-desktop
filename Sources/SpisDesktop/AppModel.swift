@@ -74,4 +74,100 @@ final class AppModel {
             )
         }
     }
+
+    // MARK: - Crawl operations
+
+    @ObservationIgnored
+    private let client = SpisClient(baseURL: URL(string: "http://127.0.0.1:8888")!)
+
+    var crawlState: AppModel.CrawlState = .idle
+    var selectedCrawlerFamily: String?
+    var crawlRecord: String?
+    var crawlHost: String?
+    var crawlAdmissionUrl: String?
+    var currentRunId: String?
+
+    enum CrawlState: Equatable {
+        case idle
+        case loading
+        case running(operation: String)
+        case completed(CrawlOperation)
+        case failed(String)
+
+        static func == (lhs: CrawlState, rhs: CrawlState) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle), (.loading, .loading):
+                return true
+            case let (.running(op1), .running(op2)):
+                return op1 == op2
+            case let (.completed(c1), .completed(c2)):
+                return c1.run_id == c2.run_id
+            case let (.failed(e1), .failed(e2)):
+                return e1 == e2
+            default:
+                return false
+            }
+        }
+    }
+
+    func startCrawl() {
+        guard let family = selectedCrawlerFamily else { return }
+        guard let host = crawlHost else { return }
+
+        crawlState = .loading
+        Task {
+            do {
+                let config = CrawlerStartConfig(
+                    catalogs: [family],
+                    host: host,
+                    record: crawlRecord,
+                    admissionUrl: crawlAdmissionUrl
+                )
+                let result = try await client.crawlStart(config: config)
+                currentRunId = result.run_id
+                crawlState = .completed(result)
+            } catch {
+                crawlState = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    func checkCrawlStatus() {
+        guard let runId = currentRunId else { return }
+        crawlState = .loading
+        Task {
+            do {
+                let result = try await client.crawlStatus(runId: runId, record: crawlRecord)
+                crawlState = .completed(result)
+            } catch {
+                crawlState = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    func resumeCrawl() {
+        guard let runId = currentRunId else { return }
+        crawlState = .running(operation: "Resuming")
+        Task {
+            do {
+                let result = try await client.crawlResume(runId: runId)
+                crawlState = .completed(result)
+            } catch {
+                crawlState = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    func importCrawlResults() {
+        guard let runId = currentRunId else { return }
+        crawlState = .running(operation: "Importing")
+        Task {
+            do {
+                let result = try await client.crawlImport(runId: runId)
+                crawlState = .completed(result)
+            } catch {
+                crawlState = .failed(error.localizedDescription)
+            }
+        }
+    }
 }
