@@ -77,11 +77,12 @@ final class AppModel {
 
     // MARK: - Crawl operations
 
-    @ObservationIgnored
-    private let client = SpisClient(baseURL: URL(string: "http://127.0.0.1:8888")!)
+    // Crawl operations use CLI Process execution (see CrawlClient.swift extension)
+
+    var selectedCrawlerFamily: String?
 
     var crawlState: AppModel.CrawlState = .idle
-    var selectedCrawlerFamily: String?
+    var selectedCatalogForCrawl: CatalogSummary?
     var crawlRecord: String?
     var crawlHost: String?
     var crawlAdmissionUrl: String?
@@ -110,20 +111,35 @@ final class AppModel {
         }
     }
 
+    private func needsAdmissionUrl(for catalog: CatalogSummary) -> Bool {
+        let slug = catalog.slug
+        return ["web-app-examples", "dashboard-console-examples", "onboarding-auth-examples",
+                "app-store-listing-examples", "design-system-examples", "report-evidence-examples",
+                "pricing-page-examples", "landing-page-examples"].contains(slug)
+    }
+
     func startCrawl() {
-        guard let family = selectedCrawlerFamily else { return }
-        guard let host = crawlHost else { return }
+        guard let catalog = selectedCatalogForCrawl else { return }
+        guard let host = crawlHost?.trimmingCharacters(in: .whitespaces), !host.isEmpty else { return }
+        guard let root = root else { return }
+
+        let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
+        let trimmedRecord = record?.isEmpty == true ? nil : record
+
+        if needsAdmissionUrl(for: catalog) {
+            guard let url = crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces), !url.isEmpty else { return }
+        }
 
         crawlState = .loading
         Task {
             do {
                 let config = CrawlerStartConfig(
-                    catalogs: [family],
+                    catalogs: [catalog.slug],
                     host: host,
-                    record: crawlRecord,
-                    admissionUrl: crawlAdmissionUrl
+                    record: trimmedRecord,
+                    admissionUrl: crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces)
                 )
-                let result = try await client.crawlStart(config: config)
+                let result = try await client.crawlStart(config: config, workingDirectory: root)
                 currentRunId = result.run_id
                 crawlState = .completed(result)
             } catch {
@@ -134,10 +150,14 @@ final class AppModel {
 
     func checkCrawlStatus() {
         guard let runId = currentRunId else { return }
+        guard let root = root else { return }
+
         crawlState = .loading
         Task {
             do {
-                let result = try await client.crawlStatus(runId: runId, record: crawlRecord)
+                let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
+                let trimmedRecord = record?.isEmpty == true ? nil : record
+                let result = try await client.crawlStatus(runId: runId, record: trimmedRecord, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
@@ -147,10 +167,12 @@ final class AppModel {
 
     func resumeCrawl() {
         guard let runId = currentRunId else { return }
+        guard let root = root else { return }
+
         crawlState = .running(operation: "Resuming")
         Task {
             do {
-                let result = try await client.crawlResume(runId: runId)
+                let result = try await client.crawlResume(runId: runId, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
@@ -160,10 +182,12 @@ final class AppModel {
 
     func importCrawlResults() {
         guard let runId = currentRunId else { return }
+        guard let root = root else { return }
+
         crawlState = .running(operation: "Importing")
         Task {
             do {
-                let result = try await client.crawlImport(runId: runId)
+                let result = try await client.crawlImport(runId: runId, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)

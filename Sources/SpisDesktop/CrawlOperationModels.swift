@@ -19,6 +19,7 @@ struct CrawlOperation: Codable, Sendable {
         let job_id: String?
         let artifact_uri: String?
         let output_uri: String?
+        let error: String?
         let records: [CrawlRecord]?
 
         struct CrawlRecord: Codable, Sendable {
@@ -53,15 +54,24 @@ struct CrawlOperation: Codable, Sendable {
     func totalRecords() -> Int {
         catalogs?.reduce(0) { $0 + ($1.records?.count ?? 0) } ?? 0
     }
+
+    func totalCompleted() -> Int {
+        counts?["record_completed"] ?? 0
+    }
+
+    func totalImported() -> Int {
+        counts?["record_imported"] ?? 0
+    }
 }
 
 // MARK: - Crawler Start Configuration
 
 struct CrawlerStartConfig: Sendable {
     let catalogs: [String] // One or more catalog slugs
-    let host: String
+    let host: String? // Optional global host override
+    var hostMappings: [String: String]? = nil // Optional ENGINE=TARGET or CATALOG=TARGET mappings
     let record: String? // Optional specific record
-    let admissionUrl: String? // For web crawls
+    let admissionUrl: String? // Optional admission-url override
 
     func buildArguments() -> [String] {
         var args = ["crawl", "start"]
@@ -71,8 +81,17 @@ struct CrawlerStartConfig: Sendable {
             args.append(catalog)
         }
         
-        args.append("--host")
-        args.append(host)
+        // Add host overrides: catalog-specific, engine-specific, or global
+        if let mappings = hostMappings {
+            for (scope, target) in mappings {
+                args.append("--host")
+                args.append("\(scope)=\(target)")
+            }
+        }
+        if let globalHost = host {
+            args.append("--host")
+            args.append(globalHost)
+        }
         
         if let record = record {
             args.append("--record")

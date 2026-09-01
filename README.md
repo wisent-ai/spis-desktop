@@ -2,13 +2,11 @@
 
 A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evidence-grade reference corpus: browse every catalog and its measured state, read the evidence contract, and run the corpus's read-only commands from one window.
 
-## What it shows
-
 - **Browse catalogs** — all fifteen catalogs with record counts and the complete/partial split, decoded live from `example-catalogs.json`.
 - **Catalog detail** — records, complete/partial, image and structure counts, the measured provenance mix, and the file paths each catalog owns.
 - **Command console** — runs read-only operations: `catalogs --check`, `drift`, `verify`, and `capture --list`.
 - **Manage references** — add, remove, and update reference records in catalogs.
-- **Crawlers** — interface prepared for real crawlers (implementation awaits `spis crawl start/status/resume/import` in core CLI).
+- **Crawlers** — run all six crawler families with real-time status: `crawl-mobile`, `crawl-desktop`, `crawl-web`, `crawl-tui`, `crawl-cli`, and `crawl-docs`. Each family supports record selection (all or specific), target host configuration, and conditional fields (admission URL for web). Check status, resume paused runs, and import completed results directly from the GUI.
 
 ## Build and run
 
