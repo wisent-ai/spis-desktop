@@ -89,7 +89,7 @@ struct CrawlerStartView: View {
                     get: { model.selectedCatalogForCrawl },
                     set: { model.selectedCatalogForCrawl = $0 }
                 )) {
-                    Text("All 15 catalogs (crawl-mobile, crawl-desktop, crawl-web, etc.)").tag(nil as CatalogSummary?)
+                    Text("All 15 catalogs").tag(nil as CatalogSummary?)
                     Divider()
                     ForEach(model.catalogs) { catalog in
                         Text(catalog.title).tag(catalog as CatalogSummary?)
@@ -100,7 +100,7 @@ struct CrawlerStartView: View {
                     get: { model.crawlHost ?? "" },
                     set: { model.crawlHost = $0.isEmpty ? nil : $0 }
                 ))
-                .help("Optional: crawler target override (hostname, IP, or service alias). Left empty uses default Stado routing.")
+                .help("Stado target override")
 
                 TextField("Record (optional)", text: Binding(
                     get: { model.crawlRecord ?? "" },
@@ -113,7 +113,7 @@ struct CrawlerStartView: View {
                     get: { model.crawlAdmissionUrl ?? "" },
                     set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
                 ))
-                .help("Optional: browser service endpoint URL (e.g., http://localhost:3000 for local dev)")
+                .help("Optional: browser service endpoint URL")
             }
 
             Section {
@@ -357,63 +357,21 @@ struct CrawlerStatusView: View {
                 }
             }
 
-            if let counts = operation.counts {
-                Section("Record Summary") {
-                    VStack(alignment: .leading, spacing: 6) {
-                        if let completed = counts["record_completed"], completed > 0 {
-                            HStack {
-                                Text("✓ Completed:")
-                                Spacer()
-                                Text("\(completed)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let partial = counts["record_partial"], partial > 0 {
-                            HStack {
-                                Text("⊘ Partial:")
-                                Spacer()
-                                Text("\(partial)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let failed = counts["record_failed"], failed > 0 {
-                            HStack {
-                                Text("✗ Failed:")
-                                Spacer()
-                                Text("\(failed)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let skipped = counts["record_skipped"], skipped > 0 {
-                            HStack {
-                                Text("⊘ Skipped:")
-                                Spacer()
-                                Text("\(skipped)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let imported = counts["record_imported"], imported > 0 {
-                            HStack {
-                                Text("✔ Imported:")
-                                Spacer()
-                                Text("\(imported)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let queued = counts["record_queued"], queued > 0 {
-                            HStack {
-                                Text("⧖ Queued:")
-                                Spacer()
-                                Text("\(queued)")
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        if let running = counts["record_running"], running > 0 {
-                            HStack {
-                                Text("⟳ Running:")
-                                Spacer()
-                                Text("\(running)")
-                                    .fontWeight(.semibold)
+            if let counts = operation.counts, !counts.isEmpty {
+                let sortedCounts = counts
+                    .filter { $0.value > 0 }
+                    .sorted { $0.key < $1.key }
+                
+                if !sortedCounts.isEmpty {
+                    Section("Record Summary") {
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(sortedCounts, id: \.key) { key, count in
+                                HStack {
+                                    Text(displayLabel(for: key))
+                                    Spacer()
+                                    Text("\(count)")
+                                        .fontWeight(.semibold)
+                                }
                             }
                         }
                     }
@@ -477,6 +435,21 @@ struct CrawlerStatusView: View {
     
     private func catalogTitle(slug: String) -> String {
         model.catalogs.first(where: { $0.slug == slug })?.title ?? slug
+    }
+    
+    private func displayLabel(for key: String) -> String {
+        let label = key.hasPrefix("record_") ? String(key.dropFirst(7)) : key
+        let emoji: [String: String] = [
+            "completed": "✓",
+            "partial": "⊘",
+            "failed": "✗",
+            "skipped": "⊘",
+            "imported": "✔",
+            "queued": "⧖",
+            "running": "⟳"
+        ]
+        let prefix = emoji[label] ?? "•"
+        return "\(prefix) \(label.capitalized)"
     }
 }
 

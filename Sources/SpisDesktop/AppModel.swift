@@ -118,7 +118,10 @@ final class AppModel {
         let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
         let trimmedRecord = record?.isEmpty == true ? nil : record
         let trimmedHost = crawlHost?.trimmingCharacters(in: .whitespaces).isEmpty == true ? nil : crawlHost?.trimmingCharacters(in: .whitespaces)
-        let trimmedAdmissionUrl = crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces).isEmpty == false ? crawlAdmissionUrl : nil
+        let trimmedAdmissionUrl = crawlAdmissionUrl.flatMap { 
+            let t = $0.trimmingCharacters(in: .whitespaces)
+            return t.isEmpty ? nil : t
+        }
         
         if selectedCatalogForCrawl == nil && trimmedRecord != nil {
             // Record not allowed when all catalogs selected
