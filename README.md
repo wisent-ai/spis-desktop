@@ -6,7 +6,7 @@ A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evi
 - **Catalog detail** — records, complete/partial, image and structure counts, the measured provenance mix, and the file paths each catalog owns.
 - **Command console** — runs read-only operations: `catalogs --check`, `drift`, `verify`, and `capture --list`.
 - **Manage references** — add, remove, and update reference records in catalogs.
-- **Crawlers** — run all six crawler families with real-time status: `crawl-mobile`, `crawl-desktop`, `crawl-web`, `crawl-tui`, `crawl-cli`, and `crawl-docs`. Each family supports record selection (all or specific), target host configuration, and conditional fields (admission URL for web). Check status, resume paused runs, and import completed results directly from the GUI.
+- **Crawlers** — run crawls across all fifteen catalogs. Pick a catalog, set the target host, optionally specify a record (or crawl all) and admission URL. Operations: start a crawl, check status with per-catalog breakdown and record metrics (complete, partial, failed), resume paused runs, and import results. Diagnostics show artifact locations, record gaps, and error details.
 
 ## Build and run
 

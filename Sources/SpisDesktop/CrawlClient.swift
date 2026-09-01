@@ -1,22 +1,33 @@
 import Foundation
 
-/// Crawl command execution methods on SpisClient.
-/// These methods invoke the `spis crawl` CLI commands as external processes
-/// with concurrent pipe draining and proper error handling.
-extension SpisClient {
+/// Thread-safe crawl operation client: invokes `spis crawl` CLI commands as external processes
+/// with concurrent pipe draining and proper JSON model fallback on partial completion.
+struct SpisCrawlClient: Sendable {
     
     // MARK: - Crawl operations (spis crawl start/status/resume/import)
     
-    func crawlStart(config: CrawlerStartConfig, workingDirectory: URL? = nil) async throws -> CrawlOperation {
-        let output = try await runCrawlProcess(args: config.buildArguments(), workingDirectory: workingDirectory)
-        guard output.succeeded else {
-            throw NSError(domain: "CrawlOperation", code: Int(output.exitCode), userInfo: [
-                NSLocalizedDescriptionKey: output.error ?? "Crawl start failed"
-            ])
+    /// Start a new crawl operation with catalog, host, and optional admission URL.
+    func crawlStart(catalogs: [String], host: String, record: String? = nil, admissionUrl: String? = nil, workingDirectory: URL? = nil) async throws -> CrawlOperation {
+        var args = ["crawl", "start"]
+        for catalog in catalogs {
+            args.append("--catalog")
+            args.append(catalog)
         }
-        return try decodeCrawlOperation(output.stdout)
+        args.append("--host")
+        args.append(host)
+        if let record = record {
+            args.append("--record")
+            args.append(record)
+        }
+        if let admissionUrl = admissionUrl {
+            args.append("--admission-url")
+            args.append(admissionUrl)
+        }
+        let output = try await runCrawlProcess(args: args, workingDirectory: workingDirectory)
+        return try parseCrawlOperation(from: output)
     }
     
+    /// Check status of a running or completed crawl operation by run ID.
     func crawlStatus(runId: String, record: String? = nil, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         var args = ["crawl", "status", "--run", runId]
         if let record = record {
@@ -24,35 +35,22 @@ extension SpisClient {
             args.append(record)
         }
         let output = try await runCrawlProcess(args: args, workingDirectory: workingDirectory)
-        guard output.succeeded else {
-            throw NSError(domain: "CrawlOperation", code: Int(output.exitCode), userInfo: [
-                NSLocalizedDescriptionKey: output.error ?? "Crawl status failed"
-            ])
-        }
-        return try decodeCrawlOperation(output.stdout)
+        return try parseCrawlOperation(from: output)
     }
     
+    /// Resume a paused crawl operation by run ID.
     func crawlResume(runId: String, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         let output = try await runCrawlProcess(args: ["crawl", "resume", "--run", runId], workingDirectory: workingDirectory)
-        guard output.succeeded else {
-            throw NSError(domain: "CrawlOperation", code: Int(output.exitCode), userInfo: [
-                NSLocalizedDescriptionKey: output.error ?? "Crawl resume failed"
-            ])
-        }
-        return try decodeCrawlOperation(output.stdout)
+        return try parseCrawlOperation(from: output)
     }
     
+    /// Import completed crawl results by run ID.
     func crawlImport(runId: String, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         let output = try await runCrawlProcess(args: ["crawl", "import", "--run", runId], workingDirectory: workingDirectory)
-        guard output.succeeded else {
-            throw NSError(domain: "CrawlOperation", code: Int(output.exitCode), userInfo: [
-                NSLocalizedDescriptionKey: output.error ?? "Crawl import failed"
-            ])
-        }
-        return try decodeCrawlOperation(output.stdout)
+        return try parseCrawlOperation(from: output)
     }
     
-    // MARK: - Crawl process execution (concurrent pipe draining)
+    // MARK: - Process execution (concurrent pipe draining)
     
     /// Runs a `spis crawl` CLI command as a subprocess, draining stdout/stderr concurrently.
     /// ProcessResult includes exit code and both output streams.
@@ -113,14 +111,29 @@ extension SpisClient {
         }
     }
     
-    private func decodeCrawlOperation(_ json: String) throws -> CrawlOperation {
-        guard let data = json.data(using: .utf8) else {
+    /// Parse crawl operation result: return JSON model even on nonzero exit if JSON is valid,
+    /// otherwise throw stderr. This allows partial/failed status to be displayed.
+    private func parseCrawlOperation(from result: ProcessResult) throws -> CrawlOperation {
+        guard let data = result.stdout.data(using: .utf8) else {
             throw NSError(domain: "CrawlOperation", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Could not encode JSON response to UTF-8"
+                NSLocalizedDescriptionKey: "Could not encode stdout to UTF-8"
             ])
         }
+        
         let decoder = JSONDecoder()
-        return try decoder.decode(CrawlOperation.self, from: data)
+        do {
+            return try decoder.decode(CrawlOperation.self, from: data)
+        } catch {
+            // If JSON decode fails, throw stderr or exit code message
+            if !result.stderr.isEmpty {
+                throw NSError(domain: "CrawlOperation", code: Int(result.exitCode), userInfo: [
+                    NSLocalizedDescriptionKey: result.stderr
+                ])
+            }
+            throw NSError(domain: "CrawlOperation", code: Int(result.exitCode), userInfo: [
+                NSLocalizedDescriptionKey: "Crawl operation failed with exit code \(result.exitCode)"
+            ])
+        }
     }
     
     /// Locates the `spis` binary in standard search paths and repository checkouts.

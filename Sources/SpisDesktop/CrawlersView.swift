@@ -31,7 +31,7 @@ struct CrawlersView: View {
                 if case .idle = model.crawlState {
                     CrawlerStartView(model: model)
                 } else if case let .completed(op) = model.crawlState {
-                    CrawlerStatusView(model: model, runId: op.run_id ?? "unknown")
+                    CrawlerStatusView(model: model, operation: op)
                 } else if case let .failed(error) = model.crawlState {
                     VStack(spacing: 12) {
                         Image(systemName: "xmark.circle")
@@ -66,40 +66,15 @@ struct CrawlersView: View {
 struct CrawlerStartView: View {
     let model: AppModel
 
-    var families: [String] {
-        ["crawl-mobile", "crawl-desktop", "crawl-web", "crawl-tui", "crawl-cli", "crawl-docs"]
-    }
-
-    var needsAdmissionUrl: Bool {
-        guard let family = model.selectedCrawlerFamily else { return false }
-        return family == "crawl-web"
-    }
-
-    var needsCatalog: Bool {
-        guard let family = model.selectedCrawlerFamily else { return false }
-        return family != "crawl-tui" && family != "crawl-cli"
-    }
-
     var body: some View {
         Form {
             Section("Configuration") {
-                Picker("Crawler Family", selection: Binding(
-                    get: { model.selectedCrawlerFamily ?? "crawl-mobile" },
-                    set: { model.selectedCrawlerFamily = $0 }
+                Picker("Catalog", selection: Binding(
+                    get: { model.selectedCatalogForCrawl ?? model.catalogs.first },
+                    set: { model.selectedCatalogForCrawl = $0 }
                 )) {
-                    ForEach(families, id: \.self) { family in
-                        Text(family).tag(family)
-                    }
-                }
-
-                if needsCatalog {
-                    Picker("Catalog", selection: Binding(
-                        get: { model.selectedCatalogForCrawl ?? model.catalogs.first },
-                        set: { model.selectedCatalogForCrawl = $0 }
-                    )) {
-                        ForEach(model.catalogs) { catalog in
-                            Text(catalog.slug).tag(catalog as CatalogSummary?)
-                        }
+                    ForEach(model.catalogs) { catalog in
+                        Text(catalog.slug).tag(catalog as CatalogSummary?)
                     }
                 }
 
@@ -107,20 +82,19 @@ struct CrawlerStartView: View {
                     get: { model.crawlHost ?? "" },
                     set: { model.crawlHost = $0.isEmpty ? nil : $0 }
                 ))
+                .help("Required: crawler target host or IP")
 
-                if needsCatalog {
-                    TextField("Record (optional)", text: Binding(
-                        get: { model.crawlRecord ?? "" },
-                        set: { model.crawlRecord = $0.isEmpty ? nil : $0 }
-                    ))
-                }
+                TextField("Record (optional)", text: Binding(
+                    get: { model.crawlRecord ?? "" },
+                    set: { model.crawlRecord = $0.isEmpty ? nil : $0 }
+                ))
+                .help("Specific record ID, or leave empty for all records")
 
-                if needsAdmissionUrl {
-                    TextField("Admission URL", text: Binding(
-                        get: { model.crawlAdmissionUrl ?? "" },
-                        set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
-                    ))
-                }
+                TextField("Admission URL (optional)", text: Binding(
+                    get: { model.crawlAdmissionUrl ?? "" },
+                    set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
+                ))
+                .help("Override: credential endpoint or auth token URL")
             }
 
             Section {
@@ -137,16 +111,14 @@ struct CrawlerStartView: View {
                     }
                 }
                 .disabled(
-                    model.selectedCrawlerFamily == nil ||
+                    model.selectedCatalogForCrawl == nil ||
                     model.crawlHost == nil ||
-                    (needsCatalog && model.selectedCatalogForCrawl == nil) ||
-                    (needsAdmissionUrl && model.crawlAdmissionUrl == nil) ||
                     model.crawlState == .loading
                 )
             }
 
             if case .completed(let op) = model.crawlState {
-                Section("Result") {
+                Section("Last Result") {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Run ID: \(op.run_id ?? "unknown")")
                             .font(.caption)
@@ -173,18 +145,82 @@ struct CrawlerStartView: View {
 
 struct CrawlerStatusView: View {
     let model: AppModel
-    let runId: String
+    let operation: CrawlOperation
 
     var body: some View {
         Form {
-            Section("Run Status") {
+            Section("Crawl Operation Status") {
                 HStack {
                     Text("Run ID")
                     Spacer()
-                    Text(runId)
+                    Text(operation.run_id ?? "unknown")
                         .font(.caption)
                         .monospaced()
                         .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("State")
+                    Spacer()
+                    Text(operation.statusDisplay)
+                        .font(.caption)
+                        .foregroundColor(operation.isError ? .red : .green)
+                }
+                if let updated = operation.updated_at {
+                    HStack {
+                        Text("Updated")
+                        Spacer()
+                        Text(updated)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            if let catalogs = operation.catalogs, !catalogs.isEmpty {
+                Section("Catalogs") {
+                    ForEach(catalogs, id: \.catalog) { catalog in
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text(catalog.catalog)
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Text(catalog.state)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            if let records = catalog.records {
+                                Text("Records: \(records.count)")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            if let uri = catalog.artifact_uri {
+                                Text("Artifacts: \(uri)")
+                                    .font(.caption2)
+                                    .monospaced()
+                                    .foregroundColor(.blue)
+                            }
+                            if let err = catalog.error {
+                                Text("Error: \(err)")
+                                    .font(.caption2)
+                                    .foregroundColor(.red)
+                            }
+                        }
+                    }
+                }
+            }
+
+            if let counts = operation.counts, !counts.isEmpty {
+                Section("Counts") {
+                    ForEach(counts.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                        HStack {
+                            Text(key.replacingOccurrences(of: "_", with: " ").capitalized)
+                            Spacer()
+                            Text("\(value)")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                    }
                 }
             }
 
@@ -193,83 +229,27 @@ struct CrawlerStatusView: View {
                     Text("Check Status")
                 }
                 Button(action: model.resumeCrawl) {
-                    Text("Resume")
-                }
-                Button(action: model.importCrawlResults) {
-                    Text("Import Results")
-                }
-            }
-        }
-    }
-}
-
-struct CrawlerResumeView: View {
-    let model: AppModel
-    let runId: String
-
-    var body: some View {
-        Form {
-            Section("Resume Crawl") {
-                HStack {
-                    Text("Run ID")
-                    Spacer()
-                    Text(runId)
-                        .font(.caption)
-                        .monospaced()
-                        .foregroundColor(.secondary)
-                }
-            }
-
-            Section {
-                Button(action: model.resumeCrawl) {
-                    switch model.crawlState {
-                    case .running(let op):
+                    if case .running = model.crawlState {
                         HStack {
                             ProgressView()
                                 .scaleEffect(0.8)
-                            Text(op)
+                            Text("Resuming...")
                         }
-                    default:
-                        Text("Resume Crawl")
+                    } else {
+                        Text("Resume")
                     }
                 }
-                .disabled(model.crawlState == .loading || (model.crawlState != .idle && model.crawlState != .running(operation: "Resuming")))
-            }
-        }
-    }
-}
-
-struct CrawlerImportView: View {
-    let model: AppModel
-    let runId: String
-
-    var body: some View {
-        Form {
-            Section("Import Results") {
-                HStack {
-                    Text("Run ID")
-                    Spacer()
-                    Text(runId)
-                        .font(.caption)
-                        .monospaced()
-                        .foregroundColor(.secondary)
-                }
-            }
-
-            Section {
                 Button(action: model.importCrawlResults) {
-                    switch model.crawlState {
-                    case .running(let op):
+                    if case .running = model.crawlState {
                         HStack {
                             ProgressView()
                                 .scaleEffect(0.8)
-                            Text(op)
+                            Text("Importing...")
                         }
-                    default:
+                    } else {
                         Text("Import Results")
                     }
                 }
-                .disabled(model.crawlState == .loading || (model.crawlState != .idle && model.crawlState != .running(operation: "Importing")))
             }
         }
     }

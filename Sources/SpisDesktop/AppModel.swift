@@ -77,11 +77,9 @@ final class AppModel {
 
     // MARK: - Crawl operations
 
-    // Crawl operations use CLI Process execution (see CrawlClient.swift extension)
+    private let crawlClient = SpisCrawlClient()
 
-    var selectedCrawlerFamily: String?
-
-    var crawlState: AppModel.CrawlState = .idle
+    var crawlState: CrawlState = .idle
     var selectedCatalogForCrawl: CatalogSummary?
     var crawlRecord: String?
     var crawlHost: String?
@@ -111,13 +109,6 @@ final class AppModel {
         }
     }
 
-    private func needsAdmissionUrl(for catalog: CatalogSummary) -> Bool {
-        let slug = catalog.slug
-        return ["web-app-examples", "dashboard-console-examples", "onboarding-auth-examples",
-                "app-store-listing-examples", "design-system-examples", "report-evidence-examples",
-                "pricing-page-examples", "landing-page-examples"].contains(slug)
-    }
-
     func startCrawl() {
         guard let catalog = selectedCatalogForCrawl else { return }
         guard let host = crawlHost?.trimmingCharacters(in: .whitespaces), !host.isEmpty else { return }
@@ -125,21 +116,18 @@ final class AppModel {
 
         let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
         let trimmedRecord = record?.isEmpty == true ? nil : record
-
-        if needsAdmissionUrl(for: catalog) {
-            guard let url = crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces), !url.isEmpty else { return }
-        }
+        let trimmedAdmissionUrl = crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces).isEmpty == false ? crawlAdmissionUrl : nil
 
         crawlState = .loading
         Task {
             do {
-                let config = CrawlerStartConfig(
+                let result = try await crawlClient.crawlStart(
                     catalogs: [catalog.slug],
                     host: host,
                     record: trimmedRecord,
-                    admissionUrl: crawlAdmissionUrl?.trimmingCharacters(in: .whitespaces)
+                    admissionUrl: trimmedAdmissionUrl,
+                    workingDirectory: root
                 )
-                let result = try await client.crawlStart(config: config, workingDirectory: root)
                 currentRunId = result.run_id
                 crawlState = .completed(result)
             } catch {
@@ -157,7 +145,7 @@ final class AppModel {
             do {
                 let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
                 let trimmedRecord = record?.isEmpty == true ? nil : record
-                let result = try await client.crawlStatus(runId: runId, record: trimmedRecord, workingDirectory: root)
+                let result = try await crawlClient.crawlStatus(runId: runId, record: trimmedRecord, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
@@ -172,7 +160,7 @@ final class AppModel {
         crawlState = .running(operation: "Resuming")
         Task {
             do {
-                let result = try await client.crawlResume(runId: runId, workingDirectory: root)
+                let result = try await crawlClient.crawlResume(runId: runId, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
@@ -187,7 +175,7 @@ final class AppModel {
         crawlState = .running(operation: "Importing")
         Task {
             do {
-                let result = try await client.crawlImport(runId: runId, workingDirectory: root)
+                let result = try await crawlClient.crawlImport(runId: runId, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
