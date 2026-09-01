@@ -15,7 +15,11 @@ struct ReferenceApp: App {
 
     var body: some Scene {
         WindowGroup("Spis") {
-            SpisRootContent(model: delegate.model, manageModel: delegate.manageModel)
+            SpisRootContent(
+                model: delegate.model,
+                manageModel: delegate.manageModel,
+                onboarding: delegate.onboarding
+            )
         }
         .windowToolbarStyle(.unified)
         .commands {
@@ -43,6 +47,7 @@ struct ReferenceApp: App {
 final class SpisAppDelegate: NSObject, NSApplicationDelegate {
     let model = AppModel()
     let manageModel = ManageModel()
+    let onboarding = SpisOnboardingController()
     private var fallbackWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -51,7 +56,11 @@ final class SpisAppDelegate: NSObject, NSApplicationDelegate {
                 title: "Spis",
                 size: CGSize(width: 1080, height: 680)
             ) {
-                SpisRootContent(model: model, manageModel: manageModel)
+                SpisRootContent(
+                    model: model,
+                    manageModel: manageModel,
+                    onboarding: onboarding
+                )
             }
         }
     }
@@ -63,11 +72,13 @@ final class SpisAppDelegate: NSObject, NSApplicationDelegate {
 private struct SpisRootContent: View {
     let model: AppModel
     let manageModel: ManageModel
+    let onboarding: SpisOnboardingController
 
     var body: some View {
         AppRootView()
             .environment(model)
             .environment(manageModel)
+            .environment(onboarding)
             .frame(minWidth: 1080, minHeight: 680)
             // Every fact Spis reports is selectable, and therefore
             // copyable. This app exists to state things a person then
@@ -89,6 +100,32 @@ private struct SpisRootContent: View {
             // ends up with, from a single call site.
             .textSelection(.enabled)
             .task { model.load(); manageModel.reloadTypes() }
+            .task { await onboarding.start() }
+            // The walkthrough's one presentation: an overlay over the whole
+            // window, not a second window and not a sheet on one surface. It
+            // sits on this description rather than inside `AppRootView` so the
+            // scene window and the delegate's fallback window show the same
+            // journey from one call site, and so the surface picker underneath
+            // stays covered until the journey closes.
+            .overlay {
+                if onboarding.isPresented {
+                    SpisOnboardingView(
+                        screen: onboarding.screen,
+                        errorMessage: onboarding.errorMessage,
+                        catalogCount: model.catalogs.count,
+                        isFinalScreen: onboarding.isFinalScreen,
+                        continueJourney: { Task { await onboarding.advance() } },
+                        openCatalog: {
+                            Task {
+                                await onboarding.finish(
+                                    catalogAvailable: model.selectedCatalog != nil
+                                )
+                            }
+                        },
+                        retry: { Task { await onboarding.retry() } }
+                    )
+                }
+            }
     }
 }
 

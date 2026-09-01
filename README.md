@@ -7,6 +7,7 @@ A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evi
 - **Command console** — runs read-only operations: `catalogs --check`, `drift`, `verify`, and `capture --list`.
 - **Manage references** — add, remove, and update reference records in catalogs.
 - **Crawlers** — run crawls across all fifteen catalogs. Pick a catalog, set the target host, optionally specify a record (or crawl all) and admission URL. Operations: start a crawl, check status with per-catalog breakdown and record metrics (complete, partial, failed), resume paused runs, and import results. Diagnostics show artifact locations, record gaps, and error details.
+- **First-run walkthrough** — three screens on a first launch: what Spis reports, which surfaces report versus run the corpus's own commands, and one catalog's measured state. It finishes only once a real catalog is decoded from an installed corpus, and never appears again. Replay it from **Manage → First-run walkthrough → Show it again**.
 
 ## Build and run
 

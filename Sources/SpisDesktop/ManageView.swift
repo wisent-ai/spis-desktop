@@ -21,10 +21,25 @@ struct ManageView: View {
             .listStyle(.sidebar)
             .navigationSplitViewColumnWidth(min: 220, ideal: 260)
         } detail: {
-            if let slug = model.selectedCatalogSlug {
-                ReferencesManager(slug: slug)
-            } else {
-                ContentUnavailableView("Select a product type", systemImage: "square.grid.2x2")
+            VStack(spacing: 0) {
+                if let slug = model.selectedCatalogSlug {
+                    ReferencesManager(slug: slug)
+                } else {
+                    ContentUnavailableView("Select a product type", systemImage: "square.grid.2x2")
+                        .frame(maxHeight: .infinity)
+                }
+
+                Divider()
+
+                // Last on the surface, under the records it does not touch.
+                // It sits outside the selection branch above because the
+                // control has to be reachable whether or not a product type
+                // is selected: a walkthrough you can only replay after
+                // clicking into a catalog is a walkthrough half the operators
+                // never find.
+                SpisFirstRunWalkthroughRow()
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
             }
         }
         .task { model.reloadTypes() }
