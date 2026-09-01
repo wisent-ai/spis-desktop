@@ -31,7 +31,7 @@ let package = Package(
         // journey client, its device-scoped storage, and the router that
         // validates the bundled definition. Named by version like every other
         // consumer in the fleet.
-        .package(url: "https://github.com/wisent-ai/echo.git", exact: "0.1.2"),
+        .package(url: "https://github.com/wisent-ai/echo.git", exact: "0.3.0"),
     ],
     targets: [
         .executableTarget(

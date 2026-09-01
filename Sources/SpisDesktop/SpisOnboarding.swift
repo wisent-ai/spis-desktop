@@ -96,13 +96,13 @@ final class SpisOnboardingController {
     /// and says why instead of recording a first success that did not happen.
     ///
     /// `observeFirstSuccess` runs before `complete`, and that order is the
-    /// whole point. `complete` closes the attempt and emits
-    /// `onboarding_completed`, but it never raises `firstSuccessObserved` and
-    /// never emits `onboarding_first_success_observed` — the event this
-    /// journey's own `analytics_contract` names as its `first_success_event`.
-    /// Calling `complete` alone would finish the journey with the fact it is
-    /// built around never reported, so the funnel would show completions
-    /// against zero first successes.
+    /// whole point: `onboarding_first_success_observed` — the event this
+    /// journey's own `analytics_contract` names as its `first_success_event`
+    /// — is emitted ahead of `onboarding_completed`, so the funnel reads in
+    /// the order the operator lived it. Since WisentOnboarding 0.3.0
+    /// `complete` also raises that fact, but only while
+    /// `firstSuccessObserved` is still false, so this call keeps the ordering
+    /// and the event is still emitted exactly once.
     func finish(catalogAvailable: Bool) async {
         guard let client, isFinalScreen else { return }
         errorMessage = nil
@@ -236,40 +236,21 @@ final class SpisOnboardingController {
         return (client, progress)
     }
 
-    /// Where the bundled definition actually is, in both layouts Spis ships in.
-    ///
-    /// SwiftPM's generated `Bundle.module` looks under
-    /// `Bundle.main.bundleURL`, which in a packaged app is `Spis.app/` — but
-    /// resource bundles belong in `Spis.app/Contents/Resources/`. The lookup
-    /// misses there, falls through to the absolute `.build` path baked in at
-    /// compile time, and calls `fatalError` on any machine that is not the one
-    /// that built it. Running from `.build` always resolves, so `swift build`
-    /// never shows it.
-    ///
-    /// `Bundle.main.resourceURL` is `Contents/Resources` when packaged and the
-    /// executable's own directory under `swift build`, and the bundle sits in
-    /// both. `Bundle.module` stays last and is never referenced until that leg
-    /// fails, because merely evaluating it is what traps.
-    private static let resourceBundle: Bundle = {
-        if let url = Bundle.main.resourceURL?
-            .appendingPathComponent("SpisDesktop_SpisDesktop.bundle"),
-           let bundle = Bundle(url: url) {
-            return bundle
-        }
-        return Bundle.module
-    }()
-
     /// The bundled definition, which is also the identity check: a resource
     /// that no longer names this version or this first-success fact is a
     /// mismatch between the app and its journey, not a journey to present.
     private static func loadFallback() throws -> JourneyBundle {
-        guard let url = Self.resourceBundle.url(
-            forResource: Constants.resourceName,
-            withExtension: "json"
-        ) else {
-            throw JourneyClientError.invalid("bundled fallback")
-        }
-        let canonicalDefinition = try String(contentsOf: url, encoding: .utf8)
+        // One loader for the whole fleet: JourneyResource resolves the
+        // packaged bundle and throws a named error saying which paths it
+        // tried, instead of SwiftPM's accessor trapping on a machine that
+        // never built this binary.
+        let canonicalDefinition = try String(
+            decoding: JourneyResource.definitionData(
+                resource: Constants.resourceName,
+                bundleName: "SpisDesktop_SpisDesktop.bundle"
+            ),
+            as: UTF8.self
+        )
         let bundle = try JourneyRouter.makeBundle(
             canonicalDefinition: canonicalDefinition,
             journeyVersionId: Constants.fallbackVersionID
