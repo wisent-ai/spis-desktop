@@ -38,6 +38,13 @@ struct CrawlersView: View {
                             CrawlerStatusView(model: model, operation: op)
                         } else if case let .failed(error) = model.crawlState {
                             CrawlerFailedView(model: model, error: error)
+                        } else if case .loading = model.crawlState {
+                            VStack(spacing: 12) {
+                                ProgressView()
+                                Text("Starting crawl...")
+                                    .font(.caption)
+                            }
+                            .padding()
                         } else if case let .running(opName) = model.crawlState {
                             VStack(spacing: 12) {
                                 ProgressView()
@@ -99,7 +106,8 @@ struct CrawlerStartView: View {
                     get: { model.crawlRecord ?? "" },
                     set: { model.crawlRecord = $0.isEmpty ? nil : $0 }
                 ))
-                .help("Specific record ID, or leave empty to crawl all records in selected catalog")
+                .help("Specific record ID (disabled when 'All catalogs' selected). Leave empty to crawl all records in selected catalog")
+                .disabled(model.selectedCatalogForCrawl == nil)
 
                 TextField("Browser Service (optional)", text: Binding(
                     get: { model.crawlAdmissionUrl ?? "" },
@@ -122,7 +130,6 @@ struct CrawlerStartView: View {
                     }
                 }
                 .disabled(
-                    model.selectedCatalogForCrawl == nil ||
                     model.crawlState == .loading
                 )
             }
@@ -150,7 +157,7 @@ struct CrawlerStartView: View {
                             }
                         }
                         
-                        if op.statusDisplay == "completed" || op.statusDisplay == "uploaded" {
+                        if let state = op.state, ["completed", "uploaded"].contains(state) {
                             Button(action: model.importCrawlResults) {
                                 HStack {
                                     Image(systemName: "arrow.down.doc")
@@ -159,7 +166,7 @@ struct CrawlerStartView: View {
                             }
                         }
                         
-                        if op.statusDisplay == "failed" || op.statusDisplay == "cancelled" || op.statusDisplay == "partial" {
+                        if let state = op.state, ["failed", "cancelled", "partial"].contains(state) {
                             Button(action: model.resumeCrawl) {
                                 HStack {
                                     Image(systemName: "play.circle")
@@ -194,6 +201,9 @@ struct CrawlerStartView: View {
         case "partial": return "⊘ Partial"
         case "cancelled": return "■ Cancelled"
         case "uploaded": return "⬆ Uploaded"
+        case "queued": return "⧖ Queued"
+        case "pending_review": return "⋯ Pending Review"
+        case "imported": return "✔ Imported"
         default: return state
         }
     }
@@ -251,19 +261,42 @@ struct CrawlerStatusView: View {
                                     
                                     if !records.isEmpty {
                                         DisclosureGroup("Record Details (\(records.count))") {
-                                            VStack(alignment: .leading, spacing: 4) {
+                                            VStack(alignment: .leading, spacing: 6) {
                                                 ForEach(records, id: \.record) { record in
-                                                    HStack(alignment: .top, spacing: 8) {
-                                                        VStack(alignment: .leading, spacing: 2) {
+                                                    VStack(alignment: .leading, spacing: 2) {
+                                                        HStack {
                                                             Text(record.record)
                                                                 .font(.caption)
                                                                 .monospaced()
-                                                            Text("Status: Crawled")
+                                                            Spacer()
+                                                            Text(statusLabel(record.state))
                                                                 .font(.caption2)
-                                                                .foregroundColor(.secondary)
+                                                                .fontWeight(.semibold)
                                                         }
-                                                        Spacer()
+                                                        
+                                                        if let gaps = record.gaps, !gaps.isEmpty {
+                                                            HStack(alignment: .top, spacing: 4) {
+                                                                Image(systemName: "exclamationmark.circle")
+                                                                    .font(.caption2)
+                                                                    .foregroundColor(.orange)
+                                                                Text("Gaps: \(gaps.joined(separator: ", "))")
+                                                                    .font(.caption2)
+                                                                    .foregroundColor(.orange)
+                                                            }
+                                                        }
+                                                        
+                                                        if let error = record.error {
+                                                            HStack(alignment: .top, spacing: 4) {
+                                                                Image(systemName: "xmark.circle")
+                                                                    .font(.caption2)
+                                                                    .foregroundColor(.red)
+                                                                Text(error)
+                                                                    .font(.caption2)
+                                                                    .foregroundColor(.red)
+                                                            }
+                                                        }
                                                     }
+                                                    .padding(.vertical, 2)
                                                 }
                                             }
                                         }
@@ -280,9 +313,15 @@ struct CrawlerStatusView: View {
                                                 .monospaced()
                                                 .foregroundColor(.blue)
                                                 .lineLimit(2)
-                                            Text("(local path - copy as needed)")
-                                                .font(.caption2)
-                                                .foregroundColor(.secondary)
+                                            if artifactUri.hasPrefix("stado://") {
+                                                Text("(Stado service reference - internal crawl artifact storage)")
+                                                    .font(.caption2)
+                                                    .foregroundColor(.secondary)
+                                            } else {
+                                                Text("(Local or external artifact location)")
+                                                    .font(.caption2)
+                                                    .foregroundColor(.secondary)
+                                            }
                                         }
                                     }
                                 }
@@ -304,7 +343,7 @@ struct CrawlerStatusView: View {
                             .padding(.vertical, 4)
                         } label: {
                             HStack {
-                                Text(catalog.catalog)
+                                Text(catalogTitle(slug: catalog.catalog))
                                     .fontWeight(.semibold)
                                 Spacer()
                                 if let records = catalog.records {
@@ -321,29 +360,61 @@ struct CrawlerStatusView: View {
             if let counts = operation.counts {
                 Section("Record Summary") {
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text("✓ Completed:")
-                            Spacer()
-                            Text("\(counts["record_completed"] ?? 0)")
-                                .fontWeight(.semibold)
+                        if let completed = counts["record_completed"], completed > 0 {
+                            HStack {
+                                Text("✓ Completed:")
+                                Spacer()
+                                Text("\(completed)")
+                                    .fontWeight(.semibold)
+                            }
                         }
-                        HStack {
-                            Text("⊘ Partial:")
-                            Spacer()
-                            Text("\(counts["record_partial"] ?? 0)")
-                                .fontWeight(.semibold)
+                        if let partial = counts["record_partial"], partial > 0 {
+                            HStack {
+                                Text("⊘ Partial:")
+                                Spacer()
+                                Text("\(partial)")
+                                    .fontWeight(.semibold)
+                            }
                         }
-                        HStack {
-                            Text("✗ Failed:")
-                            Spacer()
-                            Text("\(counts["record_failed"] ?? 0)")
-                                .fontWeight(.semibold)
+                        if let failed = counts["record_failed"], failed > 0 {
+                            HStack {
+                                Text("✗ Failed:")
+                                Spacer()
+                                Text("\(failed)")
+                                    .fontWeight(.semibold)
+                            }
                         }
-                        HStack {
-                            Text("⧖ Skipped:")
-                            Spacer()
-                            Text("\(counts["record_skipped"] ?? 0)")
-                                .fontWeight(.semibold)
+                        if let skipped = counts["record_skipped"], skipped > 0 {
+                            HStack {
+                                Text("⊘ Skipped:")
+                                Spacer()
+                                Text("\(skipped)")
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        if let imported = counts["record_imported"], imported > 0 {
+                            HStack {
+                                Text("✔ Imported:")
+                                Spacer()
+                                Text("\(imported)")
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        if let queued = counts["record_queued"], queued > 0 {
+                            HStack {
+                                Text("⧖ Queued:")
+                                Spacer()
+                                Text("\(queued)")
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        if let running = counts["record_running"], running > 0 {
+                            HStack {
+                                Text("⟳ Running:")
+                                Spacer()
+                                Text("\(running)")
+                                    .fontWeight(.semibold)
+                            }
                         }
                     }
                 }
@@ -358,7 +429,7 @@ struct CrawlerStatusView: View {
                         }
                     }
                     
-                    if operation.statusDisplay == "completed" || operation.statusDisplay == "uploaded" {
+                    if let state = operation.state, ["completed", "uploaded"].contains(state) {
                         Button(action: model.importCrawlResults) {
                             HStack {
                                 Image(systemName: "arrow.down.doc")
@@ -367,7 +438,16 @@ struct CrawlerStatusView: View {
                         }
                     }
                     
-                    if operation.statusDisplay == "failed" || operation.statusDisplay == "cancelled" || operation.statusDisplay == "partial" {
+                    if let state = operation.state, ["queued", "running"].contains(state) {
+                        Button(action: model.checkCrawlStatus) {
+                            HStack {
+                                Image(systemName: "arrow.clockwise")
+                                Text("Refresh")
+                            }
+                        }
+                    }
+                    
+                    if let state = operation.state, ["failed", "cancelled", "partial"].contains(state) {
                         Button(action: model.resumeCrawl) {
                             HStack {
                                 Image(systemName: "play.circle")
@@ -388,8 +468,15 @@ struct CrawlerStatusView: View {
         case "partial": return "⊘ Partial"
         case "cancelled": return "■ Cancelled"
         case "uploaded": return "⬆ Uploaded"
+        case "queued": return "⧖ Queued"
+        case "pending_review": return "⋯ Pending Review"
+        case "imported": return "✔ Imported"
         default: return state
         }
+    }
+    
+    private func catalogTitle(slug: String) -> String {
+        model.catalogs.first(where: { $0.slug == slug })?.title ?? slug
     }
 }
 
