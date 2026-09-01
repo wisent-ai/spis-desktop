@@ -4,661 +4,639 @@ struct CrawlersView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        VStack(spacing: 0) {
-            if model.catalogs.isEmpty {
-                Text("Loading...")
-                    .foregroundColor(.secondary)
-            } else {
-                switch model.crawlState {
-                case .idle:
-                    CrawlerStartView(model: model)
-                case .loading:
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("Starting new crawl...")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+        if let error = model.loadError {
+            errorStateView(error)
+        } else if model.catalogs.isEmpty {
+            emptyStateView()
+        } else {
+            mainStateView()
+        }
+    }
+    
+    @ViewBuilder
+    private func errorStateView(_ error: String) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "exclamationmark.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                Text("Failed to load catalogs")
+                    .font(.headline)
+            }
+            Text(error)
+                .font(.caption)
+                .textSelection(.enabled)
+                .foregroundColor(.secondary)
+                .lineLimit(nil)
+            HStack {
+                Button(action: model.load) {
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Retry")
                     }
-                    .padding()
-                case .running(let operation):
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text(operation)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                case .completed(let op):
-                    CrawlerStatusView(model: model, operation: op)
-                case .failed(let error):
-                    CrawlerFailedView(model: model, error: error)
+                    .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.bordered)
+                Spacer()
+            }
+        }
+        .padding()
+    }
+    
+    @ViewBuilder
+    private func emptyStateView() -> some View {
+        VStack(spacing: 12) {
+            Text("No catalogs found")
+                .font(.headline)
+            Text("Install a Spis reference corpus and ensure the path is correct.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .padding()
+    }
+    
+    @ViewBuilder
+    private func mainStateView() -> some View {
+        VStack(spacing: 0) {
+            switch model.crawlState {
+            case .idle:
+                idleFormView()
+            case .loading:
+                loadingView("Starting new crawl...")
+            case .running(let msg):
+                loadingView(msg)
+            case .completed(let op):
+                completedFormView(op)
+            case .failed(let err):
+                failedFormView(err)
             }
         }
         .task { model.load() }
     }
-}
-
-struct CrawlerStartView: View {
-    let model: AppModel
-
-    var body: some View {
+    
+    @ViewBuilder
+    private func loadingView(_ message: String) -> some View {
+        VStack(spacing: 12) {
+            ProgressView()
+            Text(message)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .padding()
+    }
+    
+    @ViewBuilder
+    private func idleFormView() -> some View {
         Form {
-            Section("Start New Crawl") {
-                Picker("Product Family", selection: Binding(
-                    get: { model.selectedCatalogForCrawl },
-                    set: { model.selectedCatalogForCrawl = $0 }
-                )) {
-                    Text("All 15 product families").tag(nil as CatalogSummary?)
-                    Divider()
-                    ForEach(model.catalogs) { catalog in
-                        Text(catalog.title).tag(catalog as CatalogSummary?)
-                    }
-                }
-
-                TextField("Record (optional)", text: Binding(
-                    get: { model.crawlRecord ?? "" },
-                    set: { model.crawlRecord = $0.isEmpty ? nil : $0 }
-                ))
-                .help("Specific record ID (disabled when 'All 15 product families' selected). Leave empty to crawl all records")
-                .disabled(model.selectedCatalogForCrawl == nil)
-
-                TextField("Host (optional)", text: Binding(
-                    get: { model.crawlHost ?? "" },
-                    set: { model.crawlHost = $0.isEmpty ? nil : $0 }
-                ))
-                .help("Stado target override")
-
-                TextField("Weles admission URL (optional)", text: Binding(
-                    get: { model.crawlAdmissionUrl ?? "" },
-                    set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
-                ))
-                .help("Weles credential bridge endpoint; if not specified, defaults from repository are used")
+            Section("Load Existing Run") {
+                loadExistingSection()
             }
-
+            
+            Section("Start New Crawl") {
+                newCrawlSection()
+            }
+            
             Section {
                 Button(action: model.startCrawl) {
-                    switch model.crawlState {
-                    case .loading:
+                    if case .loading = model.crawlState {
                         HStack {
-                            ProgressView()
-                                .scaleEffect(0.8)
+                            ProgressView().scaleEffect(0.8)
                             Text("Starting...")
                         }
-                    default:
+                    } else {
                         Text("Start Crawl")
                     }
                 }
-                .disabled(model.crawlState == .loading)
-            }
-
-            if case .completed(let op) = model.crawlState {
-                Section("Last Result Summary") {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Run ID: \(op.run_id ?? "unknown")")
-                            .font(.caption)
-                            .monospaced()
-                        Text("State: \(stateLabel(op.state ?? "unknown"))")
-                            .font(.caption)
-                        if let updated = op.updated_at {
-                            Text("Updated: \(updated)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    HStack {
-                        Button(action: { model.resetCrawl() }) {
-                            HStack {
-                                Image(systemName: "arrow.counterclockwise")
-                                Text("New Crawl")
-                            }
-                        }
-                        
-                        if let state = op.state, ["completed", "uploaded"].contains(state) {
-                            Button(action: model.importCrawlResults) {
-                                HStack {
-                                    Image(systemName: "arrow.down.doc")
-                                    Text("Import Results")
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if case .failed(let error) = model.crawlState {
-                Section("Error") {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                    
-                    Button(action: { model.resetCrawl() }) {
-                        HStack {
-                            Image(systemName: "arrow.counterclockwise")
-                            Text("New Crawl")
-                        }
-                    }
-                }
+                .disabled(disableStart())
             }
         }
     }
     
-    private func stateLabel(_ state: String) -> String {
-        switch state.lowercased() {
-        case "completed": return "✓ Completed"
-        case "running": return "⟳ Running"
-        case "failed": return "✗ Failed"
-        case "partial": return "⊘ Partial"
-        case "cancelled": return "■ Cancelled"
-        case "uploaded": return "⬆ Uploaded"
-        case "queued": return "⧖ Queued"
-        case "pending_review": return "⋯ Pending Review"
-        case "imported": return "✔ Imported"
-        default: return state
+    @ViewBuilder
+    private func loadExistingSection() -> some View {
+        @State var runId = ""
+        
+        TextField("Run ID (optional)", text: $runId)
+            .help("Paste a run ID to manually reattach to a crawl session and check its status. Persisted runs are identified by Spis core.")
+        
+        HStack {
+            Button(action: {
+                let trimmed = runId.trimmingCharacters(in: .whitespaces)
+                if !trimmed.isEmpty {
+                    model.currentRunId = trimmed
+                    Task { await model.checkCrawlStatus() }
+                }
+            }) {
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                    Text("Check Status")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .disabled(runId.trimmingCharacters(in: .whitespaces).isEmpty)
+            
+            if !runId.isEmpty {
+                Button(action: { runId = "" }) {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.secondary)
+            }
         }
     }
-}
-
-struct CrawlerStatusView: View {
-    let model: AppModel
-    let operation: CrawlOperation
-
-    var body: some View {
+    
+    @ViewBuilder
+    private func newCrawlSection() -> some View {
+        Picker("Product Family", selection: Binding(
+            get: { model.selectedCatalogForCrawl },
+            set: { model.selectedCatalogForCrawl = $0 }
+        )) {
+            Text("All 6 engine families").tag(nil as CatalogSummary?)
+            Divider()
+            ForEach(model.catalogs) { catalog in
+                Text(catalog.title).tag(catalog as CatalogSummary?)
+            }
+        }
+        
+        let allSelected = model.selectedCatalogForCrawl == nil
+        TextField("Record (optional)", text: Binding(
+            get: { model.crawlRecord ?? "" },
+            set: { model.crawlRecord = $0.isEmpty ? nil : $0 }
+        ))
+        .disabled(allSelected)
+        .help("Specific record ID. Leave empty to crawl all records in the selected family.")
+        
+        TextField("Host (optional)", text: Binding(
+            get: { model.crawlHost ?? "" },
+            set: { model.crawlHost = $0.isEmpty ? nil : $0 }
+        ))
+        .help("Stado target override. If not specified, Stado-selected host is used.")
+        
+        TextField("Weles admission URL (optional)", text: Binding(
+            get: { model.crawlAdmissionUrl ?? "" },
+            set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
+        ))
+        .help("Stado-resolved Weles admission endpoint. If not specified, defaults are used.")
+    }
+    
+    private func disableStart() -> Bool {
+        if case .loading = model.crawlState { return true }
+        return false
+    }
+    
+    @ViewBuilder
+    private func completedFormView(_ op: CrawlOperation) -> some View {
         Form {
             Section("Crawl Operation") {
-                HStack {
-                    Text("Run ID")
-                    Spacer()
-                    Text(operation.run_id ?? "unknown")
-                        .font(.caption)
-                        .monospaced()
-                        .textSelection(.enabled)
-                        .foregroundColor(.secondary)
+                operationStatusView(op)
+            }
+            
+            if let catalogs = op.catalogs, !catalogs.isEmpty {
+                ForEach(catalogs, id: \.catalog) { cat in
+                    catalogDetailView(cat)
                 }
-                
-                if let revision = operation.source_revision {
-                    HStack(alignment: .top) {
-                        Text("Revision")
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text(revision)
-                                .font(.caption)
-                                .monospaced()
-                                .lineLimit(nil)
-                                .textSelection(.enabled)
-                                .foregroundColor(.secondary)
-                        }
-                    }
+            }
+            
+            if let counts = op.counts, !counts.isEmpty {
+                Section("Summary") {
+                    summaryView(counts)
                 }
-                
-                HStack {
-                    Text("Status")
-                    Spacer()
-                    Text(statusLabel(operation.state ?? "unknown"))
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(stateColor(operation.state ?? "unknown"))
-                }
-                
-                if let updated = operation.updated_at {
-                    HStack {
-                        Text("Updated")
-                        Spacer()
-                        Text(updated)
-                            .font(.caption)
+            }
+            
+            Section {
+                actionButtonsView(op)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func operationStatusView(_ op: CrawlOperation) -> some View {
+        HStack {
+            Text("Run ID")
+            Spacer()
+            Text(op.run_id ?? "unknown")
+                .font(.caption)
+                .monospaced()
+                .textSelection(.enabled)
+                .foregroundColor(.secondary)
+        }
+        
+        if let rev = op.source_revision {
+            HStack(alignment: .top) {
+                Text("Revision")
+                Spacer()
+                Text(rev)
+                    .font(.caption)
+                    .monospaced()
+                    .lineLimit(nil)
+                    .textSelection(.enabled)
+                    .foregroundColor(.secondary)
+            }
+        }
+        
+        HStack {
+            Text("Status")
+            Spacer()
+            Text(statusLabel(op.state ?? "unknown"))
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(stateColor(op.state ?? "unknown"))
+        }
+        
+        if let updated = op.updated_at {
+            HStack {
+                Text("Updated")
+                Spacer()
+                Text(updated)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func catalogDetailView(_ cat: CrawlOperation.CrawlCatalog) -> some View {
+        Section(cat.catalog) {
+            HStack {
+                Text("Status:")
+                Spacer()
+                Text(statusLabel(cat.state))
+                    .foregroundColor(stateColor(cat.state))
+            }
+            
+            if let pf = cat.preflight {
+                preflightDisclosureView(pf)
+            }
+            
+            if let records = cat.records, !records.isEmpty {
+                recordsDisclosureView(records)
+            }
+            
+            if let uri = cat.artifact_uri {
+                HStack(alignment: .top, spacing: 8) {
+                    Text("Artifact:").fontWeight(.semibold)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(uri)
+                            .font(.caption2)
+                            .monospaced()
+                            .lineLimit(nil)
+                            .textSelection(.enabled)
+                            .foregroundColor(.blue)
+                        Text("(service artifact reference)")
+                            .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 }
             }
-
-            if let catalogs = operation.catalogs, !catalogs.isEmpty {
-                ForEach(catalogs, id: \.catalog) { catalog in
-                    Section(catalog.catalog) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("Status:")
-                                    .fontWeight(.semibold)
-                                Spacer()
-                                Text(statusLabel(catalog.state))
-                                    .foregroundColor(stateColor(catalog.state))
-                            }
-                            
-                            if let preflight = catalog.preflight {
-                                DisclosureGroup("Preflight Diagnostics") {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Text("Overall Ready:")
-                                                .fontWeight(.semibold)
-                                            Spacer()
-                                            Text(preflight.ready ?? false ? "✓ Yes" : "✗ No")
-                                                .foregroundColor(preflight.ready ?? false ? .green : .red)
-                                        }
-                                        
-                                        HStack {
-                                            Text("Schema:")
-                                            Spacer()
-                                            Text(preflight.schema ?? "unknown")
-                                                .font(.caption)
-                                                .monospaced()
-                                        }
-                                        
-                                        if let cat = preflight.catalog {
-                                            HStack {
-                                                Text("Catalog:")
-                                                Spacer()
-                                                Text(cat)
-                                                    .font(.caption)
-                                                    .monospaced()
-                                            }
-                                        }
-                                        
-                                        if let engine = preflight.engine {
-                                            HStack {
-                                                Text("Engine:")
-                                                Spacer()
-                                                Text(engine)
-                                                    .font(.caption)
-                                                    .monospaced()
-                                            }
-                                        }
-                                        
-                                        if let host = preflight.host {
-                                            HStack {
-                                                Text("Host:")
-                                                Spacer()
-                                                Text(host)
-                                                    .font(.caption)
-                                                    .monospaced()
-                                            }
-                                        }
-                                        
-                                        if let checks = preflight.checks, !checks.isEmpty {
-                                            Divider()
-                                            Text("Checks").fontWeight(.semibold).font(.caption)
-                                            
-                                            ForEach(Array(checks.enumerated()), id: \.offset) { idx, check in
-                                                VStack(alignment: .leading, spacing: 4) {
-                                                    HStack {
-                                                        Text("Check \(idx + 1):")
-                                                            .fontWeight(.semibold)
-                                                            .font(.caption)
-                                                        Spacer()
-                                                        Text(check.ready ?? false ? "✓ Ready" : "✗ Not Ready")
-                                                            .font(.caption)
-                                                            .foregroundColor(check.ready ?? false ? .green : .orange)
-                                                    }
-                                                    
-                                                    if let cmd = check.command, !cmd.isEmpty {
-                                                        Text("Command: \(cmd.joined(separator: " "))")
-                                                            .font(.caption2)
-                                                            .monospaced()
-                                                            .lineLimit(nil)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                    
-                                                    if let stdout = check.stdout {
-                                                        Text("stdout: \(stdout)")
-                                                            .font(.caption2)
-                                                            .monospaced()
-                                                            .lineLimit(nil)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                    
-                                                    if let stderr = check.stderr {
-                                                        Text("stderr: \(stderr)")
-                                                            .font(.caption2)
-                                                            .monospaced()
-                                                            .lineLimit(nil)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.red)
-                                                    }
-                                                    
-                                                    if let error = check.error {
-                                                        Text("error: \(error)")
-                                                            .font(.caption2)
-                                                            .monospaced()
-                                                            .lineLimit(nil)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.red)
-                                                    }
-                                                }
-                                                .padding(.vertical, 2)
-                                            }
-                                        }
-                                        
-                                        if let records = preflight.records, !records.isEmpty {
-                                            Divider()
-                                            Text("Record Preflight Checks").fontWeight(.semibold).font(.caption)
-                                            
-                                            ForEach(records, id: \.record) { record in
-                                                VStack(alignment: .leading, spacing: 4) {
-                                                    HStack {
-                                                        VStack(alignment: .leading, spacing: 2) {
-                                                            Text(record.record ?? "unknown")
-                                                                .font(.caption)
-                                                                .monospaced()
-                                                                .fontWeight(.semibold)
-                                                            if let name = record.name {
-                                                                Text(name).font(.caption2).foregroundColor(.secondary)
-                                                            }
-                                                        }
-                                                        Spacer()
-                                                        Text(record.ready ?? false ? "✓ Ready" : "✗ Not Ready")
-                                                            .font(.caption)
-                                                            .foregroundColor(record.ready ?? false ? .green : .orange)
-                                                    }
-                                                    
-                                                    if let binding = record.account_binding {
-                                                        Text("Account: \(binding)")
-                                                            .font(.caption2)
-                                                            .textSelection(.enabled)
-                                                            .lineLimit(nil)
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                    
-                                                    if let runtime = record.required_runtime_product {
-                                                        Text("Runtime: \(runtime)")
-                                                            .font(.caption2)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                    
-                                                    if let diagnostic = record.diagnostic {
-                                                        Text("Diagnostic: \(diagnostic)")
-                                                            .font(.caption2)
-                                                            .monospaced()
-                                                            .lineLimit(nil)
-                                                            .textSelection(.enabled)
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                    
-                                                    if let checks = record.checks, !checks.isEmpty {
-                                                        ForEach(Array(checks.enumerated()), id: \.offset) { idx, check in
-                                                            VStack(alignment: .leading, spacing: 2) {
-                                                                HStack {
-                                                                    Text("Check \(idx + 1)").font(.caption2).fontWeight(.semibold)
-                                                                    Spacer()
-                                                                    Text(check.ready ?? false ? "✓" : "✗")
-                                                                        .foregroundColor(check.ready ?? false ? .green : .orange)
-                                                                }
-                                                                if let cmd = check.command {
-                                                                    Text(cmd.joined(separator: " "))
-                                                                        .font(.caption2)
-                                                                        .monospaced()
-                                                                        .lineLimit(nil)
-                                                                        .textSelection(.enabled)
-                                                                        .foregroundColor(.secondary)
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                .padding(.vertical, 2)
-                                            }
-                                        }
-                                        
-                                        if let weles = preflight.weles {
-                                            Divider()
-                                            Text("Weles Info").fontWeight(.semibold).font(.caption)
-                                            
-                                            if let url = weles.admission_url {
-                                                Text("Admission URL: \(url)")
-                                                    .font(.caption2)
-                                                    .monospaced()
-                                                    .lineLimit(nil)
-                                                    .textSelection(.enabled)
-                                                    .foregroundColor(.blue)
-                                            }
-                                            
-                                            if let ready = weles.admission_transport_ready {
-                                                HStack {
-                                                    Text("Transport Ready:")
-                                                        .font(.caption2)
-                                                    Spacer()
-                                                    Text(ready ? "✓ Yes" : "✗ No")
-                                                        .font(.caption2)
-                                                        .foregroundColor(ready ? .green : .orange)
-                                                }
-                                            }
-                                            
-                                            if let binding = weles.account_binding {
-                                                Text("Account: \(binding)")
-                                                    .font(.caption2)
-                                                    .textSelection(.enabled)
-                                                    .lineLimit(nil)
-                                                    .foregroundColor(.secondary)
-                                            }
-                                        }
-                                    }
-                                    .padding(.vertical, 4)
-                                }
-                            }
-                            
-                            if let records = catalog.records {
-                                Text("Records: \(records.count)")
-                                    .font(.caption)
-                                
-                                if !records.isEmpty {
-                                    DisclosureGroup("Record Details (\(records.count))") {
-                                        VStack(alignment: .leading, spacing: 6) {
-                                            ForEach(records, id: \.record) { record in
-                                                VStack(alignment: .leading, spacing: 2) {
-                                                    HStack {
-                                                        Text(record.record)
-                                                            .font(.caption)
-                                                            .monospaced()
-                                                        Spacer()
-                                                        Text(statusLabel(record.state))
-                                                            .font(.caption2)
-                                                            .fontWeight(.semibold)
-                                                            .foregroundColor(stateColor(record.state))
-                                                    }
-                                                    
-                                                    if let gaps = record.gaps, !gaps.isEmpty {
-                                                        HStack(alignment: .top, spacing: 4) {
-                                                            Image(systemName: "exclamationmark.circle")
-                                                                .font(.caption2)
-                                                                .foregroundColor(.orange)
-                                                            Text("Gaps: \(gaps.joined(separator: ", "))")
-                                                                .font(.caption2)
-                                                                .foregroundColor(.orange)
-                                                                .lineLimit(nil)
-                                                        }
-                                                    }
-                                                    
-                                                    if let error = record.error {
-                                                        HStack(alignment: .top, spacing: 4) {
-                                                            Image(systemName: "xmark.circle")
-                                                                .font(.caption2)
-                                                                .foregroundColor(.red)
-                                                            Text(error)
-                                                                .font(.caption2)
-                                                                .foregroundColor(.red)
-                                                                .lineLimit(nil)
-                                                        }
-                                                    }
-                                                }
-                                                .padding(.vertical, 2)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if let artifactUri = catalog.artifact_uri {
-                                HStack(alignment: .top, spacing: 8) {
-                                    Text("Artifact:")
-                                        .fontWeight(.semibold)
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(artifactUri)
-                                            .font(.caption)
-                                            .monospaced()
-                                            .textSelection(.enabled)
-                                            .foregroundColor(.blue)
-                                            .lineLimit(nil)
-                                        if artifactUri.hasPrefix("stado://") {
-                                            Text("(Stado service reference - internal crawl artifact storage)")
-                                                .font(.caption2)
-                                                .foregroundColor(.secondary)
-                                        } else {
-                                            Text("(Local or external artifact location)")
-                                                .font(.caption2)
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if let error = catalog.error {
-                                HStack(alignment: .top, spacing: 8) {
-                                    Image(systemName: "exclamationmark.triangle")
-                                        .foregroundColor(.orange)
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Error")
-                                            .fontWeight(.semibold)
-                                            .font(.caption)
-                                        Text(error)
-                                            .font(.caption2)
-                                            .lineLimit(nil)
-                                    }
-                                }
-                            }
-                        }
-                    }
+            
+            if let outputUri = cat.output_uri {
+                HStack(alignment: .top, spacing: 8) {
+                    Text("Output:").fontWeight(.semibold)
+                    Text(outputUri)
+                        .font(.caption2)
+                        .monospaced()
+                        .lineLimit(nil)
+                        .textSelection(.enabled)
+                        .foregroundColor(.blue)
                 }
             }
-
-            if let counts = operation.counts, !counts.isEmpty {
-                let catalogCounts = counts.filter { $0.key.hasPrefix("catalog_") }
-                let recordCounts = counts.filter { $0.key.hasPrefix("record_") }
-                
-                if !catalogCounts.isEmpty || !recordCounts.isEmpty {
-                    Section("Summary") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            if !catalogCounts.isEmpty {
-                                Text("Catalogs").fontWeight(.semibold).font(.caption)
-                                ForEach(catalogCounts.sorted(by: { $0.key < $1.key }), id: \.key) { key, count in
-                                    HStack {
-                                        Text(displayLabel(for: key))
-                                        Spacer()
-                                        Text("\(count)")
-                                            .fontWeight(.semibold)
-                                    }
-                                    .font(.caption)
-                                }
-                            }
-                            
-                            if !recordCounts.isEmpty {
-                                if !catalogCounts.isEmpty {
-                                    Divider()
-                                }
-                                Text("Records").fontWeight(.semibold).font(.caption)
-                                ForEach(recordCounts.sorted(by: { $0.key < $1.key }), id: \.key) { key, count in
-                                    HStack {
-                                        Text(displayLabel(for: key))
-                                        Spacer()
-                                        Text("\(count)")
-                                            .fontWeight(.semibold)
-                                    }
-                                    .font(.caption)
-                                }
-                            }
-                        }
-                    }
+            
+            if let err = cat.error {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(.orange)
+                    Text(err)
+                        .font(.caption2)
+                        .lineLimit(nil)
+                        .textSelection(.enabled)
                 }
             }
-
-            Section {
+        }
+    }
+    
+    @ViewBuilder
+    private func preflightDisclosureView(_ pf: CrawlOperation.CrawlCatalog.PreflightDiagnostic) -> some View {
+        DisclosureGroup("Preflight Diagnostics") {
+            preflightDetailsView(pf)
+        }
+    }
+    
+    @ViewBuilder
+    private func preflightDetailsView(_ pf: CrawlOperation.CrawlCatalog.PreflightDiagnostic) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Overall Ready:").fontWeight(.semibold)
+                Spacer()
+                Text(pf.ready ?? false ? "✓ Yes" : "✗ No")
+                    .foregroundColor(pf.ready ?? false ? .green : .red)
+            }
+            .font(.caption)
+            
+            if let schema = pf.schema {
                 HStack {
-                    Button(action: { model.resetCrawl() }) {
+                    Text("Schema:").font(.caption)
+                    Spacer()
+                    Text(schema).font(.caption2).monospaced().textSelection(.enabled)
+                }
+            }
+            
+            if let cat = pf.catalog {
+                HStack {
+                    Text("Catalog:").font(.caption)
+                    Spacer()
+                    Text(cat).font(.caption2).monospaced().textSelection(.enabled)
+                }
+            }
+            
+            if let eng = pf.engine {
+                HStack {
+                    Text("Engine:").font(.caption)
+                    Spacer()
+                    Text(eng).font(.caption2).monospaced().textSelection(.enabled)
+                }
+            }
+            
+            if let host = pf.host {
+                HStack {
+                    Text("Host:").font(.caption)
+                    Spacer()
+                    Text(host).font(.caption2).monospaced().textSelection(.enabled)
+                }
+            }
+            
+            if let noPrompts = pf.no_permission_prompts_requested {
+                HStack {
+                    Text("No Permission Prompts:").font(.caption)
+                    Spacer()
+                    Text(noPrompts ? "✓ Yes" : "✗ No").font(.caption).foregroundColor(noPrompts ? .green : .orange)
+                }
+            }
+            
+            if let checks = pf.checks, !checks.isEmpty {
+                Divider()
+                Text("Checks").fontWeight(.semibold).font(.caption)
+                ForEach(Array(checks.enumerated()), id: \.offset) { idx, check in
+                    checkDetailsView(idx, check)
+                }
+            }
+            
+            if let records = pf.records, !records.isEmpty {
+                Divider()
+                Text("Record Preflight Checks").fontWeight(.semibold).font(.caption)
+                ForEach(records, id: \.record) { record in
+                    recordPreflightDetailsView(record)
+                }
+            }
+            
+            if let weles = pf.weles {
+                Divider()
+                Text("Weles Info").fontWeight(.semibold).font(.caption)
+                if let url = weles.admission_url {
+                    Text("Admission: \(url)")
+                        .font(.caption2)
+                        .monospaced()
+                        .lineLimit(nil)
+                        .textSelection(.enabled)
+                }
+                if let ready = weles.admission_transport_ready {
+                    HStack {
+                        Text("Transport Ready:").font(.caption2)
+                        Spacer()
+                        Text(ready ? "✓ Yes" : "✗ No").foregroundColor(ready ? .green : .orange)
+                    }
+                }
+                if let binding = weles.account_binding {
+                    Text("Account: \(binding)")
+                        .font(.caption2)
+                        .lineLimit(nil)
+                        .textSelection(.enabled)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func checkDetailsView(_ idx: Int, _ check: CrawlOperation.CrawlCatalog.PreflightDiagnostic.Check) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                Text("Check \(idx + 1):").fontWeight(.semibold)
+                Spacer()
+                Text(check.ready ?? false ? "✓ Ready" : "✗ Not Ready")
+                    .foregroundColor(check.ready ?? false ? .green : .orange)
+            }
+            if let cmd = check.command {
+                Text("Command: \(cmd.joined(separator: " "))")
+                    .monospaced()
+                    .lineLimit(nil)
+                    .textSelection(.enabled)
+            }
+            if let stdout = check.stdout {
+                Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil).textSelection(.enabled)
+            }
+            if let stderr = check.stderr {
+                Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+            }
+            if let error = check.error {
+                Text("error: \(error)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+            }
+        }
+        .font(.caption2)
+        .padding(.vertical, 2)
+    }
+    
+    @ViewBuilder
+    private func recordPreflightDetailsView(_ rc: CrawlOperation.CrawlCatalog.PreflightDiagnostic.RecordPreflightCheck) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(rc.record ?? "unknown").font(.caption).fontWeight(.semibold).monospaced().textSelection(.enabled)
+                    if let name = rc.name {
+                        Text(name).font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+                Spacer()
+                Text(rc.ready ?? false ? "✓ Ready" : "✗ Not Ready")
+                    .font(.caption2)
+                    .foregroundColor(rc.ready ?? false ? .green : .orange)
+            }
+            
+            if let binding = rc.account_binding {
+                Text("Account: \(binding)").font(.caption2).lineLimit(nil).textSelection(.enabled)
+            }
+            if let runtime = rc.required_runtime_product {
+                Text("Runtime: \(runtime)").font(.caption2).lineLimit(nil).textSelection(.enabled)
+            }
+            if let diag = rc.diagnostic {
+                Text("Diagnostic: \(diag)").font(.caption2).monospaced().lineLimit(nil).textSelection(.enabled)
+            }
+            
+            if let checks = rc.checks, !checks.isEmpty {
+                ForEach(Array(checks.enumerated()), id: \.offset) { idx, check in
+                    VStack(alignment: .leading, spacing: 1) {
                         HStack {
-                            Image(systemName: "arrow.counterclockwise")
-                            Text("New Crawl")
+                            Text("Check \(idx + 1)").font(.caption2).fontWeight(.semibold)
+                            Spacer()
+                            Text(check.ready ?? false ? "✓" : "✗")
+                                .foregroundColor(check.ready ?? false ? .green : .orange)
+                        }
+                        if let cmd = check.command {
+                            Text("Command: \(cmd.joined(separator: " "))").monospaced().lineLimit(nil).textSelection(.enabled)
+                        }
+                        if let stdout = check.stdout {
+                            Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil).textSelection(.enabled)
+                        }
+                        if let stderr = check.stderr {
+                            Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+                        }
+                        if let error = check.error {
+                            Text("error: \(error)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
                         }
                     }
-                    
-                    if let state = operation.state {
-                        if ["failed", "cancelled", "partial", "preflight_failed", "submission_failed", "lost"].contains(state) {
-                            Button(action: model.resumeCrawl) {
-                                HStack {
-                                    Image(systemName: "play.circle")
-                                    Text("Resume")
-                                }
+                    .font(.caption2)
+                    .padding(.vertical, 1)
+                }
+            }
+        }
+        .font(.caption2)
+        .padding(.vertical, 2)
+    }
+    
+    @ViewBuilder
+    private func recordsDisclosureView(_ records: [CrawlOperation.CrawlCatalog.CrawlRecord]) -> some View {
+        DisclosureGroup("Records (\(records.count))") {
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(records, id: \.record) { record in
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack {
+                            Text(record.record)
+                                .font(.caption)
+                                .monospaced()
+                                .textSelection(.enabled)
+                            Spacer()
+                            Text(statusLabel(record.state))
+                                .font(.caption2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(stateColor(record.state))
+                        }
+                        
+                        if let gaps = record.gaps, !gaps.isEmpty {
+                            HStack(alignment: .top, spacing: 4) {
+                                Image(systemName: "exclamationmark.circle")
+                                    .font(.caption2)
+                                    .foregroundColor(.orange)
+                                Text("Gaps: \(gaps.joined(separator: ", "))")
+                                    .font(.caption2)
+                                    .foregroundColor(.orange)
+                                    .lineLimit(nil)
+                                    .textSelection(.enabled)
                             }
                         }
                         
-                        if ["completed", "uploaded"].contains(state) {
-                            Button(action: model.importCrawlResults) {
-                                HStack {
-                                    Image(systemName: "arrow.down.doc")
-                                    Text("Import Results")
-                                }
+                        if let err = record.error {
+                            HStack(alignment: .top, spacing: 4) {
+                                Image(systemName: "xmark.circle")
+                                    .font(.caption2)
+                                    .foregroundColor(.red)
+                                Text(err)
+                                    .font(.caption2)
+                                    .foregroundColor(.red)
+                                    .lineLimit(nil)
+                                    .textSelection(.enabled)
                             }
                         }
                     }
+                    .padding(.vertical, 2)
                 }
             }
         }
     }
     
-    private func stateColor(_ state: String) -> Color {
-        switch state.lowercased() {
-        case "queued", "running":
-            return .gray
-        case "completed", "imported", "uploaded":
-            return .green
-        case "failed", "partial", "cancelled", "preflight_failed", "submission_failed", "lost":
-            return .red
-        default:
-            return .gray
+    @ViewBuilder
+    private func summaryView(_ counts: [String: Int]) -> some View {
+        let catalogCounts = counts.filter { $0.key.hasPrefix("catalog_") }
+        let recordCounts = counts.filter { $0.key.hasPrefix("record_") }
+        
+        if !catalogCounts.isEmpty {
+            Text("Catalogs").fontWeight(.semibold).font(.caption)
+            ForEach(catalogCounts.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                HStack {
+                    Text(countLabel(key))
+                    Spacer()
+                    Text("\(value)").fontWeight(.semibold)
+                }
+                .font(.caption)
+            }
+        }
+        
+        if !catalogCounts.isEmpty && !recordCounts.isEmpty {
+            Divider()
+        }
+        
+        if !recordCounts.isEmpty {
+            Text("Records").fontWeight(.semibold).font(.caption)
+            ForEach(recordCounts.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                HStack {
+                    Text(countLabel(key))
+                    Spacer()
+                    Text("\(value)").fontWeight(.semibold)
+                }
+                .font(.caption)
+            }
         }
     }
     
-    private func statusLabel(_ state: String) -> String {
-        switch state.lowercased() {
-        case "completed": return "✓ Completed"
-        case "running": return "⟳ Running"
-        case "failed": return "✗ Failed"
-        case "partial": return "⊘ Partial"
-        case "cancelled": return "■ Cancelled"
-        case "preflight_failed": return "✗ Preflight Failed"
-        case "submission_failed": return "✗ Submission Failed"
-        case "lost": return "⁇ Lost"
-        case "uploaded": return "⬆ Uploaded"
-        case "queued": return "⧖ Queued"
-        case "pending_review": return "⋯ Pending Review"
-        case "imported": return "✔ Imported"
-        default: return state
+    @ViewBuilder
+    private func actionButtonsView(_ op: CrawlOperation) -> some View {
+        HStack(spacing: 12) {
+            if isRunning(op) {
+                Button(action: {
+                    Task { await model.checkCrawlStatus() }
+                }) {
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Refresh")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            Button(action: { model.resetCrawl() }) {
+                HStack {
+                    Image(systemName: "arrow.counterclockwise")
+                    Text("New Crawl")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            
+            if shouldShowResume(op) {
+                Button(action: { model.resumeCrawl() }) {
+                    HStack {
+                        Image(systemName: "play.circle")
+                        Text("Resume")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            if shouldShowImport(op) {
+                Button(action: { model.importCrawlResults() }) {
+                    HStack {
+                        Image(systemName: "arrow.down.doc")
+                        Text("Import")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
         }
     }
-
-    private func catalogTitle(slug: String) -> String {
-        model.catalogs.first(where: { $0.slug == slug })?.title ?? slug
-    }
-
-    private func displayLabel(for key: String) -> String {
-        let label = key.hasPrefix("record_") ? String(key.dropFirst(7)) : 
-                   key.hasPrefix("catalog_") ? String(key.dropFirst(8)) : key
-        let emoji: [String: String] = [
-            "completed": "✓",
-            "partial": "⊘",
-            "failed": "✗",
-            "skipped": "⊘",
-            "imported": "✔",
-            "queued": "⧖",
-            "running": "⟳"
-        ]
-        let prefix = emoji[label] ?? "•"
-        return "\(prefix) \(label.capitalized)"
-    }
-}
-
-struct CrawlerFailedView: View {
-    let model: AppModel
-    let error: String
-
-    var body: some View {
+    
+    @ViewBuilder
+    private func failedFormView(_ error: String) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -694,6 +672,91 @@ struct CrawlerFailedView: View {
             Spacer()
         }
         .padding()
+    }
+    
+    // MARK: - Helpers
+    
+    private func isRunning(_ op: CrawlOperation) -> Bool {
+        guard let state = op.state else { return false }
+        let s = state.lowercased()
+        return ["queued", "running", "pending_review"].contains(s)
+    }
+    
+    private func shouldShowResume(_ op: CrawlOperation) -> Bool {
+        guard let state = op.state else { return false }
+        let s = state.lowercased()
+        return ["failed", "cancelled", "partial", "preflight_failed", "submission_failed", "lost"].contains(s)
+    }
+    
+    private func shouldShowImport(_ op: CrawlOperation) -> Bool {
+        guard let state = op.state else { return false }
+        let s = state.lowercased()
+        
+        // Always available for completed/uploaded
+        if ["completed", "uploaded"].contains(s) {
+            return true
+        }
+        
+        // For partial/failed/lost, check if there are importable records or artifacts
+        if ["partial", "failed", "lost"].contains(s) {
+            if let catalogs = op.catalogs {
+                for catalog in catalogs {
+                    // Check for artifact_uri or output_uri
+                    if catalog.artifact_uri != nil || catalog.output_uri != nil {
+                        return true
+                    }
+                    
+                    // Check for records with importable states
+                    if let records = catalog.records {
+                        for record in records {
+                            let rs = record.state.lowercased()
+                            if ["completed", "uploaded", "partial", "imported"].contains(rs) {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    private func stateColor(_ state: String) -> Color {
+        let s = state.lowercased()
+        switch s {
+        case "completed", "imported", "uploaded":
+            return .green
+        case "queued", "running", "pending_review":
+            return .gray
+        default:
+            return .red
+        }
+    }
+    
+    private func statusLabel(_ state: String) -> String {
+        let s = state.lowercased()
+        switch s {
+        case "completed": return "✓ Completed"
+        case "running": return "⟳ Running"
+        case "failed": return "✗ Failed"
+        case "partial": return "⊘ Partial"
+        case "cancelled": return "■ Cancelled"
+        case "preflight_failed": return "✗ Preflight Failed"
+        case "submission_failed": return "✗ Submission Failed"
+        case "lost": return "⁇ Lost"
+        case "uploaded": return "⬆ Uploaded"
+        case "queued": return "⧖ Queued"
+        case "pending_review": return "⋯ Pending Review"
+        case "imported": return "✔ Imported"
+        default: return state
+        }
+    }
+    
+    private func countLabel(_ key: String) -> String {
+        let label = key.hasPrefix("record_") ? String(key.dropFirst(7)) :
+                   key.hasPrefix("catalog_") ? String(key.dropFirst(8)) : key
+        return "• " + label.capitalized
     }
 }
 

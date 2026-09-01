@@ -87,9 +87,14 @@ struct SpisCrawlClient: Sendable {
         // Run process and wait for termination in detached task to avoid blocking
         let processTask = Task.detached { () -> ProcessResult in
             try process.run()
+            
+            // Close parent write ends immediately so child gets EOF when it closes its copies
+            try? stdoutPipe.fileHandleForWriting.close()
+            try? stderrPipe.fileHandleForWriting.close()
+            
             process.waitUntilExit()
             
-            // Get data from pipe readers
+            // Get data from pipe readers (now unblocked with EOF from child)
             let stdoutData = await stdoutTask.value
             let stderrData = await stderrTask.value
             let stdout = String(data: stdoutData, encoding: .utf8) ?? ""

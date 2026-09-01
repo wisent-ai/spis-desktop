@@ -72,12 +72,14 @@ struct CrawlOperation: Codable, Sendable {
 
     var isTerminal: Bool {
         guard let state = state else { return false }
-        return ["completed", "failed", "imported"].contains(state)
+        let s = state.lowercased()
+        return ["completed", "uploaded", "failed", "imported", "partial", "cancelled", "lost", "preflight_failed", "submission_failed"].contains(s)
     }
 
     var isError: Bool {
         guard let state = state else { return false }
-        return ["failed", "submission_failed", "preflight_failed"].contains(state)
+        let s = state.lowercased()
+        return ["failed", "partial", "cancelled", "lost", "preflight_failed", "submission_failed"].contains(s)
     }
 
     func countForState(_ state: String) -> Int {
