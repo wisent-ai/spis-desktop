@@ -100,6 +100,7 @@ struct AppRootView: View {
             Picker("Surface", selection: $surface) {
                 Text("Browse").tag("browse")
                 Text("Docs").tag("docs")
+                Text("Crawlers").tag("crawlers")
                 Text("Manage").tag("manage")
             }
             .pickerStyle(.segmented)
@@ -109,6 +110,7 @@ struct AppRootView: View {
             switch surface {
             case "browse": ContentView()
             case "docs": DocsCorpusView()
+            case "crawlers": CrawlersView()
             default: ManageView()
             }
         }

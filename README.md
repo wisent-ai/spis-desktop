@@ -1,12 +1,22 @@
 # Spis Desktop
 
-A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evidence-grade reference corpus: browse every catalog and its measured state, read the evidence contract, and run the corpus's read-only commands from one window.
+A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evidence-grade reference corpus: browse every catalog and its measured state, read the evidence contract, run all corpus crawler commands from one integrated surface, and manage reference records.
 
 ## What it shows
 
-- **Catalogs sidebar** — all fifteen catalogs with record counts and the complete/partial split, decoded live from `example-catalogs.json`.
+- **Browse catalogs** — all fifteen catalogs with record counts and the complete/partial split, decoded live from `example-catalogs.json`.
 - **Catalog detail** — records, complete/partial, image and structure counts, the measured provenance mix, and the file paths each catalog owns.
-- **Command console** — runs `bin/reference catalogs --check`, `drift`, `verify` (dry), and `capture --list` against the checkout, showing output and exit code. Read-only by construction; nothing in this app mutates records.
+- **Command console** — runs read-only commands: `catalogs --check`, `drift`, `verify`, and `capture --list`.
+- **Crawler launcher** — runs real crawlers on selected Stado hosts with full progress tracking:
+  - Mobile crawlers (iOS via Appium, Android via Appium)
+  - Desktop crawlers (macOS via Cua Driver, cross-platform desktop)
+  - Web crawlers (8 interface families via Weles)
+  - Terminal application crawler (PTY-based)
+  - CLI crawler (PTY-based command crawling)
+  - Documentation crawler (HTTP-based)
+- **Crawler status** — displays queued/running/pending review/completed states with record counts and artifact locations.
+- **Diagnostics** — host connectivity, catalog availability, and completion rates.
+- **Reference management** — add, remove, and update records; derive guidelines from captured references.
 
 ## Build and run
 
