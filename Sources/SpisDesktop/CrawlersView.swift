@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CrawlersView: View {
     @Environment(AppModel.self) private var model
+    @State private var refreshTimer: Timer?
 
     var body: some View {
         if let error = model.loadError {
@@ -152,7 +153,7 @@ struct CrawlersView: View {
             get: { model.selectedCatalogForCrawl },
             set: { model.selectedCatalogForCrawl = $0 }
         )) {
-            Text("All 6 engine families").tag(nil as CatalogSummary?)
+            Text("All 15 product families").tag(nil as CatalogSummary?)
             Divider()
             ForEach(model.catalogs) { catalog in
                 Text(catalog.title).tag(catalog as CatalogSummary?)
@@ -207,6 +208,28 @@ struct CrawlersView: View {
             Section {
                 actionButtonsView(op)
             }
+        }
+        .onChange(of: op.state) { oldState, newState in
+            refreshTimer?.invalidate()
+            refreshTimer = nil
+            if isRunning(op) {
+                refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                    Task { await model.checkCrawlStatus() }
+                }
+            }
+        }
+        .onAppear {
+            refreshTimer?.invalidate()
+            refreshTimer = nil
+            if isRunning(op) {
+                refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+                    Task { await model.checkCrawlStatus() }
+                }
+            }
+        }
+        .onDisappear {
+            refreshTimer?.invalidate()
+            refreshTimer = nil
         }
     }
     
