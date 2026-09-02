@@ -1,4 +1,5 @@
 import SwiftUI
+import WisentDesignSystem
 
 struct CrawlersView: View {
     @Environment(AppModel.self) private var model
@@ -64,9 +65,9 @@ struct CrawlersView: View {
             case .idle:
                 idleFormView()
             case .loading:
-                loadingView("Starting new crawl...")
+                loadingView("Starting new crawl", "Registering the run with Spis and waiting for its run ID.")
             case .running(let msg):
-                loadingView(msg)
+                loadingView("Crawl running", msg)
             case .completed(let op):
                 completedFormView(op)
             case .failed(let err):
@@ -76,15 +77,12 @@ struct CrawlersView: View {
         .task { model.load() }
     }
     
+    /// An operation already in flight, not content being read: a crawl has no
+    /// unloaded shape to stand in for, so it reports its real status instead.
     @ViewBuilder
-    private func loadingView(_ message: String) -> some View {
-        VStack(spacing: 12) {
-            ProgressView()
-            Text(message)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
+    private func loadingView(_ title: String, _ detail: String) -> some View {
+        WisentProgressPanel(title: title, detail: detail)
+            .padding()
     }
     
     @ViewBuilder
@@ -99,16 +97,17 @@ struct CrawlersView: View {
             }
             
             Section {
+                // The control's own action is in flight: the button keeps its
+                // box and its resting name — the moment a screen reader needs
+                // that name — and only the label shimmers in place.
                 Button(action: model.startCrawl) {
                     if case .loading = model.crawlState {
-                        HStack {
-                            ProgressView().scaleEffect(0.8)
-                            Text("Starting...")
-                        }
+                        WisentSkeleton(.pill, width: 76, height: 12)
                     } else {
                         Text("Start Crawl")
                     }
                 }
+                .accessibilityLabel("Start Crawl")
                 .disabled(disableStart())
             }
         }

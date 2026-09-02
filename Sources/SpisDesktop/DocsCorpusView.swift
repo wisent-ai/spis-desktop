@@ -300,12 +300,22 @@ struct DocsSidebar: View {
         }
         .refreshable { await model.loadSites() }
         .overlay(alignment: .bottom) {
-            if model.sitesLoading {
-                WisentSkeletonGroup(label: "Refreshing sites") {
-                    WisentSkeleton(.pill, width: 96, height: 10)
+            // A refresh of a list already on screen replaces nothing, so it
+            // stays a badge and the rows underneath stay put. It is out of the
+            // first read, where the skeleton list above is the region's one
+            // announcement.
+            if model.sitesLoading && !model.sites.isEmpty {
+                HStack(spacing: 6) {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("Refreshing")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
                 .fixedSize()
                 .padding(6)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Refreshing sites")
             }
         }
     }
@@ -328,10 +338,13 @@ struct DocsSearchPane: View {
                         .onSubmit { model.queryChanged() }
                         .onChange(of: model.query) { _, _ in model.queryChanged() }
                     if model.searching {
-                        WisentSkeletonGroup(label: "Searching") {
-                            WisentSkeleton(.pill, width: 48, height: 10)
-                        }
-                        .fixedSize()
+                        // A scan in flight inside a text field: too small for a
+                        // panel, and impersonating nothing, so it is the plain
+                        // spinner it describes. The results pane below carries
+                        // the region's progress report.
+                        ProgressView()
+                            .controlSize(.small)
+                            .accessibilityLabel("Searching")
                     } else if !model.query.isEmpty {
                         Button {
                             model.query = ""
@@ -367,10 +380,14 @@ struct DocsSearchPane: View {
                 if model.hits.isEmpty {
                     Group {
                         if model.searching {
-                            ContentUnavailableView(
-                                "Searching…",
-                                systemImage: "text.magnifyingglass"
+                            // A scan already in flight, not content being read:
+                            // it has no unloaded target to impersonate, so it
+                            // reports its real status.
+                            WisentProgressPanel(
+                                title: "Searching",
+                                detail: "Scanning the documentation corpus site by site."
                             )
+                            .padding(20)
                         } else {
                             ContentUnavailableView(
                                 "No results yet",
