@@ -126,15 +126,13 @@ struct ConsoleOutput: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if model.running {
-                Text(model.statusText).font(.system(.caption, design: .monospaced))
-                // The same scrolling box the output lands in, so the console
-                // keeps its shape and the bars measure it rather than the
-                // window.
-                ScrollView {
-                    WisentSkeletonText(lines: 4, label: model.statusText)
-                        .padding(8)
-                }
-                .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
+                // An operation already in flight, not content being read: the
+                // console has no output yet to stand in for, so it reports the
+                // operation's real status until the output lands.
+                WisentProgressPanel(
+                    title: model.statusText,
+                    detail: "Spis is running this operation. Its output appears here when it finishes."
+                )
             } else if let result = model.output {
                 ScrollView {
                     Text(result.output.isEmpty ? "(no output)" : result.output)
