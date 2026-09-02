@@ -97,15 +97,23 @@ struct CrawlersView: View {
             }
             
             Section {
-                // The control's own action is in flight: the button keeps its
-                // box and its resting name — the moment a screen reader needs
-                // that name — and only the label shimmers in place.
+                // The control's own action is in flight. This is what
+                // `WisentAction(isBusy:)` does in the shell's action bar, and
+                // Spis's crawl form is native `Form` chrome rather than a
+                // `WisentActionButton`, so it does the same thing by hand: the
+                // box, the verb and the resting accessible name all stay, the
+                // word underneath keeps sizing the button so it cannot reflow,
+                // and a bar shimmers over it. A running crawl also refuses a
+                // second press, which is what `disableStart` already reports.
+                let isStarting = model.crawlState == .loading
                 Button(action: model.startCrawl) {
-                    if case .loading = model.crawlState {
-                        WisentSkeleton(.pill, width: 76, height: 12)
-                    } else {
-                        Text("Start Crawl")
-                    }
+                    Text("Start Crawl")
+                        .opacity(isStarting ? 0 : 1)
+                        .overlay {
+                            if isStarting {
+                                WisentSkeleton(.line, height: 10)
+                            }
+                        }
                 }
                 .accessibilityLabel("Start Crawl")
                 .disabled(disableStart())

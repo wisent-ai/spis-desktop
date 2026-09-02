@@ -17,7 +17,7 @@ let package = Package(
         // because it declares no dependencies of its own.
         .package(url: "https://github.com/wisent-ai/wisent-errors.git", exact: "1.0.0"),
         .package(url: "https://github.com/wisent-ai/wisent-desktop-update.git", exact: "0.2.0"),
-        // Named by version, not by commit: `wisent-components` 0.9.0 is a
+        // Named by version, not by commit: `wisent-components` 0.9.1 is a
         // tagged release that declares no dependencies of its own, so an exact
         // version requirement is legal here and every consumer in the fleet
         // names the same one. Spis takes no screens from this package — only
@@ -26,7 +26,7 @@ let package = Package(
         // `WisentSkeletonGroup`, `WisentSkeletonList`) that stand content in
         // place while it is read, and `WisentProgressPanel`, which reports an
         // operation already in flight rather than impersonating content.
-        .package(url: "https://github.com/wisent-ai/wisent-components.git", exact: "0.9.0"),
+        .package(url: "https://github.com/wisent-ai/wisent-components.git", exact: "0.9.1"),
         // Echo 0.1.2 is the fleet's onboarding library, and the only thing
         // Spis takes from it is `WisentOnboarding`: the first-run walkthrough's
         // journey client, its device-scoped storage, and the router that
