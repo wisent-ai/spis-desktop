@@ -222,14 +222,23 @@ struct CrawlersView: View {
         ))
         .help("Published immutably with the cancellation intent before anything is dispatched. It stays in the record.")
 
-        Button(action: model.cancelCrawl) {
+        // `--run RUN_ID` is an argument, not a session: the command cancels a
+        // run the operator names, with no load step first, so the run id
+        // typed above is enough here too.
+        let namedRun = existingRunId.trimmingCharacters(in: .whitespaces)
+        Button(action: {
+            if model.currentRunId == nil, !namedRun.isEmpty {
+                model.currentRunId = namedRun
+            }
+            model.cancelCrawl()
+        }) {
             HStack {
                 Image(systemName: "stop.circle")
                 Text("Cancel Run")
             }
         }
-        .disabled(model.currentRunId == nil)
-        .help("Cancels the loaded run, or one record of it. Status-first, durable and idempotent.")
+        .disabled(model.currentRunId == nil && namedRun.isEmpty)
+        .help("Cancels the run named above, or one record of it. Status-first, durable and idempotent.")
 
         if let refusal = model.cancelRefusal {
             Label(refusal, systemImage: "exclamationmark.triangle")
