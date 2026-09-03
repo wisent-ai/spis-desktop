@@ -322,16 +322,13 @@ struct RunConsole: View {
             case .idle:
                 EmptyView()
             case .running(let name):
-                Text("\(name)…")
-                    .font(.caption)
-                // The same scrolling box the output lands in, so the console
-                // keeps its shape and the bars measure it rather than the
-                // window.
-                ScrollView {
-                    WisentSkeletonText(lines: 4, label: "Running \(name)")
-                        .padding(8)
-                }
-                .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
+                // An operation already in flight, not content being read: the
+                // console has no output yet to stand in for, so it reports the
+                // operation's real status until the output lands.
+                WisentProgressPanel(
+                    title: name,
+                    detail: "Spis is running this operation. Its output appears here when it finishes."
+                )
             case .finished(let outcome):
                 ScrollView {
                     Text(outcome.output.isEmpty ? "(no output)" : outcome.output)
