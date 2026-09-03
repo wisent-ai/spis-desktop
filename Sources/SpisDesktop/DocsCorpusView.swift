@@ -60,19 +60,31 @@ struct DocsSiteStatus: Identifiable, Decodable, Hashable {
     /// `true` once a run has ended in the named over-capacity state.
     var overCapacity: Bool { retrievalStatus == "retrieval_over_capacity" }
 
-    /// The remainder as a sentence, or `nil` when nothing is outside.
+    /// All three capacity numbers the product reports, or `nil` when this
+    /// site is inside the bound and nothing was ever excluded.
+    ///
+    /// The bound, the count outside it, and whether that count is exact are
+    /// one fact in three parts: a remainder without its bound cannot be
+    /// judged, and a remainder without its exactness cannot be planned
+    /// against. `pages_outside_corpus` is what a run measured, so before any
+    /// attempt it is a measured zero and the declared overflow is stated
+    /// beside it rather than in its place.
     var outsideCorpusSummary: String? {
         guard let bound = corpusBound else { return nil }
         let measured = pagesOutsideCorpus ?? 0
-        if measured > 0 {
-            let qualifier = pagesOutsideCorpusExact == false ? "at least " : ""
-            return "\(qualifier)\(measured) pages outside this corpus (bound \(bound))"
-        }
+        guard measured > 0 || exceedsCorpusBound else { return nil }
+        let exactness = pagesOutsideCorpusExact == false
+            ? "a lower bound, not an exact count"
+            : "an exact count"
+        var sentence = "corpus bound \(bound) pages · "
+            + "\(measured) pages measured outside this corpus (\(exactness))"
         if exceedsCorpusBound {
-            return "declares \(inventoryURLCount) pages against a \(bound)-page corpus bound; "
-                + "no attempt has measured the remainder yet"
+            sentence += measured > 0
+                ? " · declares \(inventoryURLCount) pages in scope"
+                : " · declares \(inventoryURLCount) pages in scope, so "
+                    + "\(inventoryURLCount - bound) cannot fit one corpus and no attempt has measured them yet"
         }
-        return nil
+        return sentence
     }
 }
 
