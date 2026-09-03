@@ -32,7 +32,7 @@ struct CrawlersView: View {
                 .foregroundColor(.secondary)
                 .lineLimit(nil)
             HStack {
-                Button(action: model.load) {
+                Button(action: { Task { await model.load() } }) {
                     HStack {
                         Image(systemName: "arrow.clockwise")
                         Text("Retry")
@@ -74,7 +74,7 @@ struct CrawlersView: View {
                 failedFormView(err)
             }
         }
-        .task { model.load() }
+        .task { await model.load() }
     }
     
     /// An operation already in flight, not content being read: a crawl has no
@@ -95,6 +95,14 @@ struct CrawlersView: View {
             Section("Start New Crawl") {
                 newCrawlSection()
             }
+            Section("Cancel a Run") {
+                cancelSection()
+            }
+
+            Section("Runtime Bindings") {
+                bindingsSection()
+            }
+
             
             Section {
                 // The control's own action is in flight. This is what
@@ -200,6 +208,99 @@ struct CrawlersView: View {
         .help("Runs this family's declared preconditions on the named host through Stado's approved read-only probes. Starts nothing and claims no slot.")
 
         hostReadinessView()
+    }
+
+    /// `spis crawl cancel --run R [--record S] --reason TEXT`.
+    ///
+    /// The reason is required here because it is required there, and it is
+    /// shown afterwards because it went into the record.
+    @ViewBuilder
+    private func cancelSection() -> some View {
+        TextField("Reason (required)", text: Binding(
+            get: { model.crawlCancelReason ?? "" },
+            set: { model.crawlCancelReason = $0.isEmpty ? nil : $0 }
+        ))
+        .help("Published immutably with the cancellation intent before anything is dispatched. It stays in the record.")
+
+        Button(action: model.cancelCrawl) {
+            HStack {
+                Image(systemName: "stop.circle")
+                Text("Cancel Run")
+            }
+        }
+        .disabled(model.currentRunId == nil)
+        .help("Cancels the loaded run, or one record of it. Status-first, durable and idempotent.")
+
+        if let refusal = model.cancelRefusal {
+            Label(refusal, systemImage: "exclamationmark.triangle")
+                .font(.caption)
+                .foregroundColor(.orange)
+                .textSelection(.enabled)
+        }
+        if let cancellation = model.lastCancellation {
+            VStack(alignment: .leading, spacing: 2) {
+                Label("Cancelled run \(cancellation.runId)", systemImage: "stop.circle.fill")
+                    .font(.caption)
+                Text("reason: \(cancellation.reason)")
+                    .font(.caption.monospaced())
+                    .foregroundColor(.secondary)
+                    .textSelection(.enabled)
+            }
+        }
+    }
+
+    /// `spis crawl bindings generate --weles-token-ref … --organization-ref …`.
+    @ViewBuilder
+    private func bindingsSection() -> some View {
+        TextField("Weles token ref (ITEM#FIELD)", text: Binding(
+            get: { model.bindingsWelesTokenRef ?? "" },
+            set: { model.bindingsWelesTokenRef = $0.isEmpty ? nil : $0 }
+        ))
+        TextField("Organization ref (ITEM#FIELD)", text: Binding(
+            get: { model.bindingsOrganizationRef ?? "" },
+            set: { model.bindingsOrganizationRef = $0.isEmpty ? nil : $0 }
+        ))
+        TextField("Output path (optional)", text: Binding(
+            get: { model.bindingsOutputPath ?? "" },
+            set: { model.bindingsOutputPath = $0.isEmpty ? nil : $0 }
+        ))
+        .help("With a path, an existing generated document is replaced atomically after validation and read-back.")
+
+        Button(action: model.generateBindings) {
+            HStack {
+                Image(systemName: "doc.badge.gearshape")
+                Text("Generate Bindings")
+            }
+        }
+        .disabled(model.bindingsState == .generating)
+
+        switch model.bindingsState {
+        case .idle:
+            EmptyView()
+        case .generating:
+            HStack(spacing: 6) {
+                ProgressView().controlSize(.small)
+                Text("Writing the typed binding for every checked-in record…")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        case let .wrote(document):
+            // The command's own document, not a summary of it: created,
+            // replaced or unchanged is per record and this surface has no
+            // business rounding that off.
+            ScrollView {
+                Text(document)
+                    .font(.caption.monospaced())
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxHeight: 180)
+        case let .refused(reason):
+            Label(reason, systemImage: "exclamationmark.triangle")
+                .font(.caption)
+                .foregroundColor(.red)
+                .textSelection(.enabled)
+        }
     }
 
     @ViewBuilder

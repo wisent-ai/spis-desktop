@@ -53,6 +53,62 @@ struct SpisCrawlClient: Sendable {
         return try parseCrawlOperation(from: output)
     }
 
+    /// Cancel one run, or one record of it, with the reason that becomes part
+    /// of the record.
+    ///
+    /// `spis crawl cancel` requires `--reason`, so this surface requires one
+    /// too: the reason is published immutably with the cancellation intent
+    /// before anything is dispatched, and a cancellation nobody can account
+    /// for is exactly what that field exists to prevent.
+    func crawlCancel(
+        runId: String,
+        record: String? = nil,
+        reason: String,
+        workingDirectory: URL? = nil
+    ) async throws -> CrawlOperation {
+        var args = ["crawl", "cancel", "--run", runId]
+        if let record, !record.isEmpty {
+            args.append("--record")
+            args.append(record)
+        }
+        args.append("--reason")
+        args.append(reason)
+        let output = try await runCrawlProcess(args: args, workingDirectory: workingDirectory)
+        return try parseCrawlOperation(from: output)
+    }
+
+    /// Write the exact typed binding for every checked-in record.
+    ///
+    /// The command answers with its own JSON document — the outcome per
+    /// record, created, replaced or unchanged — and that document is returned
+    /// verbatim rather than remodelled, because this surface's job is to run
+    /// the command and show what it said.
+    func generateBindings(
+        welesTokenRef: String,
+        organizationRef: String,
+        output: String? = nil,
+        workingDirectory: URL? = nil
+    ) async throws -> String {
+        var args = [
+            "crawl", "bindings", "generate",
+            "--weles-token-ref", welesTokenRef,
+            "--organization-ref", organizationRef,
+        ]
+        if let output, !output.isEmpty {
+            args.append("--output")
+            args.append(output)
+        }
+        let result = try await runCrawlProcess(args: args, workingDirectory: workingDirectory)
+        let printed = result.stdout.trimmingCharacters(in: .whitespacesAndNewlines)
+        if result.exitCode == 0, !printed.isEmpty { return printed }
+        let said = result.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
+        throw NSError(domain: "CrawlBindings", code: Int(result.exitCode), userInfo: [
+            NSLocalizedDescriptionKey: said.isEmpty
+                ? "spis crawl bindings generate exited \(result.exitCode) without a document"
+                : said
+        ])
+    }
+
     /// Ask whether one host can run one family's worker, without starting
     /// anything.
     ///

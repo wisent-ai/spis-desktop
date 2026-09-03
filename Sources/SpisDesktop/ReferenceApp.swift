@@ -99,7 +99,7 @@ private struct SpisRootContent: View {
             // window render, the rule holds in whichever window the operator
             // ends up with, from a single call site.
             .textSelection(.enabled)
-            .task { model.load(); manageModel.reloadTypes() }
+            .task { await model.load(); manageModel.reloadTypes() }
             .task { await onboarding.start() }
             // The walkthrough's one presentation: an overlay over the whole
             // window, not a second window and not a sheet on one surface. It

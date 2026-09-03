@@ -1,7 +1,7 @@
 import Foundation
 
 /// One catalog entry decoded from `example-catalogs.json`.
-struct CatalogSummary: Identifiable, Decodable, Hashable {
+struct CatalogSummary: Identifiable, Decodable, Hashable, Sendable {
     let slug: String
     let title: String
     let description: String
@@ -44,18 +44,45 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
     }
 }
 
-struct CatalogIndex: Decodable {
+struct CatalogIndex: Decodable, Sendable {
     let catalogs: [CatalogSummary]
 }
 
+/// Why one corpus could not be opened, in words this surface can print.
+enum CorpusLoadFailure: Error, Sendable {
+    case notInstalled
+    case unreadable(path: String, reason: String)
+
+    var sentence: String {
+        switch self {
+        case .notInstalled:
+            return "Spis is not installed. Install Spis, then try again."
+        case let .unreadable(path, reason):
+            // The system's own sentence, kept: "permission denied" and "no
+            // such file" are different problems and only the reason
+            // distinguishes them.
+            return "Spis could not read its corpus at \(path). \(reason)"
+        }
+    }
+}
+
 /// The repository the app operates on.
-struct CorpusRepository {
+struct CorpusRepository: Sendable {
     /// nil in development means the checkout this app was built from.
     var root: URL?
 
     init(root: URL? = nil) {
         self.root = root ?? ProcessInfo.processInfo.environment["REFERENCE_ENGINE_ROOT"]
             .map { URL(fileURLWithPath: $0) }
+    }
+
+    /// The root this app was told to use, named without touching the file
+    /// system — the one thing that is still safe to say when a read of that
+    /// directory does not come back.
+    var declaredRoot: String? {
+        root?.path
+            ?? ProcessInfo.processInfo.environment["SPIS_ROOT"]
+            ?? ProcessInfo.processInfo.environment["REFERENCE_ENGINE_ROOT"]
     }
 
     func locate() -> URL? {
