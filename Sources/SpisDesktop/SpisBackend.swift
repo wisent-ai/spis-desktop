@@ -214,8 +214,11 @@ enum SpisBackendError: LocalizedError {
             return "Spis is not installed. Install Spis, then try again."
         case .backendMissing:
             return "Spis is not installed correctly. Reinstall Spis, then try again."
-        case .failedToStart:
-            return "Spis could not start. Try again."
+        case let .failedToStart(detail):
+            // The backend's own sentence, not a paraphrase: without it a
+            // failed start is indistinguishable from a missing install, and
+            // the operator has nothing to act on.
+            return "Spis could not start. \(detail)"
         }
     }
 
