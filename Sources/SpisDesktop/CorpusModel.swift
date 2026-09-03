@@ -12,9 +12,25 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
     let partialRecordCount: Int
     let measuredProvenance: [String: Int]
     let source: String
-    let readme: String
+    /// The catalog's own page, when the index names one.
+    ///
+    /// Optional, and read from either spelling, because this is what made the
+    /// whole application unusable: `generate-example-catalogs` writes
+    /// `full_reference_source` and no `readme`, this model required `readme`,
+    /// so decoding `example-catalogs.json` threw on a current corpus and every
+    /// screen — Browse, Crawlers, Manage, Docs — came up with no catalogs and
+    /// the first-run walkthrough said "Spis found no installed corpus to
+    /// read". A required field the product does not emit is not a stricter
+    /// contract; it is a surface that cannot open its own data.
+    let readme: String?
+    let fullReferenceSource: String?
 
     var id: String { slug }
+
+    /// Whichever page the index names, for display.
+    var catalogPage: String {
+        readme ?? fullReferenceSource ?? "—"
+    }
 
     enum CodingKeys: String, CodingKey {
         case slug, title, description, count
@@ -24,6 +40,7 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
         case partialRecordCount = "partial_record_count"
         case measuredProvenance = "measured_provenance"
         case source, readme
+        case fullReferenceSource = "full_reference_source"
     }
 }
 

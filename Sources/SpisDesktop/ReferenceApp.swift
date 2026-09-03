@@ -245,7 +245,7 @@ struct CatalogDetail: View {
                         Text("Files")
                             .font(.headline)
                         LabeledRow(label: "Sources", value: catalog.source)
-                        LabeledRow(label: "Catalog page", value: catalog.readme)
+                        LabeledRow(label: "Catalog page", value: catalog.catalogPage)
                     }
                 }
                 .padding(24)

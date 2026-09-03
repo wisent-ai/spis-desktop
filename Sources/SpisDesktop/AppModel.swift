@@ -110,6 +110,71 @@ final class AppModel {
         }
     }
 
+    /// The readiness question, asked on its own and answered before anything
+    /// is claimed.
+    ///
+    /// Separate from `crawlState` on purpose: a preflight is not an attempt.
+    /// A host that is not ready is a fact to read, not a run that failed, and
+    /// collapsing the two is what left this surface unable to ask the
+    /// question at all until a run had already been submitted.
+    enum PreflightState: Equatable {
+        case idle
+        case checking(catalog: String, host: String)
+        case answered(HostPreflightReport)
+        case unavailable(String)
+
+        static func == (lhs: PreflightState, rhs: PreflightState) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle):
+                return true
+            case let (.checking(catalogLeft, hostLeft), .checking(catalogRight, hostRight)):
+                return catalogLeft == catalogRight && hostLeft == hostRight
+            case let (.answered(left), .answered(right)):
+                return left.host == right.host
+                    && left.catalog == right.catalog
+                    && left.ready == right.ready
+                    && (left.checks?.count ?? 0) == (right.checks?.count ?? 0)
+            case let (.unavailable(left), .unavailable(right)):
+                return left == right
+            default:
+                return false
+            }
+        }
+    }
+
+    var preflightState: PreflightState = .idle
+
+    /// Ask one host about one family. Read-only; claims nothing.
+    func checkHostReadiness() {
+        guard let root = root else { return }
+        guard let catalog = selectedCatalogForCrawl?.slug else {
+            preflightState = .unavailable(
+                "Choose one product family: readiness is a question about a family's worker, and every family requires different programs."
+            )
+            return
+        }
+        let host = (crawlHost ?? "").trimmingCharacters(in: .whitespaces)
+        guard !host.isEmpty else {
+            preflightState = .unavailable(
+                "Name the host to ask. Readiness is a property of one machine, and Stado picks the host only once a run is submitted."
+            )
+            return
+        }
+        preflightState = .checking(catalog: catalog, host: host)
+        Task {
+            do {
+                let report = try await crawlClient.crawlPreflight(
+                    catalog: catalog,
+                    host: host,
+                    workingDirectory: root
+                )
+                preflightState = .answered(report)
+            } catch {
+                preflightState = .unavailable(error.localizedDescription)
+            }
+        }
+    }
+
     func startCrawl() {
         guard let root = root else { return }
         

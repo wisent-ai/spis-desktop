@@ -15,6 +15,18 @@ struct DocsSiteStatus: Identifiable, Decodable, Hashable {
     let cumulativeOK: Int
     let noise: Int
     let done: Bool
+    /// The per-corpus page bound, and what this site could not fit inside it.
+    ///
+    /// Four sites in this family declare more in-scope pages than one corpus
+    /// holds — Google Cloud 216,092, .NET 201,460, Azure 201,009, MDN 54,594
+    /// against a 50,000-page bound — and one site is one corpus, so the
+    /// remainder cannot be delivered by that record at all. Without these
+    /// three numbers on screen those four read as ordinary failures instead
+    /// of a capacity decision somebody has to make.
+    let corpusBound: Int?
+    let pagesOutsideCorpus: Int?
+    let pagesOutsideCorpusExact: Bool?
+    let retrievalStatus: String?
 
     var id: String { slug }
 
@@ -23,12 +35,44 @@ struct DocsSiteStatus: Identifiable, Decodable, Hashable {
         case sourceURL = "source_url"
         case inventoryURLCount = "inventory_url_count"
         case cumulativeOK = "cumulative_ok"
+        case corpusBound = "corpus_bound"
+        case pagesOutsideCorpus = "pages_outside_corpus"
+        case pagesOutsideCorpusExact = "pages_outside_corpus_exact"
+        case retrievalStatus = "retrieval_status"
     }
 
     /// Fraction of the sitemap inventory that has been fetched at least once.
     var progress: Double {
         guard inventoryURLCount > 0 else { return 0 }
         return min(1, Double(seen) / Double(inventoryURLCount))
+    }
+
+    /// This site declares more in-scope pages than one corpus can hold.
+    ///
+    /// True from the declared inventory alone, before any attempt: the count
+    /// of what was actually excluded arrives only once a run has measured it,
+    /// and an operator deciding where to place work needs to know beforehand.
+    var exceedsCorpusBound: Bool {
+        guard let bound = corpusBound, bound > 0 else { return false }
+        return inventoryURLCount > bound
+    }
+
+    /// `true` once a run has ended in the named over-capacity state.
+    var overCapacity: Bool { retrievalStatus == "retrieval_over_capacity" }
+
+    /// The remainder as a sentence, or `nil` when nothing is outside.
+    var outsideCorpusSummary: String? {
+        guard let bound = corpusBound else { return nil }
+        let measured = pagesOutsideCorpus ?? 0
+        if measured > 0 {
+            let qualifier = pagesOutsideCorpusExact == false ? "at least " : ""
+            return "\(qualifier)\(measured) pages outside this corpus (bound \(bound))"
+        }
+        if exceedsCorpusBound {
+            return "declares \(inventoryURLCount) pages against a \(bound)-page corpus bound; "
+                + "no attempt has measured the remainder yet"
+        }
+        return nil
     }
 }
 
@@ -283,11 +327,30 @@ struct DocsSidebar: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.green)
                                     .help("Complete")
+                            } else if site.overCapacity || site.exceedsCorpusBound {
+                                // Not a failure mark. This site is as complete
+                                // as one corpus can be, and the rest is a
+                                // capacity decision rather than a fault.
+                                Image(systemName: "tray.full")
+                                    .foregroundStyle(.orange)
+                                    .help("Over the corpus bound: this site declares more pages than one corpus holds")
                             }
                         }
                         Text("\(site.cumulativeOK) available · \(site.inventoryURLCount) total")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        if let summary = site.outsideCorpusSummary {
+                            Text(summary)
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                                .textSelection(.enabled)
+                                .lineLimit(nil)
+                        }
+                        if site.overCapacity {
+                            Text("retrieval_over_capacity")
+                                .font(.caption2.monospaced())
+                                .foregroundStyle(.orange)
+                        }
                         ProgressView(value: site.progress)
                             .progressViewStyle(.linear)
                             .controlSize(.small)

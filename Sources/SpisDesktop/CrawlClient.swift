@@ -52,6 +52,34 @@ struct SpisCrawlClient: Sendable {
         let output = try await runCrawlProcess(args: ["crawl", "import", "--run", runId], workingDirectory: workingDirectory)
         return try parseCrawlOperation(from: output)
     }
+
+    /// Ask whether one host can run one family's worker, without starting
+    /// anything.
+    ///
+    /// `spis crawl preflight` is read-only: no run store, no job, no slot. It
+    /// exits non-zero when the host is not ready, and that exit is an answer
+    /// rather than a failure, so the report is decoded first and the exit code
+    /// is only consulted when there is no report to read.
+    func crawlPreflight(
+        catalog: String,
+        host: String,
+        workingDirectory: URL? = nil
+    ) async throws -> HostPreflightReport {
+        let result = try await runCrawlProcess(
+            args: ["crawl", "preflight", "--catalog", catalog, "--host", host, "--json"],
+            workingDirectory: workingDirectory
+        )
+        if let data = result.stdout.data(using: .utf8),
+           let report = try? JSONDecoder().decode(HostPreflightReport.self, from: data) {
+            return report
+        }
+        let said = result.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
+        throw NSError(domain: "CrawlPreflight", code: Int(result.exitCode), userInfo: [
+            NSLocalizedDescriptionKey: said.isEmpty
+                ? "spis crawl preflight exited \(result.exitCode) without a report"
+                : said
+        ])
+    }
     
     // MARK: - Process execution (concurrent pipe draining)
     

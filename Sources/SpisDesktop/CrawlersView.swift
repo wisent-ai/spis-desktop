@@ -178,8 +178,84 @@ struct CrawlersView: View {
             set: { model.crawlAdmissionUrl = $0.isEmpty ? nil : $0 }
         ))
         .help("Stado-resolved Weles admission endpoint. If not specified, defaults are used.")
+        Divider()
+
+        // Ask before claiming. This is the graphical half of `spis crawl
+        // preflight`: the command line could always ask whether a host can
+        // run a family, and this surface could only find out by starting a
+        // run and reading the refusal out of a failed attempt.
+        Button(action: model.checkHostReadiness) {
+            HStack {
+                Image(systemName: "checkmark.shield")
+                Text("Check host readiness")
+            }
+        }
+        .help("Runs this family's declared preconditions on the named host through Stado's approved read-only probes. Starts nothing and claims no slot.")
+
+        hostReadinessView()
     }
-    
+
+    @ViewBuilder
+    private func hostReadinessView() -> some View {
+        switch model.preflightState {
+        case .idle:
+            EmptyView()
+        case let .checking(catalog, host):
+            HStack(spacing: 6) {
+                ProgressView().controlSize(.small)
+                Text("Asking \(host) about \(catalog)…")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        case let .unavailable(reason):
+            Label(reason, systemImage: "exclamationmark.triangle")
+                .font(.caption)
+                .foregroundColor(.orange)
+                .textSelection(.enabled)
+        case let .answered(report):
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: report.ready == true
+                        ? "checkmark.circle.fill"
+                        : "xmark.octagon.fill")
+                        .foregroundColor(report.ready == true ? .green : .red)
+                    Text(report.ready == true
+                        ? "\(report.host ?? "host") can run \(report.catalog ?? "this family")"
+                        : "\(report.host ?? "host") cannot run \(report.catalog ?? "this family")")
+                        .font(.subheadline.weight(.medium))
+                    if let engine = report.engine {
+                        Text("engine \(engine)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                ForEach(report.checks ?? []) { check in
+                    HStack(alignment: .top, spacing: 6) {
+                        Image(systemName: check.ready == true
+                            ? "checkmark.circle"
+                            : "exclamationmark.circle.fill")
+                            .foregroundColor(check.ready == true ? .secondary : .red)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(check.spelling)
+                                .font(.caption.monospaced())
+                            // The host's own sentence, not a paraphrase: a
+                            // refusal restated by this side is how a missing
+                            // program and a probe spelled wrong stop being
+                            // distinguishable.
+                            if !check.hostWords.isEmpty {
+                                Text(check.hostWords)
+                                    .font(.caption2)
+                                    .foregroundColor(check.ready == true ? .secondary : .red)
+                                    .textSelection(.enabled)
+                                    .lineLimit(nil)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private func disableStart() -> Bool {
         if case .loading = model.crawlState { return true }
         return false
