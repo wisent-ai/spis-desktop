@@ -22,7 +22,7 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
         case completeRecordCount = "complete_record_count"
         case partialRecordCount = "partial_record_count"
         case measuredProvenance = "measured_provenance"
-        case source, readme
+        case source
     }
 }
 
