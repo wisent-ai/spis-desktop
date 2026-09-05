@@ -112,12 +112,11 @@ private struct SpisRootContent: View {
                     SpisOnboardingView(
                         screen: onboarding.screen,
                         errorMessage: onboarding.errorMessage,
-                        catalogCount: model.catalogs.count,
                         isFinalScreen: onboarding.isFinalScreen,
                         continueJourney: { Task { await onboarding.advance() } },
-                        openCatalog: {
+                        onAdopted: {
                             Task {
-                                await onboarding.finish(
+                                await onboarding.finishAfterAdoption(
                                     catalogAvailable: model.selectedCatalog != nil
                                 )
                             }

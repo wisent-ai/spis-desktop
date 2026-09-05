@@ -6,8 +6,9 @@ A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evi
 - **Catalog detail** — records, complete/partial, image and structure counts, the measured provenance mix, and the file paths each catalog owns.
 - **Reference commands** — read-only operations: `catalogs --check`, `drift`, `verify`, and `capture --list`.
 - **Manage references** — add, remove, and update reference records in catalogs.
+- **Corpus adoption** — first use and **Manage → Use an existing corpus** open a native directory picker and call Spis core's `corpus adopt` operation through the loopback API. The app does not parse or copy the corpus.
 - **Crawlers** — run native crawl operations across all 15 product families using six engines (mobile, desktop, web, TUI, CLI, docs) via Rust `spis crawl start|status|resume|import` commands. Pick a product family (all 15 or individual), optionally specify a record (or crawl all), set Stado host target, and Stado-resolved Weles admission endpoint. Operations: (1) start a crawl and reattach manually by entering its run ID in "Load Existing Run" after app restart; (2) check status with per-catalog breakdown and record metrics (complete, partial, failed); (3) resume paused/failed runs; (4) import results (mutating operation that updates corpus records from crawl artifacts). Diagnostics: preflight checks per catalog (schema, engine, host, Weles connectivity, no-permission-prompts flag), per-record readiness and permission requirements, artifact locations (artifact_uri for service references, output_uri for external data), record gaps, and error details. Crawl sessions are persisted by Spis core via their run IDs; reattach by pasting the run ID in the "Load Existing Run" field.
-- **First-run walkthrough** — three screens on a first launch: what Spis reports, which surfaces report versus run the corpus's own commands, and one catalog's measured state. It finishes only once a real catalog is decoded from an installed corpus, and never appears again. Replay it from **Manage → First-run walkthrough → Show it again**.
+- **First-run walkthrough** — three screens explain the evidence boundary and finish only after Spis core validates and persists an unpacked canonical corpus and the app decodes one of its catalogs. Replay it from **Manage → First-run walkthrough → Show it again**.
 
 ## Build and run
 
@@ -23,6 +24,13 @@ REFERENCE_ENGINE_ROOT=~/Documents/CodingProjects/Wisent/spis .build/debug/Refere
 ```
 
 Requires macOS 14+ and Swift 6 toolchain. The Rust `spis` binary must be executable and discoverable (the app searches `PATH`, repository checkouts, and `target/release/`).
+
+The adopted corpus location is stored by Spis core at
+`~/.config/spis/corpus.json` (or under `XDG_CONFIG_HOME`). The original
+catalogs, reference records, provenance, screenshots, recordings, and receipts
+stay in their selected directory. Repeated adoption is reported unchanged;
+archive files and incomplete or escaping corpus paths are refused before the
+saved location changes.
 
 ## Rules
 

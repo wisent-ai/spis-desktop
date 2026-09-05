@@ -17,7 +17,7 @@ actor SpisBackendProcess {
         if let process, process.isRunning, let baseURL { return baseURL }
         stop()
 
-        guard let root = CorpusRepository().locate() else {
+        guard let root = CorpusRepository().locateProductRoot() else {
             throw SpisBackendError.checkoutMissing
         }
         let serve = root.appendingPathComponent("bin/spis-serve")

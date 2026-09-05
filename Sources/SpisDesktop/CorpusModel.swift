@@ -12,9 +12,8 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
     let partialRecordCount: Int
     let measuredProvenance: [String: Int]
     let source: String
-    let readme: String
-
     var id: String { slug }
+    var readme: String { "\(slug)/README.md" }
 
     enum CodingKeys: String, CodingKey {
         case slug, title, description, count
@@ -41,7 +40,34 @@ struct CorpusRepository {
             .map { URL(fileURLWithPath: $0) }
     }
 
+    private var configurationURL: URL {
+        let environment = ProcessInfo.processInfo.environment
+        let configurationRoot: URL
+        if let xdg = environment["XDG_CONFIG_HOME"], !xdg.isEmpty {
+            configurationRoot = URL(fileURLWithPath: xdg, isDirectory: true)
+        } else {
+            configurationRoot = FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent(".config", isDirectory: true)
+        }
+        return configurationRoot
+            .appendingPathComponent("spis", isDirectory: true)
+            .appendingPathComponent("corpus.json")
+    }
+
+    private var configuredRoot: URL? {
+        guard let data = try? Data(contentsOf: configurationURL),
+              let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              document["schema"] as? String == "spis.corpus-location.v1",
+              let path = document["root"] as? String else {
+            return nil
+        }
+        return URL(fileURLWithPath: path, isDirectory: true)
+    }
+
     func locate() -> URL? {
+        if FileManager.default.fileExists(atPath: configurationURL.path) {
+            return configuredRoot
+        }
         if let root, FileManager.default.fileExists(atPath: root.path) { return root }
         if let fromEnv = ProcessInfo.processInfo.environment["SPIS_ROOT"],
            FileManager.default.fileExists(atPath: fromEnv) {
@@ -57,6 +83,26 @@ struct CorpusRepository {
             // Sibling checkout layout: <parent>/spis next to <parent>/spis-desktop.
             let sibling = url.appendingPathComponent("spis")
             if FileManager.default.fileExists(atPath: sibling.appendingPathComponent("example-catalogs.json").path) {
+                return sibling
+            }
+        }
+        return nil
+    }
+
+    /// Locate the installed Spis checkout that owns the loopback API. An
+    /// adopted corpus is data, not an executable installation.
+    func locateProductRoot() -> URL? {
+        if let root, FileManager.default.fileExists(atPath: root.appendingPathComponent("bin/spis-serve").path) {
+            return root
+        }
+        var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
+        for _ in 0...8 {
+            url.deleteLastPathComponent()
+            if FileManager.default.fileExists(atPath: url.appendingPathComponent("bin/spis-serve").path) {
+                return url
+            }
+            let sibling = url.appendingPathComponent("spis")
+            if FileManager.default.fileExists(atPath: sibling.appendingPathComponent("bin/spis-serve").path) {
                 return sibling
             }
         }

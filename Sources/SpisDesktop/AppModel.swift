@@ -23,7 +23,12 @@ final class AppModel {
 
     func load() {
         guard let root = repository.locate() else {
-            loadError = "Spis is not installed. Install Spis, then try again."
+            self.root = nil
+            catalogs = []
+            selectedCatalog = nil
+            selectedCatalogForCrawl = nil
+            contractText = nil
+            loadError = "Spis corpus location is unavailable or invalid. Adopt an existing canonical corpus, then try again."
             return
         }
         self.root = root
@@ -35,7 +40,52 @@ final class AppModel {
             contractText = repository.contractText(from: root)
             loadError = nil
         } catch {
+            self.root = nil
+            catalogs = []
+            selectedCatalog = nil
+            selectedCatalogForCrawl = nil
+            contractText = nil
             loadError = "Spis data could not be loaded. Try again."
+        }
+    }
+
+    /// The native picker supplies only a directory URL. Validation and durable
+    /// adoption run through Spis's loopback API and the product-owned `corpus`
+    /// operation, never through a desktop copy of the importer.
+    func adoptCorpus(at url: URL) async -> Bool {
+        if case .running = runState { return false }
+        runState = .running("Adopting corpus")
+        do {
+            let base = try await backend.endpoint()
+            let outcome = try await SpisClient(baseURL: base).adoptCorpus(at: url.path)
+            runState = .finished(outcome)
+            if outcome.succeeded {
+                load()
+                return true
+            }
+            if let refusal = outcome.refusal {
+                WisentFailureReporter.shared.report(
+                    failurePoint: "spis.corpus-adopt",
+                    code: "invalid_input",
+                    service: "spis",
+                    detail: refusal
+                )
+            }
+            return false
+        } catch {
+            runState = .finished(SpisOutcome(
+                operation: "Adopt corpus",
+                status: 1,
+                output: "",
+                refusal: error.localizedDescription
+            ))
+            WisentFailureReporter.shared.report(
+                failurePoint: "spis.corpus-adopt",
+                code: "invalid_input",
+                service: "spis",
+                detail: error.localizedDescription
+            )
+            return false
         }
     }
 

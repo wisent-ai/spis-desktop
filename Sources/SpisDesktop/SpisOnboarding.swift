@@ -16,11 +16,11 @@ final class SpisOnboardingController {
     private enum Constants {
         static let productID = "spis-desktop"
         static let journeyID = "first-use"
-        static let journeyVersion = "2026-09-01.1"
-        static let firstSuccessFact = "catalog_measured_state_read"
-        static let evidenceRevision = "spis-desktop-onboarding-2026-09-01.1"
-        static let fallbackVersionID = UUID(uuidString: "8C4B7C11-6E60-4E52-9C36-2AD5D5B6E7C1")!
-        static let storageNamespace = "ai.wisent.spis.onboarding.2026-09-01.1"
+        static let journeyVersion = "2026-09-05.1"
+        static let firstSuccessFact = "corpus_adopted"
+        static let evidenceRevision = "spis-desktop-onboarding-2026-09-05.1"
+        static let fallbackVersionID = UUID(uuidString: "5BD5E39A-4D63-4777-9A91-F6EABF9BE9EF")!
+        static let storageNamespace = "ai.wisent.spis.onboarding.2026-09-05.1"
         static let deviceIDKey = "ai.wisent.spis.onboarding.device-id"
         static let resourceName = "spis-desktop-first-use"
     }
@@ -88,26 +88,14 @@ final class SpisOnboardingController {
         }
     }
 
-    /// Closes the walkthrough on the fact it was waiting for.
-    ///
-    /// `catalogAvailable` is the real measured state of this window: a catalog
-    /// decoded from the installed corpus and selected in Browse. Without one
-    /// there is nothing useful behind the overlay, so the journey stays open
-    /// and says why instead of recording a first success that did not happen.
-    ///
-    /// `observeFirstSuccess` runs before `complete`, and that order is the
-    /// whole point: `onboarding_first_success_observed` — the event this
-    /// journey's own `analytics_contract` names as its `first_success_event`
-    /// — is emitted ahead of `onboarding_completed`, so the funnel reads in
-    /// the order the operator lived it. Since WisentOnboarding 0.3.0
-    /// `complete` also raises that fact, but only while
-    /// `firstSuccessObserved` is still false, so this call keeps the ordering
-    /// and the event is still emitted exactly once.
-    func finish(catalogAvailable: Bool) async {
+    /// Closes the walkthrough only after the product-owned adoption operation
+    /// has persisted a corpus location and the application can decode a catalog
+    /// from that accepted root.
+    func finishAfterAdoption(catalogAvailable: Bool) async {
         guard let client, isFinalScreen else { return }
         errorMessage = nil
         guard catalogAvailable else {
-            errorMessage = "No catalog is loaded. Install Spis, or point the app at a checkout with SPIS_ROOT, then try again."
+            errorMessage = "The corpus location was saved, but no catalog could be decoded from it. Choose the corpus again to see the exact refusal."
             return
         }
         let evidence: [String: JSONValue] = [Constants.firstSuccessFact: .boolean(true)]
@@ -121,7 +109,7 @@ final class SpisOnboardingController {
                 evidenceRevision: Constants.evidenceRevision
             )
             guard completed else {
-                errorMessage = "Spis couldn’t record the first catalog read. Try again."
+                errorMessage = "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
                 return
             }
             state = .completed
@@ -129,7 +117,7 @@ final class SpisOnboardingController {
             exposedScreenID = nil
             try? await client.flush()
         } catch {
-            errorMessage = "Spis couldn’t record the first catalog read. Try again."
+            errorMessage = "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
         }
     }
 
@@ -326,10 +314,9 @@ private struct SpisJourneyTransport: JourneyTransport {
 struct SpisOnboardingView: View {
     let screen: JourneyScreen?
     let errorMessage: String?
-    let catalogCount: Int
     let isFinalScreen: Bool
     let continueJourney: () -> Void
-    let openCatalog: () -> Void
+    let onAdopted: () -> Void
     let retry: () -> Void
 
     var body: some View {
@@ -344,14 +331,7 @@ struct SpisOnboardingView: View {
                     copy
 
                     if isFinalScreen {
-                        Label(
-                            catalogCount == 0
-                                ? "No catalogs are loaded. Spis found no installed corpus to read."
-                                : "\(catalogCount) catalog\(catalogCount == 1 ? "" : "s") decoded from the installed corpus.",
-                            systemImage: catalogCount == 0 ? "questionmark.folder" : "checkmark.circle.fill"
-                        )
-                        .font(WisentTypography.bodyMedium(13))
-                        .foregroundStyle(catalogCount == 0 ? WisentDesign.secondary : WisentDesign.success)
+                        SpisCorpusAdoptionView(compact: true, onAdopted: onAdopted)
                     }
 
                     if let errorMessage {
@@ -361,25 +341,23 @@ struct SpisOnboardingView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    HStack {
-                        Spacer()
-                        if screen == nil {
-                            Button("Try Again", action: retry)
-                                .buttonStyle(WisentPrimaryButtonStyle())
-                                .keyboardShortcut(.defaultAction)
-                        } else if isFinalScreen {
-                            Button("Read the Catalog", action: openCatalog)
-                                .buttonStyle(WisentPrimaryButtonStyle())
-                                .keyboardShortcut(.defaultAction)
-                        } else {
-                            Button("Continue", action: continueJourney)
-                                .buttonStyle(WisentPrimaryButtonStyle())
-                                .keyboardShortcut(.defaultAction)
+                    if !isFinalScreen || screen == nil {
+                        HStack {
+                            Spacer()
+                            if screen == nil {
+                                Button("Try Again", action: retry)
+                                    .buttonStyle(WisentPrimaryButtonStyle())
+                                    .keyboardShortcut(.defaultAction)
+                            } else {
+                                Button("Continue", action: continueJourney)
+                                    .buttonStyle(WisentPrimaryButtonStyle())
+                                    .keyboardShortcut(.defaultAction)
+                            }
                         }
                     }
                 }
             }
-            .frame(width: 620)
+            .frame(width: 700)
             .padding(WisentDesign.Space.x8)
         }
         .accessibilityLabel("Spis first-run walkthrough")
@@ -451,7 +429,7 @@ struct SpisOnboardingView: View {
         return value
     }
 
-    private static let order = ["promise", "read_and_write", "first_catalog"]
+    private static let order = ["promise", "read_and_write", "adopt_corpus"]
 }
 
 /// The control that shows the walkthrough again.

@@ -104,6 +104,16 @@ struct SpisClient: Sendable {
         ]))
     }
 
+    // MARK: - Corpus adoption
+
+    func adoptCorpus(at path: String) async throws -> SpisOutcome {
+        try await post(
+            "corpus-adopt",
+            operation: "Adopt corpus",
+            body: ["path": path]
+        )
+    }
+
     // MARK: - Manage operations
 
     func deriveGuidelines(slug: String) async throws -> SpisOutcome {

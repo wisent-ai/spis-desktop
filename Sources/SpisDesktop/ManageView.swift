@@ -30,6 +30,12 @@ struct ManageView: View {
                 }
 
                 Divider()
+                SpisCorpusAdoptionView()
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+
+                Divider()
+
 
                 // Last on the surface, under the records it does not touch.
                 // It sits outside the selection branch above because the
