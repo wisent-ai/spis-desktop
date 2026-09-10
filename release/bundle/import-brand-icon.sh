@@ -4,7 +4,7 @@ set -eu
 PRODUCT=${1:?"Usage: import-brand-icon.sh PRODUCT OUTPUT.icns"}
 OUTPUT=${2:?"Usage: import-brand-icon.sh PRODUCT OUTPUT.icns"}
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-LOCAL_SOURCE="$SCRIPT_DIR/../Assets/$PRODUCT-app-icon.svg"
+LOCAL_SOURCE="$SCRIPT_DIR/../../Assets/$PRODUCT-app-icon.svg"
 API_BASE=${WISENT_GROUND_TRUTH_API:-${GROUND_TRUTH_API:-}}
 
 if [ -z "$API_BASE" ] && [ ! -f "$LOCAL_SOURCE" ]; then
