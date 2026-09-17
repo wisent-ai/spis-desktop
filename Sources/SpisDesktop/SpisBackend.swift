@@ -161,10 +161,13 @@ private final class ReadyHandshake: @unchecked Sendable {
         return line
     }
 
+    /// The backend's stderr is kept only as a tail this long, enough for one error with context.
+    private static let stderrTailLimit = 2_000
+
     func appendError(_ text: String) {
         lock.lock()
         stderrTail += text
-        if stderrTail.count > 2_000 { stderrTail = String(stderrTail.suffix(2_000)) }
+        if stderrTail.count > Self.stderrTailLimit { stderrTail = String(stderrTail.suffix(Self.stderrTailLimit)) }
         lock.unlock()
     }
 
