@@ -2,6 +2,53 @@ import Foundation
 
 // MARK: - Crawl Operation JSON Schema (wisent.crawl-operation.v1)
 
+/// One `wisent.crawl-host-preflight.v2` report, as `spis crawl preflight`
+/// prints it.
+///
+/// The same document the crawl embeds per catalog, asked on its own. Before
+/// this existed the graphical surface could only see a preflight AFTER a run
+/// had been started and had already refused, so "can this host run this
+/// family" was a question only the command line could ask — and the answer
+/// arrived attached to a failed attempt. Every check keeps the host's own
+/// words, because a refusal paraphrased by this side is how a missing
+/// program and a probe this side spelled wrong become indistinguishable.
+struct HostPreflightReport: Codable, Sendable {
+    let schema: String?
+    let catalog: String?
+    let engine: String?
+    let host: String?
+    let ready: Bool?
+    let checks: [PreflightCheck]?
+
+    struct PreflightCheck: Codable, Sendable, Identifiable {
+        let command: [String]?
+        let ready: Bool?
+        let stdout: String?
+        let stderr: String?
+        let error: String?
+
+        var id: String { (command ?? []).joined(separator: " ") }
+
+        /// The probe as an operator would type it.
+        var spelling: String { (command ?? []).joined(separator: " ") }
+
+        /// What the host said, unedited and unsummarised: its answer when the
+        /// probe ran, its refusal when it did not.
+        var hostWords: String {
+            for candidate in [error, stderr, stdout] {
+                let trimmed = candidate?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                if !trimmed.isEmpty { return trimmed }
+            }
+            return ""
+        }
+    }
+
+    /// Only the preconditions the host does not satisfy.
+    var missing: [PreflightCheck] {
+        (checks ?? []).filter { $0.ready != true }
+    }
+}
+
 struct CrawlOperation: Codable, Sendable {
     let schema: String
     let operation: String

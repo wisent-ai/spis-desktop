@@ -31,13 +31,27 @@ final class AppModel {
             loadError = "Spis corpus location is unavailable or invalid. Adopt an existing canonical corpus, then try again."
             return
         }
-        self.root = root
-        do {
-            let index = try repository.loadIndex(from: root)
-            catalogs = index.catalogs.sorted { $0.title < $1.title }
+        let settled: Result<LoadedCorpus, Error>? = await withTaskGroup(
+            of: Result<LoadedCorpus, Error>?.self
+        ) { group in
+            group.addTask {
+                do { return .success(try await read.value) } catch { return .failure(error) }
+            }
+            group.addTask {
+                try? await Task.sleep(nanoseconds: Self.corpusReadDeadlineNanos)
+                return nil
+            }
+            let first = await group.next() ?? nil
+            group.cancelAll()
+            return first
+        }
+        switch settled {
+        case let .success(corpus):
+            root = corpus.root
+            catalogs = corpus.catalogs.sorted { $0.title < $1.title }
             selectedCatalog = catalogs.first
             selectedCatalogForCrawl = catalogs.first
-            contractText = repository.contractText(from: root)
+            contractText = corpus.contract
             loadError = nil
         } catch {
             self.root = nil
@@ -160,6 +174,71 @@ final class AppModel {
         }
     }
 
+    /// The readiness question, asked on its own and answered before anything
+    /// is claimed.
+    ///
+    /// Separate from `crawlState` on purpose: a preflight is not an attempt.
+    /// A host that is not ready is a fact to read, not a run that failed, and
+    /// collapsing the two is what left this surface unable to ask the
+    /// question at all until a run had already been submitted.
+    enum PreflightState: Equatable {
+        case idle
+        case checking(catalog: String, host: String)
+        case answered(HostPreflightReport)
+        case unavailable(String)
+
+        static func == (lhs: PreflightState, rhs: PreflightState) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle):
+                return true
+            case let (.checking(catalogLeft, hostLeft), .checking(catalogRight, hostRight)):
+                return catalogLeft == catalogRight && hostLeft == hostRight
+            case let (.answered(left), .answered(right)):
+                return left.host == right.host
+                    && left.catalog == right.catalog
+                    && left.ready == right.ready
+                    && (left.checks?.count ?? 0) == (right.checks?.count ?? 0)
+            case let (.unavailable(left), .unavailable(right)):
+                return left == right
+            default:
+                return false
+            }
+        }
+    }
+
+    var preflightState: PreflightState = .idle
+
+    /// Ask one host about one family. Read-only; claims nothing.
+    func checkHostReadiness() {
+        guard let root = root else { return }
+        guard let catalog = selectedCatalogForCrawl?.slug else {
+            preflightState = .unavailable(
+                "Choose one product family: readiness is a question about a family's worker, and every family requires different programs."
+            )
+            return
+        }
+        let host = (crawlHost ?? "").trimmingCharacters(in: .whitespaces)
+        guard !host.isEmpty else {
+            preflightState = .unavailable(
+                "Name the host to ask. Readiness is a property of one machine, and Stado picks the host only once a run is submitted."
+            )
+            return
+        }
+        preflightState = .checking(catalog: catalog, host: host)
+        Task {
+            do {
+                let report = try await crawlClient.crawlPreflight(
+                    catalog: catalog,
+                    host: host,
+                    workingDirectory: root
+                )
+                preflightState = .answered(report)
+            } catch {
+                preflightState = .unavailable(error.localizedDescription)
+            }
+        }
+    }
+
     func startCrawl() {
         guard let root = root else { return }
         
@@ -243,6 +322,101 @@ final class AppModel {
         }
     }
     
+    // MARK: - Cancellation, with the reason that goes into the record
+
+    var crawlCancelReason: String?
+
+    /// The reason a cancellation was actually dispatched with, kept after the
+    /// fact.
+    ///
+    /// `spis crawl cancel` requires `--reason` and publishes it immutably
+    /// with the intent before anything is dispatched, so the reason is part of
+    /// the record rather than decoration. A surface that took it and then
+    /// dropped it would leave the operator unable to read back what they
+    /// claimed.
+    var lastCancellation: (runId: String, reason: String)?
+
+    /// Why a cancellation was not attempted at all.
+    var cancelRefusal: String?
+
+    func cancelCrawl() {
+        cancelRefusal = nil
+        guard let root = root else { return }
+        guard let runId = currentRunId else {
+            cancelRefusal = "Load or start a run first: cancellation names one run id."
+            return
+        }
+        let reason = (crawlCancelReason ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !reason.isEmpty else {
+            cancelRefusal = "Give the reason. It is published with the cancellation before "
+                + "anything is dispatched and stays in the record, so this command will not "
+                + "run without one."
+            return
+        }
+        let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
+        let trimmedRecord = (record?.isEmpty ?? true) ? nil : record
+        crawlState = .running(operation: "Cancelling")
+        Task {
+            do {
+                let result = try await crawlClient.crawlCancel(
+                    runId: runId,
+                    record: trimmedRecord,
+                    reason: reason,
+                    workingDirectory: root
+                )
+                lastCancellation = (runId: runId, reason: reason)
+                crawlState = .completed(result)
+            } catch {
+                crawlState = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    // MARK: - Runtime bindings
+
+    var bindingsWelesTokenRef: String?
+    var bindingsOrganizationRef: String?
+    var bindingsOutputPath: String?
+
+    enum BindingsState: Equatable {
+        case idle
+        case generating
+        case wrote(String)
+        case refused(String)
+    }
+
+    var bindingsState: BindingsState = .idle
+
+    /// `spis crawl bindings generate`, which only the command line could run.
+    func generateBindings() {
+        guard let root = root else { return }
+        let token = (bindingsWelesTokenRef ?? "").trimmingCharacters(in: .whitespaces)
+        let organization = (bindingsOrganizationRef ?? "").trimmingCharacters(in: .whitespaces)
+        guard !token.isEmpty, !organization.isEmpty else {
+            bindingsState = .refused(
+                "Both references are required, each as ITEM#FIELD: the Weles token and the "
+                + "organization. The generated binding is typed and exact, so a missing half is "
+                + "not a default to guess."
+            )
+            return
+        }
+        let output = (bindingsOutputPath ?? "").trimmingCharacters(in: .whitespaces)
+        bindingsState = .generating
+        Task {
+            do {
+                let document = try await crawlClient.generateBindings(
+                    welesTokenRef: token,
+                    organizationRef: organization,
+                    output: output.isEmpty ? nil : output,
+                    workingDirectory: root
+                )
+                bindingsState = .wrote(document)
+            } catch {
+                bindingsState = .refused(error.localizedDescription)
+            }
+        }
+    }
+
     func resetCrawl() {
         crawlState = .idle
         currentRunId = nil
@@ -250,5 +424,9 @@ final class AppModel {
         crawlRecord = nil
         crawlHost = nil
         crawlAdmissionUrl = nil
+        crawlCancelReason = nil
+        cancelRefusal = nil
+        lastCancellation = nil
+        bindingsState = .idle
     }
 }
