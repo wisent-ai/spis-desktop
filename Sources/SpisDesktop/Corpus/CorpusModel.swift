@@ -1,7 +1,7 @@
 import Foundation
 
 /// One catalog entry decoded from `example-catalogs.json`.
-struct CatalogSummary: Identifiable, Decodable, Hashable, Sendable {
+struct CatalogSummary: Identifiable, Decodable, Hashable {
     let slug: String
     let title: String
     let description: String
@@ -15,11 +15,6 @@ struct CatalogSummary: Identifiable, Decodable, Hashable, Sendable {
     var id: String { slug }
     var readme: String { "\(slug)/README.md" }
 
-    /// Whichever page the index names, for display.
-    var catalogPage: String {
-        readme ?? fullReferenceSource ?? "—"
-    }
-
     enum CodingKeys: String, CodingKey {
         case slug, title, description, count
         case imageCount = "image_count"
@@ -31,30 +26,12 @@ struct CatalogSummary: Identifiable, Decodable, Hashable, Sendable {
     }
 }
 
-struct CatalogIndex: Decodable, Sendable {
+struct CatalogIndex: Decodable {
     let catalogs: [CatalogSummary]
 }
 
-/// Why one corpus could not be opened, in words this surface can print.
-enum CorpusLoadFailure: Error, Sendable {
-    case notInstalled
-    case unreadable(path: String, reason: String)
-
-    var sentence: String {
-        switch self {
-        case .notInstalled:
-            return "Spis is not installed. Install Spis, then try again."
-        case let .unreadable(path, reason):
-            // The system's own sentence, kept: "permission denied" and "no
-            // such file" are different problems and only the reason
-            // distinguishes them.
-            return "Spis could not read its corpus at \(path). \(reason)"
-        }
-    }
-}
-
 /// The repository the app operates on.
-struct CorpusRepository: Sendable {
+struct CorpusRepository {
     /// nil in development means the checkout this app was built from.
     var root: URL?
 
