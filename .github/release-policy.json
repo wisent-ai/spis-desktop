@@ -3,5 +3,5 @@
   "releases": true,
   "type": "macos-sparkle-application",
   "manifest": ".wisent-desktop-release.json",
-  "publisher": ["sparkle", "github-releases"]
+  "publisher": ["sparkle", "stado-release-channel"]
 }
