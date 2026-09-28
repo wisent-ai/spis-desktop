@@ -61,7 +61,11 @@ final class SpisOnboardingController {
 
             if progress.status == .completed {
                 state = .completed
-                try? await client.flush()
+                do {
+                    try await client.flush()
+                } catch {
+                    errorMessage = "Spis couldn’t send its first-use events: \(error.localizedDescription)"
+                }
             } else {
                 state = .presenting
                 try await expose(using: client)
@@ -112,12 +116,17 @@ final class SpisOnboardingController {
                 errorMessage = "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
                 return
             }
-            state = .completed
-            screen = nil
-            exposedScreenID = nil
-            try? await client.flush()
         } catch {
-            errorMessage = "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
+            errorMessage = "Spis couldn’t record the accepted corpus (\(error.localizedDescription)). You can continue using it and replay first use from Manage."
+            return
+        }
+        state = .completed
+        screen = nil
+        exposedScreenID = nil
+        do {
+            try await client.flush()
+        } catch {
+            errorMessage = "Spis recorded first use but couldn’t send its events yet: \(error.localizedDescription)"
         }
     }
 

@@ -123,6 +123,14 @@ private struct SpisRootContent: View {
                         },
                         retry: { Task { await onboarding.retry() } }
                     )
+                } else if let failure = onboarding.errorMessage {
+                    // Events not sent after first use completed stay visible
+                    // once the card is down.
+                    VStack {
+                        Spacer()
+                        WisentAlertPanel(tone: .warning, title: "First use", detail: failure)
+                            .padding(WisentDesign.Space.x4)
+                    }
                 }
             }
     }
