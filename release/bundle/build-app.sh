@@ -22,20 +22,11 @@ if [ -n "${WISENT_RELEASE_VERSION:-}" ]; then
   plutil -replace CFBundleShortVersionString -string "$WISENT_RELEASE_VERSION" "$CONTENTS/Info.plist"
   plutil -replace CFBundleVersion -string "${WISENT_BUILD_NUMBER:-$WISENT_RELEASE_VERSION}" "$CONTENTS/Info.plist"
 fi
-# The feed URL already exists in this repository, in
-# .wisent-desktop-release.json - the release manifest wisent-desktop-update
-# reads. Until 2026-08-31 this script stamped SUFeedURL only from
-# WISENT_UPDATE_FEED_URL, and never validated it. Whatever App/Info.plist
-# happened to carry was what shipped, so the committed plist and the shipped
-# bundle drifted apart: App/Info.plist names the appcast, while the installed
-# 1.0.0 bundle in ~/Applications has no SUFeedURL key at all. Sparkle with no
-# feed URL issues no request, so "Check for Updates…" did nothing at all in
-# that build. Stamping from the manifest on every build removes the drift.
-#
-# The manifest is now the default, the environment variable stays an override
-# for a staging feed, a non-HTTPS feed fails the build, and a bundle that would
-# ship without a feed URL fails the build instead of being discovered months
-# later by a user who never got an update.
+# The feed URL is .feed_url of .wisent-desktop-release.json, the release
+# manifest wisent-desktop-update reads, stamped on every build so the
+# committed plist and the shipped bundle cannot drift; WISENT_UPDATE_FEED_URL
+# overrides it for a staging feed. A bundle whose SUFeedURL is empty or not
+# https would never check for updates, so it fails the build here.
 RELEASE_MANIFEST="$ROOT/.wisent-desktop-release.json"
 UPDATE_FEED_URL=${WISENT_UPDATE_FEED_URL:-}
 if [ -z "$UPDATE_FEED_URL" ] && [ -f "$RELEASE_MANIFEST" ]; then
