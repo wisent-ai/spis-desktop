@@ -13,7 +13,7 @@
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSPrincipalClass</key><string>NSApplication</string>
-<key>SUFeedURL</key><string>https://charless-mac-mini.tail6443b3.ts.net/api/release/appcast?product=spis-desktop</string>
+<key>SUFeedURL</key><string></string>
 <key>SUPublicEDKey</key><string>nVhrC8RzFwDX1ISaXvePqPTSxBEhPhIIGZcSrL6uKKw=</string>
 <key>SUEnableAutomaticChecks</key><true/>
 <key>SUScheduledCheckInterval</key><integer>86400</integer>
