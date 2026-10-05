@@ -89,20 +89,30 @@ struct CorpusRepository {
         return nil
     }
 
-    /// Locate the installed Spis checkout that owns the loopback API. An
-    /// adopted corpus is data, not an executable installation.
+    /// The built `spis` executable of a checkout: the release build, else the
+    /// debug build, the order a developer and an install produce them in.
+    func spisExecutable(in root: URL) -> URL? {
+        ["target/release/spis", "target/debug/spis"]
+            .map { root.appendingPathComponent($0) }
+            .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    }
+
+    /// Locate the installed Spis checkout that owns the loopback API: the
+    /// configured root, else a directory above this app (or its `spis`
+    /// sibling) that holds a built `spis`. An adopted corpus is data, not an
+    /// executable installation.
     func locateProductRoot() -> URL? {
-        if let root, FileManager.default.fileExists(atPath: root.appendingPathComponent("bin/spis-serve").path) {
+        if let root, spisExecutable(in: root) != nil {
             return root
         }
         var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
-        for _ in 0...8 {
+        while url.pathComponents.count > 1 {
             url.deleteLastPathComponent()
-            if FileManager.default.fileExists(atPath: url.appendingPathComponent("bin/spis-serve").path) {
+            if spisExecutable(in: url) != nil {
                 return url
             }
             let sibling = url.appendingPathComponent("spis")
-            if FileManager.default.fileExists(atPath: sibling.appendingPathComponent("bin/spis-serve").path) {
+            if spisExecutable(in: sibling) != nil {
                 return sibling
             }
         }

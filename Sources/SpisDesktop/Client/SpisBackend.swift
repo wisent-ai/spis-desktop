@@ -2,10 +2,10 @@ import AppKit
 import Foundation
 
 /// The one Spis backend process for the app's lifetime. Spawned lazily on
-/// first use as `python3 bin/spis-serve --port 0` inside the located spis
-/// checkout, which binds 127.0.0.1 on an ephemeral port and prints a single
-/// ready line naming that port; the process then serves HTTP until the app
-/// kills it on quit.
+/// first use as `spis serve --port 0` from the located spis checkout, which
+/// binds the loopback address on a port the system chooses and prints a
+/// single ready line naming that port; the process then serves HTTP until the
+/// app kills it on quit.
 actor SpisBackendProcess {
     private var process: Process?
     private var baseURL: URL?
@@ -17,19 +17,19 @@ actor SpisBackendProcess {
         if let process, process.isRunning, let baseURL { return baseURL }
         stop()
 
-        guard let root = CorpusRepository().locateProductRoot() else {
+        let repository = CorpusRepository()
+        guard let root = repository.locateProductRoot() else {
             throw SpisBackendError.checkoutMissing
         }
-        let serve = root.appendingPathComponent("bin/spis-serve")
-        guard FileManager.default.fileExists(atPath: serve.path) else {
+        guard let spis = repository.spisExecutable(in: root) else {
             throw SpisBackendError.backendMissing
         }
 
         let process = Process()
         let stdout = Pipe()
         let stderr = Pipe()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        process.arguments = ["python3", serve.path, "--port", "0"]
+        process.executableURL = spis
+        process.arguments = ["serve", "--port", "0"]
         process.currentDirectoryURL = root
         process.standardOutput = stdout
         process.standardError = stderr
