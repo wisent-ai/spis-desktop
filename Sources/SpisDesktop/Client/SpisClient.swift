@@ -116,8 +116,29 @@ struct SpisClient: Sendable {
 
     // MARK: - Manage operations
 
-    func deriveGuidelines(slug: String) async throws -> SpisOutcome {
-        try await post("guidelines", operation: "Derive guidelines draft", body: ["slug": slug])
+    func addCatalog(slug: String, title: String, description: String) async throws -> SpisOutcome {
+        try await post("catalog-add", operation: "Add product type", body: [
+            "slug": slug,
+            "title": title,
+            "description": description,
+        ])
+    }
+
+    /// Empty fields are left unchanged; `rename` is the new slug.
+    func editCatalog(slug: String, title: String, description: String, rename: String) async throws -> SpisOutcome {
+        try await post("catalog-edit", operation: "Edit product type", body: [
+            "slug": slug,
+            "title": title,
+            "description": description,
+            "rename": rename,
+        ])
+    }
+
+    func removeCatalog(slug: String, force: Bool) async throws -> SpisOutcome {
+        try await post("catalog-remove", operation: "Remove product type", body: [
+            "slug": slug,
+            "force": force,
+        ])
     }
 
     func addReference(

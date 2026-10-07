@@ -108,9 +108,29 @@ final class ManageModel {
         }
     }
 
-    func deriveGuidelines(slug: String) async {
-        await perform(operation: "Derive guidelines draft") { client in
-            try await client.deriveGuidelines(slug: slug)
+    func addCatalog(slug: String, title: String, description: String) async {
+        await perform(operation: "Add product type") { client in
+            try await client.addCatalog(slug: slug, title: title, description: description)
+        }
+    }
+
+    func editCatalog(slug: String, title: String, description: String, rename: String) async {
+        await perform(operation: "Edit product type") { client in
+            try await client.editCatalog(slug: slug, title: title, description: description, rename: rename)
+        }
+        if output?.succeeded == true, !rename.isEmpty {
+            selectedCatalogSlug = nil
+            references = []
+        }
+    }
+
+    func removeCatalog(slug: String, force: Bool) async {
+        await perform(operation: "Remove product type") { client in
+            try await client.removeCatalog(slug: slug, force: force)
+        }
+        if output?.succeeded == true {
+            selectedCatalogSlug = nil
+            references = []
         }
     }
 

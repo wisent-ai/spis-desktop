@@ -17,6 +17,9 @@ struct ManageView: View {
                         .onTapGesture { model.loadReferences(for: type.slug) }
                     }
                 }
+                Section("New product type") {
+                    NewCatalogForm()
+                }
             }
             .listStyle(.sidebar)
             .navigationSplitViewColumnWidth(min: 220, ideal: 260)
@@ -86,13 +89,7 @@ struct ReferencesManager: View {
                     }
                     .disabled(newName.isEmpty || newURL.isEmpty || newImagePath.isEmpty || model.running)
                 }
-                HStack {
-                    TextField("Type title / description / rename", text: .constant("")).frame(width: 0)
-                    Button("Derive guidelines draft") {
-                        Task { await model.deriveGuidelines(slug: slug) }
-                    }
-                    Spacer()
-                }
+                CatalogEditor(slug: slug)
             }
             .padding(.horizontal).padding(.top, 8)
 
