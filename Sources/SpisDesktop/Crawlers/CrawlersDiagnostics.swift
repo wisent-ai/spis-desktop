@@ -17,15 +17,15 @@ extension CrawlersView {
                 Text(statusLabel(cat.state))
                     .foregroundColor(stateColor(cat.state))
             }
-            
+
             if let pf = cat.preflight {
                 preflightDisclosureView(pf)
             }
-            
+
             if let records = cat.records, !records.isEmpty {
                 recordsDisclosureView(records)
             }
-            
+
             if let uri = cat.artifact_uri {
                 HStack(alignment: .top, spacing: 8) {
                     Text("Artifact:").fontWeight(.semibold)
@@ -42,7 +42,7 @@ extension CrawlersView {
                     }
                 }
             }
-            
+
             if let outputUri = cat.output_uri {
                 HStack(alignment: .top, spacing: 8) {
                     Text("Output:").fontWeight(.semibold)
@@ -54,7 +54,7 @@ extension CrawlersView {
                         .foregroundColor(.blue)
                 }
             }
-            
+
             if let err = cat.error {
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
@@ -67,14 +67,15 @@ extension CrawlersView {
             }
         }
     }
-    
+
     @ViewBuilder
-    func preflightDisclosureView(_ pf: CrawlOperation.CrawlCatalog.PreflightDiagnostic) -> some View {
+    func preflightDisclosureView(_ pf: CrawlOperation.CrawlCatalog.PreflightDiagnostic) -> some View
+    {
         DisclosureGroup("Preflight Diagnostics") {
             preflightDetailsView(pf)
         }
     }
-    
+
     @ViewBuilder
     func preflightDetailsView(_ pf: CrawlOperation.CrawlCatalog.PreflightDiagnostic) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -85,7 +86,7 @@ extension CrawlersView {
                     .foregroundColor(pf.ready ?? false ? .green : .red)
             }
             .font(.caption)
-            
+
             if let schema = pf.schema {
                 HStack {
                     Text("Schema:").font(.caption)
@@ -93,7 +94,7 @@ extension CrawlersView {
                     Text(schema).font(.caption2).monospaced().textSelection(.enabled)
                 }
             }
-            
+
             if let cat = pf.catalog {
                 HStack {
                     Text("Catalog:").font(.caption)
@@ -101,7 +102,7 @@ extension CrawlersView {
                     Text(cat).font(.caption2).monospaced().textSelection(.enabled)
                 }
             }
-            
+
             if let eng = pf.engine {
                 HStack {
                     Text("Engine:").font(.caption)
@@ -109,7 +110,7 @@ extension CrawlersView {
                     Text(eng).font(.caption2).monospaced().textSelection(.enabled)
                 }
             }
-            
+
             if let host = pf.host {
                 HStack {
                     Text("Host:").font(.caption)
@@ -117,15 +118,16 @@ extension CrawlersView {
                     Text(host).font(.caption2).monospaced().textSelection(.enabled)
                 }
             }
-            
+
             if let noPrompts = pf.no_permission_prompts_requested {
                 HStack {
                     Text("No Permission Prompts:").font(.caption)
                     Spacer()
-                    Text(noPrompts ? "✓ Yes" : "✗ No").font(.caption).foregroundColor(noPrompts ? .green : .orange)
+                    Text(noPrompts ? "✓ Yes" : "✗ No").font(.caption).foregroundColor(
+                        noPrompts ? .green : .orange)
                 }
             }
-            
+
             if let checks = pf.checks, !checks.isEmpty {
                 Divider()
                 Text("Checks").fontWeight(.semibold).font(.caption)
@@ -133,7 +135,7 @@ extension CrawlersView {
                     checkDetailsView(idx, check)
                 }
             }
-            
+
             if let records = pf.records, !records.isEmpty {
                 Divider()
                 Text("Record Preflight Checks").fontWeight(.semibold).font(.caption)
@@ -141,7 +143,7 @@ extension CrawlersView {
                     recordPreflightDetailsView(record)
                 }
             }
-            
+
             if let weles = pf.weles {
                 Divider()
                 Text("Weles Info").fontWeight(.semibold).font(.caption)
@@ -168,9 +170,11 @@ extension CrawlersView {
             }
         }
     }
-    
+
     @ViewBuilder
-    func checkDetailsView(_ idx: Int, _ check: CrawlOperation.CrawlCatalog.PreflightDiagnostic.Check) -> some View {
+    func checkDetailsView(
+        _ idx: Int, _ check: CrawlOperation.CrawlCatalog.PreflightDiagnostic.Check
+    ) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
                 Text("Check \(idx + 1):").fontWeight(.semibold)
@@ -185,10 +189,12 @@ extension CrawlersView {
                     .textSelection(.enabled)
             }
             if let stdout = check.stdout {
-                Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil).textSelection(.enabled)
+                Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil).textSelection(
+                    .enabled)
             }
             if let stderr = check.stderr {
-                Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+                Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil).textSelection(
+                    .enabled)
             }
             if let error = check.error {
                 Text("error: \(error)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
@@ -197,13 +203,16 @@ extension CrawlersView {
         .font(.caption2)
         .padding(.vertical, 2)
     }
-    
+
     @ViewBuilder
-    func recordPreflightDetailsView(_ rc: CrawlOperation.CrawlCatalog.PreflightDiagnostic.RecordPreflightCheck) -> some View {
+    func recordPreflightDetailsView(
+        _ rc: CrawlOperation.CrawlCatalog.PreflightDiagnostic.RecordPreflightCheck
+    ) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(rc.record ?? "unknown").font(.caption).fontWeight(.semibold).monospaced().textSelection(.enabled)
+                    Text(rc.record ?? "unknown").font(.caption).fontWeight(.semibold).monospaced()
+                        .textSelection(.enabled)
                     if let name = rc.name {
                         Text(name).font(.caption2).foregroundColor(.secondary)
                     }
@@ -213,7 +222,7 @@ extension CrawlersView {
                     .font(.caption2)
                     .foregroundColor(rc.ready ?? false ? .green : .orange)
             }
-            
+
             if let binding = rc.account_binding {
                 Text("Account: \(binding)").font(.caption2).lineLimit(nil).textSelection(.enabled)
             }
@@ -221,9 +230,10 @@ extension CrawlersView {
                 Text("Runtime: \(runtime)").font(.caption2).lineLimit(nil).textSelection(.enabled)
             }
             if let diag = rc.diagnostic {
-                Text("Diagnostic: \(diag)").font(.caption2).monospaced().lineLimit(nil).textSelection(.enabled)
+                Text("Diagnostic: \(diag)").font(.caption2).monospaced().lineLimit(nil)
+                    .textSelection(.enabled)
             }
-            
+
             if let checks = rc.checks, !checks.isEmpty {
                 ForEach(Array(checks.enumerated()), id: \.offset) { idx, check in
                     VStack(alignment: .leading, spacing: 1) {
@@ -234,16 +244,21 @@ extension CrawlersView {
                                 .foregroundColor(check.ready ?? false ? .green : .orange)
                         }
                         if let cmd = check.command {
-                            Text("Command: \(cmd.joined(separator: " "))").monospaced().lineLimit(nil).textSelection(.enabled)
+                            Text("Command: \(cmd.joined(separator: " "))").monospaced().lineLimit(
+                                nil
+                            ).textSelection(.enabled)
                         }
                         if let stdout = check.stdout {
-                            Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil).textSelection(.enabled)
+                            Text("stdout: \(stdout)").foregroundColor(.secondary).lineLimit(nil)
+                                .textSelection(.enabled)
                         }
                         if let stderr = check.stderr {
-                            Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+                            Text("stderr: \(stderr)").foregroundColor(.red).lineLimit(nil)
+                                .textSelection(.enabled)
                         }
                         if let error = check.error {
-                            Text("error: \(error)").foregroundColor(.red).lineLimit(nil).textSelection(.enabled)
+                            Text("error: \(error)").foregroundColor(.red).lineLimit(nil)
+                                .textSelection(.enabled)
                         }
                     }
                     .font(.caption2)
@@ -254,5 +269,5 @@ extension CrawlersView {
         .font(.caption2)
         .padding(.vertical, 2)
     }
-    
+
 }

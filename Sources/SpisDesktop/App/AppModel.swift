@@ -28,7 +28,8 @@ final class AppModel {
             selectedCatalog = nil
             selectedCatalogForCrawl = nil
             contractText = nil
-            loadError = "Spis corpus location is unavailable or invalid. Adopt an existing canonical corpus, then try again."
+            loadError =
+                "Spis corpus location is unavailable or invalid. Adopt an existing canonical corpus, then try again."
             return
         }
         self.root = root
@@ -73,12 +74,13 @@ final class AppModel {
             }
             return false
         } catch {
-            runState = .finished(SpisOutcome(
-                operation: "Adopt corpus",
-                status: 1,
-                output: "",
-                refusal: error.localizedDescription
-            ))
+            runState = .finished(
+                SpisOutcome(
+                    operation: "Adopt corpus",
+                    status: 1,
+                    output: "",
+                    refusal: error.localizedDescription
+                ))
             WisentFailureReporter.shared.report(
                 failurePoint: "spis.corpus-adopt",
                 code: "invalid_input",
@@ -97,7 +99,8 @@ final class AppModel {
         runState = .running(operation.displayName)
         do {
             let base = try await backend.endpoint()
-            let outcome = try await SpisClient(baseURL: base).run(operation, catalog: selectedCatalog?.slug)
+            let outcome = try await SpisClient(baseURL: base).run(
+                operation, catalog: selectedCatalog?.slug)
             runState = .finished(outcome)
             // The outcome panel's source: a refusal becomes user-visible
             // state here, so it reports here.
@@ -110,16 +113,18 @@ final class AppModel {
                 )
             }
         } catch {
-            runState = .finished(SpisOutcome(
-                operation: operation.displayName,
-                status: 1,
-                output: "",
-                refusal: error.localizedDescription
-            ))
+            runState = .finished(
+                SpisOutcome(
+                    operation: operation.displayName,
+                    status: 1,
+                    output: "",
+                    refusal: error.localizedDescription
+                ))
             let backendError = error as? SpisBackendError
             WisentFailureReporter.shared.report(
                 failurePoint: backendError == nil ? "spis.browse" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
+                    ?? "unknown",
                 service: "spis",
                 detail: error.localizedDescription
             )
@@ -148,11 +153,11 @@ final class AppModel {
             switch (lhs, rhs) {
             case (.idle, .idle), (.loading, .loading):
                 return true
-            case let (.running(op1), .running(op2)):
+            case (.running(let op1), .running(let op2)):
                 return op1 == op2
-            case let (.completed(c1), .completed(c2)):
+            case (.completed(let c1), .completed(let c2)):
                 return c1.run_id == c2.run_id
-            case let (.failed(e1), .failed(e2)):
+            case (.failed(let e1), .failed(let e2)):
                 return e1 == e2
             default:
                 return false
@@ -162,17 +167,19 @@ final class AppModel {
 
     func startCrawl() {
         guard let root = root else { return }
-        
+
         let catalogsToUse = selectedCatalogForCrawl.map { [$0.slug] } ?? []
-        
+
         let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
         let trimmedRecord = record?.isEmpty == true ? nil : record
-        let trimmedHost = crawlHost?.trimmingCharacters(in: .whitespaces).isEmpty == true ? nil : crawlHost?.trimmingCharacters(in: .whitespaces)
-        let trimmedAdmissionUrl = crawlAdmissionUrl.flatMap { 
+        let trimmedHost =
+            crawlHost?.trimmingCharacters(in: .whitespaces).isEmpty == true
+            ? nil : crawlHost?.trimmingCharacters(in: .whitespaces)
+        let trimmedAdmissionUrl = crawlAdmissionUrl.flatMap {
             let t = $0.trimmingCharacters(in: .whitespaces)
             return t.isEmpty ? nil : t
         }
-        
+
         if selectedCatalogForCrawl == nil && trimmedRecord != nil {
             // Record not allowed when all catalogs selected
             return
@@ -205,7 +212,8 @@ final class AppModel {
             do {
                 let record = crawlRecord?.trimmingCharacters(in: .whitespaces)
                 let trimmedRecord = record?.isEmpty == true ? nil : record
-                let result = try await crawlClient.crawlStatus(runId: runId, record: trimmedRecord, workingDirectory: root)
+                let result = try await crawlClient.crawlStatus(
+                    runId: runId, record: trimmedRecord, workingDirectory: root)
                 crawlState = .completed(result)
             } catch {
                 crawlState = .failed(error.localizedDescription)
@@ -242,7 +250,7 @@ final class AppModel {
             }
         }
     }
-    
+
     func resetCrawl() {
         crawlState = .idle
         currentRunId = nil

@@ -105,7 +105,8 @@ final class DocsCorpusModel {
             let backendError = error as? SpisBackendError
             WisentFailureReporter.shared.report(
                 failurePoint: backendError == nil ? "spis.docs" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
+                    ?? "unknown",
                 service: "spis",
                 detail: error.localizedDescription
             )
@@ -150,7 +151,8 @@ final class DocsCorpusModel {
             let backendError = error as? SpisBackendError
             WisentFailureReporter.shared.report(
                 failurePoint: backendError == nil ? "spis.docs" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
+                    ?? "unknown",
                 service: "spis",
                 detail: error.localizedDescription
             )
@@ -164,7 +166,8 @@ final class DocsCorpusModel {
             let limit = min(Self.perSiteLimit, remaining)
             progressText = "Searching \(site.name)…"
             do {
-                let data = try await client.docsSearch(query: trimmed, site: site.slug, limit: limit)
+                let data = try await client.docsSearch(
+                    query: trimmed, site: site.slug, limit: limit)
                 if Task.isCancelled { return }
                 let envelope = try JSONDecoder().decode(DocsSearchEnvelope.self, from: data)
                 scannedPages += envelope.scanned
@@ -209,7 +212,8 @@ final class DocsCorpusModel {
             }
         }
         var rows: [(String, String)] = []
-        for key in ["status", "quality", "bytes", "fetched_at", "lastmod"] where object[key] != nil {
+        for key in ["status", "quality", "bytes", "fetched_at", "lastmod"] where object[key] != nil
+        {
             rows.append((key, string(key)))
         }
         return DocsPage(
@@ -222,4 +226,3 @@ final class DocsCorpusModel {
 }
 
 // MARK: - Views
-

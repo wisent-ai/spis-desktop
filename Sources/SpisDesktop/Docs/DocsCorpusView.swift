@@ -30,8 +30,8 @@ struct DocsCorpusView: View {
     }
 }
 
-private extension DocsCorpusModel {
-    func cancelAll() {
+extension DocsCorpusModel {
+    fileprivate func cancelAll() {
         searchTask?.cancel()
         pageTask?.cancel()
         searching = false
@@ -225,4 +225,3 @@ struct DocsHitRow: View {
         .background(isSelected ? Color.accentColor.opacity(0.12) : .clear)
     }
 }
-

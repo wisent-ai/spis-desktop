@@ -106,27 +106,34 @@ actor SpisBackendProcess {
                 let data = handle.availableData
                 guard !data.isEmpty else {
                     handle.readabilityHandler = nil
-                    finish(.failure(SpisBackendError.failedToStart(
-                        "It exited before reporting its port." + state.stderrSuffix()
-                    )))
+                    finish(
+                        .failure(
+                            SpisBackendError.failedToStart(
+                                "It exited before reporting its port." + state.stderrSuffix()
+                            )))
                     return
                 }
                 guard let line = state.appendOutput(data) else { return }
                 if let object = try? JSONSerialization.jsonObject(with: line) as? [String: Any],
-                   (object["ready"] as? Bool) == true,
-                   let port = object["port"] as? Int {
+                    (object["ready"] as? Bool) == true,
+                    let port = object["port"] as? Int
+                {
                     finish(.success(port))
                 } else {
-                    finish(.failure(SpisBackendError.failedToStart(
-                        "Its ready line could not be read." + state.stderrSuffix()
-                    )))
+                    finish(
+                        .failure(
+                            SpisBackendError.failedToStart(
+                                "Its ready line could not be read." + state.stderrSuffix()
+                            )))
                 }
             }
             state.scheduleTimeout {
                 process.terminate()
-                finish(.failure(SpisBackendError.failedToStart(
-                    "It did not report a port within twenty seconds." + state.stderrSuffix()
-                )))
+                finish(
+                    .failure(
+                        SpisBackendError.failedToStart(
+                            "It did not report a port within twenty seconds." + state.stderrSuffix()
+                        )))
             }
         }
     }
@@ -167,7 +174,9 @@ private final class ReadyHandshake: @unchecked Sendable {
     func appendError(_ text: String) {
         lock.lock()
         stderrTail += text
-        if stderrTail.count > Self.stderrTailLimit { stderrTail = String(stderrTail.suffix(Self.stderrTailLimit)) }
+        if stderrTail.count > Self.stderrTailLimit {
+            stderrTail = String(stderrTail.suffix(Self.stderrTailLimit))
+        }
         lock.unlock()
     }
 

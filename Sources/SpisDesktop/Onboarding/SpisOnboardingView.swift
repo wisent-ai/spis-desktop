@@ -126,8 +126,8 @@ struct SpisOnboardingView: View {
     }
 
     private func presentationString(_ key: String) -> String? {
-        guard case let .string(value)? = screen?.presentation[key],
-              !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        guard case .string(let value)? = screen?.presentation[key],
+            !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         else { return nil }
         return value
     }

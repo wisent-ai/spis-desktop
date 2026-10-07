@@ -8,7 +8,6 @@ import WisentDesignSystem
 // three-hundred-line limit; the app, its delegate and the window's root
 // stay there.
 
-
 struct ContentView: View {
     @Environment(AppModel.self) private var model
 
@@ -35,10 +34,12 @@ struct CatalogSidebar: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        List(selection: Binding(
-            get: { model.selectedCatalog },
-            set: { model.selectedCatalog = $0 }
-        )) {
+        List(
+            selection: Binding(
+                get: { model.selectedCatalog },
+                set: { model.selectedCatalog = $0 }
+            )
+        ) {
             ForEach(model.catalogs) { catalog in
                 NavigationLink(value: catalog) {
                     VStack(alignment: .leading, spacing: 2) {
@@ -84,7 +85,10 @@ struct CatalogDetail: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Measured provenance")
                                 .font(.headline)
-                            ForEach(catalog.measuredProvenance.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                            ForEach(
+                                catalog.measuredProvenance.sorted(by: { $0.key < $1.key }),
+                                id: \.key
+                            ) { key, value in
                                 HStack {
                                     Text(key)
                                         .font(.system(.body, design: .monospaced))
@@ -182,7 +186,8 @@ struct RunConsole: View {
                 // operation's real status until the output lands.
                 WisentProgressPanel(
                     title: name,
-                    detail: "Spis is running this operation. Its output appears here when it finishes."
+                    detail:
+                        "Spis is running this operation. Its output appears here when it finishes."
                 )
             case .finished(let outcome):
                 ScrollView {
@@ -192,8 +197,11 @@ struct RunConsole: View {
                 }
                 .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
                 HStack {
-                    Image(systemName: outcome.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(outcome.succeeded ? .green : .red)
+                    Image(
+                        systemName: outcome.succeeded
+                            ? "checkmark.circle.fill" : "xmark.circle.fill"
+                    )
+                    .foregroundStyle(outcome.succeeded ? .green : .red)
                     Text(outcome.refusal ?? "\(outcome.operation) finished")
                         .font(.caption)
                 }

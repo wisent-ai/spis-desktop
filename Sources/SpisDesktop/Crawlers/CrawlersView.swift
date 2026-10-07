@@ -15,7 +15,7 @@ struct CrawlersView: View {
             mainStateView()
         }
     }
-    
+
     @ViewBuilder
     func errorStateView(_ error: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -45,7 +45,7 @@ struct CrawlersView: View {
         }
         .padding()
     }
-    
+
     @ViewBuilder
     func emptyStateView() -> some View {
         VStack(spacing: 12) {
@@ -57,7 +57,7 @@ struct CrawlersView: View {
         }
         .padding()
     }
-    
+
     @ViewBuilder
     func mainStateView() -> some View {
         VStack(spacing: 0) {
@@ -65,7 +65,9 @@ struct CrawlersView: View {
             case .idle:
                 idleFormView()
             case .loading:
-                loadingView("Starting new crawl", "Registering the run with Spis and waiting for its run ID.")
+                loadingView(
+                    "Starting new crawl",
+                    "Registering the run with Spis and waiting for its run ID.")
             case .running(let msg):
                 loadingView("Crawl running", msg)
             case .completed(let op):
@@ -76,7 +78,7 @@ struct CrawlersView: View {
         }
         .task { model.load() }
     }
-    
+
     /// An operation already in flight, not content being read: a crawl has no
     /// unloaded shape to stand in for, so it reports its real status instead.
     @ViewBuilder
@@ -84,7 +86,7 @@ struct CrawlersView: View {
         WisentProgressPanel(title: title, detail: detail)
             .padding()
     }
-    
+
     @ViewBuilder
     func actionButtonsView(_ op: CrawlOperation) -> some View {
         HStack(spacing: 12) {
@@ -100,7 +102,7 @@ struct CrawlersView: View {
                 }
                 .buttonStyle(.bordered)
             }
-            
+
             Button(action: { model.resetCrawl() }) {
                 HStack {
                     Image(systemName: "arrow.counterclockwise")
@@ -109,7 +111,7 @@ struct CrawlersView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            
+
             if shouldShowResume(op) {
                 Button(action: { model.resumeCrawl() }) {
                     HStack {
@@ -120,7 +122,7 @@ struct CrawlersView: View {
                 }
                 .buttonStyle(.bordered)
             }
-            
+
             if shouldShowImport(op) {
                 Button(action: { model.importCrawlResults() }) {
                     HStack {
@@ -133,7 +135,7 @@ struct CrawlersView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     func failedFormView(_ error: String) -> some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -145,7 +147,7 @@ struct CrawlersView: View {
                     Text("Crawl Failed")
                         .font(.headline)
                 }
-                
+
                 Text(error)
                     .font(.caption)
                     .textSelection(.enabled)
@@ -155,7 +157,7 @@ struct CrawlersView: View {
             .padding()
             .background(Color(.controlBackgroundColor))
             .cornerRadius(8)
-            
+
             HStack {
                 Button(action: { model.resetCrawl() }) {
                     HStack {
@@ -167,35 +169,36 @@ struct CrawlersView: View {
                 .buttonStyle(.bordered)
             }
             .padding()
-            
+
             Spacer()
         }
         .padding()
     }
-    
+
     // MARK: - Helpers
-    
+
     func isRunning(_ op: CrawlOperation) -> Bool {
         guard let state = op.state else { return false }
         let s = state.lowercased()
         return ["queued", "running", "pending_review"].contains(s)
     }
-    
+
     func shouldShowResume(_ op: CrawlOperation) -> Bool {
         guard let state = op.state else { return false }
         let s = state.lowercased()
-        return ["failed", "cancelled", "partial", "preflight_failed", "submission_failed", "lost"].contains(s)
+        return ["failed", "cancelled", "partial", "preflight_failed", "submission_failed", "lost"]
+            .contains(s)
     }
-    
+
     func shouldShowImport(_ op: CrawlOperation) -> Bool {
         guard let state = op.state else { return false }
         let s = state.lowercased()
-        
+
         // Always available for completed/uploaded
         if ["completed", "uploaded"].contains(s) {
             return true
         }
-        
+
         // For partial/failed/lost, check if there are importable records or artifacts
         if ["partial", "failed", "lost", "cancelled", "submission_failed"].contains(s) {
             if let catalogs = op.catalogs {
@@ -204,7 +207,7 @@ struct CrawlersView: View {
                     if catalog.artifact_uri != nil || catalog.output_uri != nil {
                         return true
                     }
-                    
+
                     // Check for records with importable states
                     if let records = catalog.records {
                         for record in records {
@@ -217,10 +220,10 @@ struct CrawlersView: View {
                 }
             }
         }
-        
+
         return false
     }
-    
+
     func stateColor(_ state: String) -> Color {
         let s = state.lowercased()
         switch s {
@@ -232,7 +235,7 @@ struct CrawlersView: View {
             return .red
         }
     }
-    
+
     func statusLabel(_ state: String) -> String {
         let s = state.lowercased()
         switch s {
@@ -251,10 +254,11 @@ struct CrawlersView: View {
         default: return state
         }
     }
-    
+
     func countLabel(_ key: String) -> String {
-        let label = key.hasPrefix("record_") ? String(key.dropFirst(7)) :
-                   key.hasPrefix("catalog_") ? String(key.dropFirst(8)) : key
+        let label =
+            key.hasPrefix("record_")
+            ? String(key.dropFirst(7)) : key.hasPrefix("catalog_") ? String(key.dropFirst(8)) : key
         return "• " + label.capitalized
     }
 }

@@ -33,7 +33,7 @@ struct CrawlOperation: Codable, Sendable {
             let records: [RecordPreflightCheck]?
             let weles: WelesInfo?
             let no_permission_prompts_requested: Bool?
-            
+
             struct Check: Codable, Sendable {
                 let command: [String]?
                 let ready: Bool?
@@ -41,13 +41,13 @@ struct CrawlOperation: Codable, Sendable {
                 let stderr: String?
                 let error: String?
             }
-            
+
             struct WelesInfo: Codable, Sendable {
                 let admission_url: String?
                 let admission_transport_ready: Bool?
                 let account_binding: String?
             }
-            
+
             struct RecordPreflightCheck: Codable, Sendable {
                 let record: String?
                 let name: String?
@@ -73,13 +73,17 @@ struct CrawlOperation: Codable, Sendable {
     var isTerminal: Bool {
         guard let state = state else { return false }
         let s = state.lowercased()
-        return ["completed", "uploaded", "failed", "imported", "partial", "cancelled", "lost", "preflight_failed", "submission_failed"].contains(s)
+        return [
+            "completed", "uploaded", "failed", "imported", "partial", "cancelled", "lost",
+            "preflight_failed", "submission_failed",
+        ].contains(s)
     }
 
     var isError: Bool {
         guard let state = state else { return false }
         let s = state.lowercased()
-        return ["failed", "partial", "cancelled", "lost", "preflight_failed", "submission_failed"].contains(s)
+        return ["failed", "partial", "cancelled", "lost", "preflight_failed", "submission_failed"]
+            .contains(s)
     }
 
     func countForState(_ state: String) -> Int {
@@ -102,20 +106,20 @@ struct CrawlOperation: Codable, Sendable {
 // MARK: - Crawler Start Configuration
 
 struct CrawlerStartConfig: Sendable {
-    let catalogs: [String] // One or more catalog slugs
-    let host: String? // Optional global host override
-    var hostMappings: [String: String]? = nil // Optional ENGINE=TARGET or CATALOG=TARGET mappings
-    let record: String? // Optional specific record
-    let admissionUrl: String? // Optional admission-url override
+    let catalogs: [String]  // One or more catalog slugs
+    let host: String?  // Optional global host override
+    var hostMappings: [String: String]? = nil  // Optional ENGINE=TARGET or CATALOG=TARGET mappings
+    let record: String?  // Optional specific record
+    let admissionUrl: String?  // Optional admission-url override
 
     func buildArguments() -> [String] {
         var args = ["crawl", "start"]
-        
+
         for catalog in catalogs {
             args.append("--catalog")
             args.append(catalog)
         }
-        
+
         // Add host overrides: catalog-specific, engine-specific, or global
         if let mappings = hostMappings {
             for (scope, target) in mappings {
@@ -127,17 +131,17 @@ struct CrawlerStartConfig: Sendable {
             args.append("--host")
             args.append(globalHost)
         }
-        
+
         if let record = record {
             args.append("--record")
             args.append(record)
         }
-        
+
         if let url = admissionUrl {
             args.append("--admission-url")
             args.append(url)
         }
-        
+
         return args
     }
 }

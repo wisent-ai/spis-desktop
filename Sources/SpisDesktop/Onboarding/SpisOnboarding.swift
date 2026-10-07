@@ -64,7 +64,8 @@ final class SpisOnboardingController {
                 do {
                     try await client.flush()
                 } catch {
-                    errorMessage = "Spis couldn’t send its first-use events: \(error.localizedDescription)"
+                    errorMessage =
+                        "Spis couldn’t send its first-use events: \(error.localizedDescription)"
                 }
             } else {
                 state = .presenting
@@ -81,10 +82,12 @@ final class SpisOnboardingController {
         guard let client, !isFinalScreen else { return }
         errorMessage = nil
         do {
-            guard try await client.advance(
-                evidence: [:],
-                evidenceRevision: Constants.evidenceRevision
-            ) != nil else { return }
+            guard
+                try await client.advance(
+                    evidence: [:],
+                    evidenceRevision: Constants.evidenceRevision
+                ) != nil
+            else { return }
             screen = await client.currentScreen
             try await expose(using: client)
         } catch {
@@ -99,7 +102,8 @@ final class SpisOnboardingController {
         guard let client, isFinalScreen else { return }
         errorMessage = nil
         guard catalogAvailable else {
-            errorMessage = "The corpus location was saved, but no catalog could be decoded from it. Choose the corpus again to see the exact refusal."
+            errorMessage =
+                "The corpus location was saved, but no catalog could be decoded from it. Choose the corpus again to see the exact refusal."
             return
         }
         let evidence: [String: JSONValue] = [Constants.firstSuccessFact: .boolean(true)]
@@ -113,11 +117,13 @@ final class SpisOnboardingController {
                 evidenceRevision: Constants.evidenceRevision
             )
             guard completed else {
-                errorMessage = "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
+                errorMessage =
+                    "Spis couldn’t record the accepted corpus. You can continue using it and replay first use from Manage."
                 return
             }
         } catch {
-            errorMessage = "Spis couldn’t record the accepted corpus (\(error.localizedDescription)). You can continue using it and replay first use from Manage."
+            errorMessage =
+                "Spis couldn’t record the accepted corpus (\(error.localizedDescription)). You can continue using it and replay first use from Manage."
             return
         }
         state = .completed
@@ -126,7 +132,8 @@ final class SpisOnboardingController {
         do {
             try await client.flush()
         } catch {
-            errorMessage = "Spis recorded first use but couldn’t send its events yet: \(error.localizedDescription)"
+            errorMessage =
+                "Spis recorded first use but couldn’t send its events yet: \(error.localizedDescription)"
         }
     }
 
@@ -193,7 +200,7 @@ final class SpisOnboardingController {
             return "The walkthrough's progress could not be written on this machine."
         case .transport:
             return "The onboarding service could not be reached."
-        case let .invalid(reason):
+        case .invalid(let reason):
             return reason
         }
     }
@@ -211,7 +218,7 @@ final class SpisOnboardingController {
         let subjectHash = JourneySubject.scoped([
             Constants.productID,
             JourneyScope.device.rawValue,
-            Self.deviceID()
+            Self.deviceID(),
         ])
         let transport = SpisJourneyTransport(
             upstream: EnvironmentJourneyTransport(
@@ -253,7 +260,7 @@ final class SpisOnboardingController {
             journeyVersionId: Constants.fallbackVersionID
         )
         guard bundle.definition.journeyVersion == Constants.journeyVersion,
-              bundle.definition.firstSuccessFact == Constants.firstSuccessFact
+            bundle.definition.firstSuccessFact == Constants.firstSuccessFact
         else {
             throw JourneyClientError.invalid("bundled fallback identity")
         }
@@ -265,7 +272,8 @@ final class SpisOnboardingController {
     private static func deviceID() -> String {
         let defaults = UserDefaults.standard
         if let stored = defaults.string(forKey: Constants.deviceIDKey),
-           !stored.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            !stored.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
             return stored
         }
         let created = UUID().uuidString.lowercased()

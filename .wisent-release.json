@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "product": "spis-desktop",
+  "releases": true,
+  "version_source": {
+    "kind": "regex",
+    "path": "App/Info.plist",
+    "pattern": "(?s)<key>CFBundleShortVersionString</key>\\s*<string>(?<version>\\d+\\.\\d+\\.\\d+)</string>"
+  },
+  "inputs": {},
+  "platforms": {
+    "darwin-arm64": {
+      "runner_platform": "darwin-arm64",
+      "quality": [{"name": "fmt", "argv": ["bash", "release/fmt.sh", "--check"]}],
+      "build": {
+        "argv": ["sh", "release/stado-release.sh"]
+      },
+      "stage": {
+        "Spis.app": "Spis.app"
+      },
+      "secret_env": {
+        "MACOS_SIGN_IDENTITY": "macos-developer-id#sign_identity"
+      }
+    }
+  },
+  "promotion": {
+    "channels": ["stable"],
+    "reconcile": false
+  },
+  "deliveries": []
+}

@@ -36,7 +36,9 @@ struct CorpusRepository {
     var root: URL?
 
     init(root: URL? = nil) {
-        self.root = root ?? ProcessInfo.processInfo.environment["REFERENCE_ENGINE_ROOT"]
+        self.root =
+            root
+            ?? ProcessInfo.processInfo.environment["REFERENCE_ENGINE_ROOT"]
             .map { URL(fileURLWithPath: $0) }
     }
 
@@ -49,16 +51,18 @@ struct CorpusRepository {
             configurationRoot = FileManager.default.homeDirectoryForCurrentUser
                 .appendingPathComponent(".config", isDirectory: true)
         }
-        return configurationRoot
+        return
+            configurationRoot
             .appendingPathComponent("spis", isDirectory: true)
             .appendingPathComponent("corpus.json")
     }
 
     private var configuredRoot: URL? {
         guard let data = try? Data(contentsOf: configurationURL),
-              let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              document["schema"] as? String == "spis.corpus-location.v1",
-              let path = document["root"] as? String else {
+            let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            document["schema"] as? String == "spis.corpus-location.v1",
+            let path = document["root"] as? String
+        else {
             return nil
         }
         return URL(fileURLWithPath: path, isDirectory: true)
@@ -70,19 +74,24 @@ struct CorpusRepository {
         }
         if let root, FileManager.default.fileExists(atPath: root.path) { return root }
         if let fromEnv = ProcessInfo.processInfo.environment["SPIS_ROOT"],
-           FileManager.default.fileExists(atPath: fromEnv) {
+            FileManager.default.fileExists(atPath: fromEnv)
+        {
             return URL(fileURLWithPath: fromEnv)
         }
         // Walk up from the executable: build products live several levels deep.
         var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
         for _ in 0...8 {
             url.deleteLastPathComponent()
-            if FileManager.default.fileExists(atPath: url.appendingPathComponent("example-catalogs.json").path) {
+            if FileManager.default.fileExists(
+                atPath: url.appendingPathComponent("example-catalogs.json").path)
+            {
                 return url
             }
             // Sibling checkout layout: <parent>/spis next to <parent>/spis-desktop.
             let sibling = url.appendingPathComponent("spis")
-            if FileManager.default.fileExists(atPath: sibling.appendingPathComponent("example-catalogs.json").path) {
+            if FileManager.default.fileExists(
+                atPath: sibling.appendingPathComponent("example-catalogs.json").path)
+            {
                 return sibling
             }
         }
@@ -126,6 +135,7 @@ struct CorpusRepository {
     }
 
     func contractText(from root: URL) -> String? {
-        try? String(contentsOf: root.appendingPathComponent("full-reference-contract.md"), encoding: .utf8)
+        try? String(
+            contentsOf: root.appendingPathComponent("full-reference-contract.md"), encoding: .utf8)
     }
 }

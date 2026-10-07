@@ -19,7 +19,9 @@ struct NewCatalogForm: View {
                 Task {
                     await model.addCatalog(slug: slug, title: title, description: description)
                     if model.output?.succeeded == true {
-                        slug = ""; title = ""; description = ""
+                        slug = ""
+                        title = ""
+                        description = ""
                     }
                 }
             }
@@ -51,9 +53,12 @@ struct CatalogEditor: View {
             TextField("New slug", text: $rename).frame(width: 180)
             Button("Save product type") {
                 Task {
-                    await model.editCatalog(slug: slug, title: title, description: description, rename: rename)
+                    await model.editCatalog(
+                        slug: slug, title: title, description: description, rename: rename)
                     if model.output?.succeeded == true {
-                        title = ""; description = ""; rename = ""
+                        title = ""
+                        description = ""
+                        rename = ""
                     }
                 }
             }

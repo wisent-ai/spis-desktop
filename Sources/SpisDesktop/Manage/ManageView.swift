@@ -39,7 +39,6 @@ struct ManageView: View {
 
                 Divider()
 
-
                 // Last on the surface, under the records it does not touch.
                 // It sits outside the selection branch above because the
                 // control has to be reachable whether or not a product type
@@ -84,10 +83,15 @@ struct ReferencesManager: View {
                                 selectionNote: newNote.isEmpty ? "operator-added" : newNote,
                                 visual: newImagePath
                             )
-                            newName = ""; newURL = ""; newCategory = ""; newNote = ""; newImagePath = ""
+                            newName = ""
+                            newURL = ""
+                            newCategory = ""
+                            newNote = ""
+                            newImagePath = ""
                         }
                     }
-                    .disabled(newName.isEmpty || newURL.isEmpty || newImagePath.isEmpty || model.running)
+                    .disabled(
+                        newName.isEmpty || newURL.isEmpty || newImagePath.isEmpty || model.running)
                 }
                 CatalogEditor(slug: slug)
             }
@@ -134,7 +138,8 @@ struct ConsoleOutput: View {
                 // operation's real status until the output lands.
                 WisentProgressPanel(
                     title: model.statusText,
-                    detail: "Spis is running this operation. Its output appears here when it finishes."
+                    detail:
+                        "Spis is running this operation. Its output appears here when it finishes."
                 )
             } else if let result = model.output {
                 ScrollView {
@@ -144,8 +149,10 @@ struct ConsoleOutput: View {
                 }
                 .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 8))
                 HStack {
-                    Image(systemName: result.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(result.succeeded ? .green : .red)
+                    Image(
+                        systemName: result.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill"
+                    )
+                    .foregroundStyle(result.succeeded ? .green : .red)
                     Text(result.refusal ?? "\(result.operation) finished")
                         .font(.caption)
                 }

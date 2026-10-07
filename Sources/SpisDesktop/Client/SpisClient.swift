@@ -84,24 +84,31 @@ struct SpisClient: Sendable {
     // arrives as a non-2xx envelope and is thrown with its sentence verbatim.
 
     func docsStatus() async throws -> Data {
-        var request = URLRequest(url: baseURL.appendingPathComponent("v1").appendingPathComponent("docs-status"))
+        var request = URLRequest(
+            url: baseURL.appendingPathComponent("v1").appendingPathComponent("docs-status"))
         request.httpMethod = "GET"
         return try await jsonDocument(request)
     }
 
     func docsSearch(query: String, site: String, limit: Int) async throws -> Data {
-        try await jsonDocument(postRequest("docs-search", body: [
-            "query": query,
-            "site": site,
-            "limit": limit,
-        ]))
+        try await jsonDocument(
+            postRequest(
+                "docs-search",
+                body: [
+                    "query": query,
+                    "site": site,
+                    "limit": limit,
+                ]))
     }
 
     func docsShow(site: String, url: String) async throws -> Data {
-        try await jsonDocument(postRequest("docs-show", body: [
-            "site": site,
-            "url": url,
-        ]))
+        try await jsonDocument(
+            postRequest(
+                "docs-show",
+                body: [
+                    "site": site,
+                    "url": url,
+                ]))
     }
 
     // MARK: - Corpus adoption
@@ -117,28 +124,36 @@ struct SpisClient: Sendable {
     // MARK: - Manage operations
 
     func addCatalog(slug: String, title: String, description: String) async throws -> SpisOutcome {
-        try await post("catalog-add", operation: "Add product type", body: [
-            "slug": slug,
-            "title": title,
-            "description": description,
-        ])
+        try await post(
+            "catalog-add", operation: "Add product type",
+            body: [
+                "slug": slug,
+                "title": title,
+                "description": description,
+            ])
     }
 
     /// Empty fields are left unchanged; `rename` is the new slug.
-    func editCatalog(slug: String, title: String, description: String, rename: String) async throws -> SpisOutcome {
-        try await post("catalog-edit", operation: "Edit product type", body: [
-            "slug": slug,
-            "title": title,
-            "description": description,
-            "rename": rename,
-        ])
+    func editCatalog(slug: String, title: String, description: String, rename: String) async throws
+        -> SpisOutcome
+    {
+        try await post(
+            "catalog-edit", operation: "Edit product type",
+            body: [
+                "slug": slug,
+                "title": title,
+                "description": description,
+                "rename": rename,
+            ])
     }
 
     func removeCatalog(slug: String, force: Bool) async throws -> SpisOutcome {
-        try await post("catalog-remove", operation: "Remove product type", body: [
-            "slug": slug,
-            "force": force,
-        ])
+        try await post(
+            "catalog-remove", operation: "Remove product type",
+            body: [
+                "slug": slug,
+                "force": force,
+            ])
     }
 
     func addReference(
@@ -149,28 +164,33 @@ struct SpisClient: Sendable {
         selectionNote: String,
         visual: String
     ) async throws -> SpisOutcome {
-        try await post("reference-add", operation: "Add record", body: [
-            "slug": slug,
-            "name": name,
-            "sourceUrl": sourceURL,
-            "category": category,
-            "selectionNote": selectionNote,
-            "visual": visual,
-        ])
+        try await post(
+            "reference-add", operation: "Add record",
+            body: [
+                "slug": slug,
+                "name": name,
+                "sourceUrl": sourceURL,
+                "category": category,
+                "selectionNote": selectionNote,
+                "visual": visual,
+            ])
     }
 
     func removeReference(slug: String, number: Int) async throws -> SpisOutcome {
-        try await post("reference-remove", operation: "Remove record", body: [
-            "slug": slug,
-            "number": number,
-            "force": true,
-        ])
+        try await post(
+            "reference-remove", operation: "Remove record",
+            body: [
+                "slug": slug,
+                "number": number,
+                "force": true,
+            ])
     }
 
     // MARK: - Transport
 
     private func postRequest(_ endpoint: String, body: [String: Any]) throws -> URLRequest {
-        var request = URLRequest(url: baseURL.appendingPathComponent("v1").appendingPathComponent(endpoint))
+        var request = URLRequest(
+            url: baseURL.appendingPathComponent("v1").appendingPathComponent(endpoint))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
@@ -195,7 +215,8 @@ struct SpisClient: Sendable {
         operation: String,
         body: [String: Any]
     ) async throws -> SpisOutcome {
-        let (bytes, response) = try await URLSession.shared.bytes(for: try postRequest(endpoint, body: body))
+        let (bytes, response) = try await URLSession.shared.bytes(
+            for: try postRequest(endpoint, body: body))
         guard let http = response as? HTTPURLResponse else { throw SpisClientError.notHTTP }
 
         // A non-2xx before the stream starts is the error envelope.
@@ -220,9 +241,9 @@ struct SpisClient: Sendable {
         var resultObject: [String: Any]?
         for try await line in bytes.lines {
             guard !line.isEmpty,
-                  let lineData = line.data(using: .utf8),
-                  let event = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
-                  let type = event["type"] as? String
+                let lineData = line.data(using: .utf8),
+                let event = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
+                let type = event["type"] as? String
             else { continue }
             switch type {
             case "log":

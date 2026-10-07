@@ -17,10 +17,12 @@ struct SpisCorpusAdoptionView: View {
             if !compact {
                 Text("Use an existing corpus")
                     .font(.headline)
-                Text("Choose an unpacked canonical Spis corpus. Its original references, provenance, screenshots, recordings, and evidence files stay in place.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(
+                    "Choose an unpacked canonical Spis corpus. Its original references, provenance, screenshots, recordings, and evidence files stay in place."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             }
 
             HStack {
@@ -35,12 +37,13 @@ struct SpisCorpusAdoptionView: View {
             }
 
             switch model.runState {
-            case let .running(operation):
+            case .running(let operation):
                 WisentProgressPanel(
                     title: operation,
-                    detail: "Spis is validating every catalog and referenced evidence file before saving this location."
+                    detail:
+                        "Spis is validating every catalog and referenced evidence file before saving this location."
                 )
-            case let .finished(outcome) where outcome.operation == "Adopt corpus":
+            case .finished(let outcome) where outcome.operation == "Adopt corpus":
                 if outcome.succeeded {
                     Label("Corpus accepted", systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
@@ -50,15 +53,20 @@ struct SpisCorpusAdoptionView: View {
                             .textSelection(.enabled)
                     }
                 } else {
-                    Label(outcome.refusal ?? "Spis refused the corpus without a reason.", systemImage: "xmark.circle.fill")
-                        .foregroundStyle(.red)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .textSelection(.enabled)
+                    Label(
+                        outcome.refusal ?? "Spis refused the corpus without a reason.",
+                        systemImage: "xmark.circle.fill"
+                    )
+                    .foregroundStyle(.red)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .textSelection(.enabled)
                 }
             default:
-                Text("Accepted format: a directory with canonical example-catalogs.json, catalog sources.json and references.json, and every referenced record file. Archives are refused.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(
+                    "Accepted format: a directory with canonical example-catalogs.json, catalog sources.json and references.json, and every referenced record file. Archives are refused."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
         }
         .fileImporter(
@@ -67,7 +75,7 @@ struct SpisCorpusAdoptionView: View {
             allowsMultipleSelection: false
         ) { result in
             switch result {
-            case let .success(urls):
+            case .success(let urls):
                 guard let url = urls.first else { return }
                 let access = url.startAccessingSecurityScopedResource()
                 Task {
@@ -76,13 +84,14 @@ struct SpisCorpusAdoptionView: View {
                         onAdopted()
                     }
                 }
-            case let .failure(error):
-                model.runState = .finished(SpisOutcome(
-                    operation: "Adopt corpus",
-                    status: 1,
-                    output: "",
-                    refusal: error.localizedDescription
-                ))
+            case .failure(let error):
+                model.runState = .finished(
+                    SpisOutcome(
+                        operation: "Adopt corpus",
+                        status: 1,
+                        output: "",
+                        refusal: error.localizedDescription
+                    ))
             }
         }
     }

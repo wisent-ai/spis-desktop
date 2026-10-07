@@ -43,8 +43,8 @@ final class ManageModel {
 
     func reloadTypes() {
         guard let root = repository.locate(),
-              let data = try? Data(contentsOf: root.appendingPathComponent("example-catalogs.json")),
-              let index = try? JSONDecoder().decode(CatalogIndex.self, from: data)
+            let data = try? Data(contentsOf: root.appendingPathComponent("example-catalogs.json")),
+            let index = try? JSONDecoder().decode(CatalogIndex.self, from: data)
         else { return }
         types = index.catalogs.map { entry in
             TypeEntry(
@@ -59,7 +59,8 @@ final class ManageModel {
 
     func loadReferences(for slug: String) {
         guard let root = repository.locate() else { return }
-        let url = root
+        let url =
+            root
             .appendingPathComponent(slug)
             .appendingPathComponent("references.json")
         struct Index: Decodable {
@@ -71,7 +72,7 @@ final class ManageModel {
             }
         }
         guard let data = try? Data(contentsOf: url),
-              let decoded = try? JSONDecoder().decode(Index.self, from: data)
+            let decoded = try? JSONDecoder().decode(Index.self, from: data)
         else {
             references = []
             return
@@ -116,7 +117,8 @@ final class ManageModel {
 
     func editCatalog(slug: String, title: String, description: String, rename: String) async {
         await perform(operation: "Edit product type") { client in
-            try await client.editCatalog(slug: slug, title: title, description: description, rename: rename)
+            try await client.editCatalog(
+                slug: slug, title: title, description: description, rename: rename)
         }
         if output?.succeeded == true, !rename.isEmpty {
             selectedCatalogSlug = nil
@@ -172,7 +174,8 @@ final class ManageModel {
             let backendError = error as? SpisBackendError
             WisentFailureReporter.shared.report(
                 failurePoint: backendError == nil ? "spis.manage" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" } ?? "unknown",
+                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
+                    ?? "unknown",
                 service: "spis",
                 detail: error.localizedDescription
             )
