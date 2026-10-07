@@ -24,7 +24,7 @@ case "${1:-}" in
     exit "$changed"
     ;;
   '')
-    sources | xargs xcrun swift-format format --configuration .swift-format --in-place
+    sources | tr '\n' '\0' | xargs -0 xcrun swift-format format --configuration .swift-format --in-place
     ;;
   *)
     printf 'usage: %s [--check]\n' "$0" >&2
