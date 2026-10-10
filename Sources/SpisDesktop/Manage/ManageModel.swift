@@ -103,6 +103,12 @@ final class ManageModel {
         }
     }
 
+    func editReference(slug: String, number: Int, fields: [String: String]) async {
+        await perform(operation: "Edit record") { client in
+            try await client.editReference(slug: slug, number: number, fields: fields)
+        }
+    }
+
     func removeReference(slug: String, number: Int) async {
         await perform(operation: "Remove record") { client in
             try await client.removeReference(slug: slug, number: number)

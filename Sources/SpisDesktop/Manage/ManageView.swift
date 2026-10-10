@@ -63,6 +63,7 @@ struct ReferencesManager: View {
     @State private var newCategory = ""
     @State private var newNote = ""
     @State private var newImagePath = ""
+    @State private var editingReference: ReferenceEntry?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -110,6 +111,9 @@ struct ReferencesManager: View {
                         .foregroundStyle(reference.evidenceStatus == "complete" ? .green : .orange)
                     Text("\(reference.evidenceGapCount) gaps")
                         .font(.caption).foregroundStyle(.secondary)
+                    Button("Edit") { editingReference = reference }
+                        .buttonStyle(.link)
+                        .disabled(model.running)
                     Button("Remove") {
                         Task { await model.removeReference(slug: slug, number: reference.number) }
                     }
@@ -123,6 +127,9 @@ struct ReferencesManager: View {
                     .padding(.horizontal).padding(.bottom, 12)
                     .frame(height: 170)
             }
+        }
+        .sheet(item: $editingReference) { reference in
+            ReferenceEditor(slug: slug, reference: reference)
         }
     }
 }

@@ -176,6 +176,13 @@ struct SpisClient: Sendable {
             ])
     }
 
+    func editReference(slug: String, number: Int, fields: [String: String]) async throws -> SpisOutcome {
+        var body: [String: Any] = fields
+        body["slug"] = slug
+        body["number"] = number
+        return try await post("reference-edit", operation: "Edit record", body: body)
+    }
+
     func removeReference(slug: String, number: Int) async throws -> SpisOutcome {
         try await post(
             "reference-remove", operation: "Remove record",
