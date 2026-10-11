@@ -25,6 +25,13 @@ struct ManageView: View {
             .navigationSplitViewColumnWidth(min: 220, ideal: 260)
         } detail: {
             VStack(spacing: 0) {
+                if let loadError = model.loadError {
+                    Label(loadError, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                    Divider()
+                }
                 if let slug = model.selectedCatalogSlug {
                     ReferencesManager(slug: slug)
                 } else {

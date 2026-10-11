@@ -40,12 +40,23 @@ final class ManageModel {
     var output: SpisOutcome?
     var running = false
     var statusText = ""
+    /// Why the catalog index or a catalog's references could not be read.
+    /// An unreadable file used to leave the list empty with no word, the same
+    /// as a corpus that holds no catalog.
+    var loadError: String?
 
     func reloadTypes() {
-        guard let root = repository.locate(),
-            let data = try? Data(contentsOf: root.appendingPathComponent("example-catalogs.json")),
-            let index = try? JSONDecoder().decode(CatalogIndex.self, from: data)
-        else { return }
+        guard let root = repository.locate() else { return }
+        let url = root.appendingPathComponent("example-catalogs.json")
+        let index: CatalogIndex
+        do {
+            index = try JSONDecoder().decode(CatalogIndex.self, from: Data(contentsOf: url))
+        } catch {
+            loadError = "\(url.path) cannot be read: \(error.localizedDescription)"
+            types = []
+            return
+        }
+        loadError = nil
         types = index.catalogs.map { entry in
             TypeEntry(
                 slug: entry.slug,
@@ -71,12 +82,15 @@ final class ManageModel {
                 case references
             }
         }
-        guard let data = try? Data(contentsOf: url),
-            let decoded = try? JSONDecoder().decode(Index.self, from: data)
-        else {
+        let decoded: Index
+        do {
+            decoded = try JSONDecoder().decode(Index.self, from: Data(contentsOf: url))
+        } catch {
+            loadError = "\(url.path) cannot be read: \(error.localizedDescription)"
             references = []
             return
         }
+        loadError = nil
         selectedCatalogSlug = slug
         references = decoded.references
     }
