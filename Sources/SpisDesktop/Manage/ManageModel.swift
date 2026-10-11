@@ -45,8 +45,22 @@ final class ManageModel {
     /// as a corpus that holds no catalog.
     var loadError: String?
 
+    /// The corpus root, or nil after recording why it cannot be located.
+    private func locatedRoot() -> URL? {
+        do {
+            guard let root = try repository.locate() else {
+                loadError = "Spis corpus location is unavailable."
+                return nil
+            }
+            return root
+        } catch {
+            loadError = "Spis corpus location is invalid: \(error.localizedDescription)"
+            return nil
+        }
+    }
+
     func reloadTypes() {
-        guard let root = repository.locate() else { return }
+        guard let root = locatedRoot() else { return }
         let url = root.appendingPathComponent("example-catalogs.json")
         let index: CatalogIndex
         do {
@@ -69,7 +83,7 @@ final class ManageModel {
     }
 
     func loadReferences(for slug: String) {
-        guard let root = repository.locate() else { return }
+        guard let root = locatedRoot() else { return }
         let url =
             root
             .appendingPathComponent(slug)

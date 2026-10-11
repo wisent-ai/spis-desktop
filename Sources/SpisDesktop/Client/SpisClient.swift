@@ -44,23 +44,6 @@ enum SpisOperation: String, CaseIterable, Identifiable, Sendable {
     }
 }
 
-enum SpisClientError: LocalizedError {
-    case notHTTP
-    case streamClosedEarly
-    case refusal(String)
-
-    var errorDescription: String? {
-        switch self {
-        case .notHTTP:
-            return "Spis returned an unreadable response. Try again."
-        case .streamClosedEarly:
-            return "The operation ended unexpectedly. Try again."
-        case .refusal(let sentence):
-            return sentence
-        }
-    }
-}
-
 /// HTTP/JSON client for the local Spis backend. Every operation POSTs and
 /// streams NDJSON — each log event is operation output in the backend's own
 /// order, and the single result event carries the status and, on failure,
@@ -176,7 +159,9 @@ struct SpisClient: Sendable {
             ])
     }
 
-    func editReference(slug: String, number: Int, fields: [String: String]) async throws -> SpisOutcome {
+    func editReference(slug: String, number: Int, fields: [String: String]) async throws
+        -> SpisOutcome
+    {
         var body: [String: Any] = fields
         body["slug"] = slug
         body["number"] = number
@@ -208,11 +193,7 @@ struct SpisClient: Sendable {
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let http = response as? HTTPURLResponse else { throw SpisClientError.notHTTP }
         guard (200...299).contains(http.statusCode) else {
-            let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-            throw SpisClientError.refusal(
-                (object?["error"] as? String)
-                    ?? "The request failed. Try again."
-            )
+            throw SpisClientError.refusal(Self.refusalSentence(status: http.statusCode, body: data))
         }
         return data
     }
@@ -233,13 +214,11 @@ struct SpisClient: Sendable {
                 data.append(contentsOf: line.utf8)
                 data.append(UInt8(ascii: "\n"))
             }
-            let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
             return SpisOutcome(
                 operation: operation,
                 status: 1,
                 output: "",
-                refusal: (object?["error"] as? String)
-                    ?? "The request failed. Try again."
+                refusal: Self.refusalSentence(status: http.statusCode, body: data)
             )
         }
 
@@ -247,11 +226,8 @@ struct SpisClient: Sendable {
         var resultStatus: Int?
         var resultObject: [String: Any]?
         for try await line in bytes.lines {
-            guard !line.isEmpty,
-                let lineData = line.data(using: .utf8),
-                let event = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
-                let type = event["type"] as? String
-            else { continue }
+            guard !line.isEmpty else { continue }
+            let (type, event) = try Self.streamEvent(line)
             switch type {
             case "log":
                 let chunk = event["chunk"] as? String ?? ""

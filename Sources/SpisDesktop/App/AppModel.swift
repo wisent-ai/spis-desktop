@@ -22,14 +22,19 @@ final class AppModel {
     var loadError: String?
 
     func load() {
-        guard let root = repository.locate() else {
-            self.root = nil
-            catalogs = []
-            selectedCatalog = nil
-            selectedCatalogForCrawl = nil
-            contractText = nil
-            loadError =
-                "Spis corpus location is unavailable or invalid. Adopt an existing canonical corpus, then try again."
+        let located: URL?
+        do {
+            located = try repository.locate()
+        } catch {
+            clear(
+                because: "Spis corpus location is invalid: \(error.localizedDescription)")
+            return
+        }
+        guard let root = located else {
+            clear(
+                because:
+                    "Spis corpus location is unavailable. Adopt an existing canonical corpus, then try again."
+            )
             return
         }
         self.root = root
@@ -41,13 +46,17 @@ final class AppModel {
             contractText = repository.contractText(from: root)
             loadError = nil
         } catch {
-            self.root = nil
-            catalogs = []
-            selectedCatalog = nil
-            selectedCatalogForCrawl = nil
-            contractText = nil
-            loadError = "Spis data could not be loaded. Try again."
+            clear(because: "Spis data could not be loaded: \(error.localizedDescription)")
         }
+    }
+
+    private func clear(because reason: String) {
+        root = nil
+        catalogs = []
+        selectedCatalog = nil
+        selectedCatalogForCrawl = nil
+        contractText = nil
+        loadError = reason
     }
 
     /// The native picker supplies only a directory URL. Validation and durable

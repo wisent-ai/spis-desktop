@@ -57,20 +57,42 @@ struct CorpusRepository {
             .appendingPathComponent("corpus.json")
     }
 
-    private var configuredRoot: URL? {
-        guard let data = try? Data(contentsOf: configurationURL),
-            let document = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-            document["schema"] as? String == "spis.corpus-location.v1",
-            let path = document["root"] as? String
-        else {
-            return nil
+    /// The corpus root the configuration names. A configuration that cannot be
+    /// read, is not JSON, has another schema or names no root fails with the
+    /// file and the cause; it used to read as "no corpus configured".
+    private func configuredRoot() throws -> URL {
+        let url = configurationURL
+        let data: Data
+        do {
+            data = try Data(contentsOf: url)
+        } catch {
+            throw CorpusLocationError("\(url.path) cannot be read: \(error.localizedDescription)")
+        }
+        let parsed: Any
+        do {
+            parsed = try JSONSerialization.jsonObject(with: data)
+        } catch {
+            throw CorpusLocationError("\(url.path) is not JSON: \(error.localizedDescription)")
+        }
+        guard let document = parsed as? [String: Any] else {
+            throw CorpusLocationError("\(url.path) is not a JSON object")
+        }
+        guard document["schema"] as? String == Self.locationSchema else {
+            throw CorpusLocationError(
+                "\(url.path) declares schema \(String(describing: document["schema"])), not \(Self.locationSchema)"
+            )
+        }
+        guard let path = document["root"] as? String else {
+            throw CorpusLocationError("\(url.path) names no root")
         }
         return URL(fileURLWithPath: path, isDirectory: true)
     }
 
-    func locate() -> URL? {
+    private static let locationSchema = "spis.corpus-location.v1"
+
+    func locate() throws -> URL? {
         if FileManager.default.fileExists(atPath: configurationURL.path) {
-            return configuredRoot
+            return try configuredRoot()
         }
         if let root, FileManager.default.fileExists(atPath: root.path) { return root }
         if let fromEnv = ProcessInfo.processInfo.environment["SPIS_ROOT"],
@@ -101,9 +123,22 @@ struct CorpusRepository {
     /// The built `spis` executable of a checkout: the release build, else the
     /// debug build, the order a developer and an install produce them in.
     func spisExecutable(in root: URL) -> URL? {
-        ["target/release/spis", "target/debug/spis"]
-            .map { root.appendingPathComponent($0) }
+        BuildProfile.allCases
+            .map { root.appendingPathComponent($0.executablePath) }
             .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    }
+
+    /// The cargo profiles a `spis` executable is built under, release first.
+    enum BuildProfile: CaseIterable {
+        case release
+        case debug
+
+        var executablePath: String {
+            switch self {
+            case .release: "target/release/spis"
+            case .debug: "target/debug/spis"
+            }
+        }
     }
 
     /// Locate the installed Spis checkout that owns the loopback API: the
@@ -138,4 +173,11 @@ struct CorpusRepository {
         try? String(
             contentsOf: root.appendingPathComponent("full-reference-contract.md"), encoding: .utf8)
     }
+}
+
+/// Why the configured corpus location could not be used.
+struct CorpusLocationError: LocalizedError {
+    let reason: String
+    init(_ reason: String) { self.reason = reason }
+    var errorDescription: String? { reason }
 }
