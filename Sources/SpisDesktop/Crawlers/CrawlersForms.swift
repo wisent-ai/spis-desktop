@@ -181,7 +181,7 @@ extension CrawlersView {
         HStack {
             Text("Run ID")
             Spacer()
-            Text(op.run_id ?? "unknown")
+            Text(reported(op.run_id))
                 .font(.caption)
                 .monospaced()
                 .textSelection(.enabled)
@@ -204,10 +204,10 @@ extension CrawlersView {
         HStack {
             Text("Status")
             Spacer()
-            Text(statusLabel(op.state ?? "unknown"))
+            Text(stateText(op))
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundColor(stateColor(op.state ?? "unknown"))
+                .foregroundColor(stateTint(op))
         }
 
         if let updated = op.updated_at {
@@ -219,6 +219,23 @@ extension CrawlersView {
                     .foregroundColor(.secondary)
             }
         }
+    }
+
+    /// A field the crawl operation did not report, said as such; "unknown"
+    /// read as a run id and a state of their own.
+    func reported(_ value: String?) -> String {
+        guard let value else { return "Not reported" }
+        return value
+    }
+
+    func stateText(_ op: CrawlOperation) -> String {
+        guard let state = op.state else { return "Not reported" }
+        return statusLabel(state)
+    }
+
+    func stateTint(_ op: CrawlOperation) -> Color {
+        guard let state = op.state else { return .secondary }
+        return stateColor(state)
     }
 
 }

@@ -211,7 +211,7 @@ extension CrawlersView {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(rc.record ?? "unknown").font(.caption).fontWeight(.semibold).monospaced()
+                    Text(reported(rc.record)).font(.caption).fontWeight(.semibold).monospaced()
                         .textSelection(.enabled)
                     if let name = rc.name {
                         Text(name).font(.caption2).foregroundColor(.secondary)
