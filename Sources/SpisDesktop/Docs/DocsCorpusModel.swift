@@ -102,14 +102,7 @@ final class DocsCorpusModel {
                 .sorted { $0.slug < $1.slug }
         } catch {
             loadError = error.localizedDescription
-            let backendError = error as? SpisBackendError
-            WisentFailureReporter.shared.report(
-                failurePoint: backendError == nil ? "spis.docs" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
-                    ?? "unknown",
-                service: "spis",
-                detail: error.localizedDescription
-            )
+            SpisFailure.report(error, at: "spis.docs")
         }
     }
 
@@ -148,14 +141,7 @@ final class DocsCorpusModel {
             searchError = error.localizedDescription
             progressText = ""
             // Only the backend start can throw here: the search never ran.
-            let backendError = error as? SpisBackendError
-            WisentFailureReporter.shared.report(
-                failurePoint: backendError == nil ? "spis.docs" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
-                    ?? "unknown",
-                service: "spis",
-                detail: error.localizedDescription
-            )
+            SpisFailure.report(error, at: "spis.docs")
             return
         }
 

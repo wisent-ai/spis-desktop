@@ -74,12 +74,7 @@ final class AppModel {
                 return true
             }
             if let refusal = outcome.refusal {
-                WisentFailureReporter.shared.report(
-                    failurePoint: "spis.corpus-adopt",
-                    code: "invalid_input",
-                    service: "spis",
-                    detail: refusal
-                )
+                SpisFailure.reportRefusal(refusal, at: "spis.corpus-adopt")
             }
             return false
         } catch {
@@ -90,12 +85,7 @@ final class AppModel {
                     output: "",
                     refusal: error.localizedDescription
                 ))
-            WisentFailureReporter.shared.report(
-                failurePoint: "spis.corpus-adopt",
-                code: "invalid_input",
-                service: "spis",
-                detail: error.localizedDescription
-            )
+            SpisFailure.report(error, at: "spis.corpus-adopt")
             return false
         }
     }
@@ -114,12 +104,7 @@ final class AppModel {
             // The outcome panel's source: a refusal becomes user-visible
             // state here, so it reports here.
             if let refusal = outcome.refusal {
-                WisentFailureReporter.shared.report(
-                    failurePoint: "spis.browse",
-                    code: "unknown",
-                    service: "spis",
-                    detail: refusal
-                )
+                SpisFailure.reportRefusal(refusal, at: "spis.browse")
             }
         } catch {
             runState = .finished(
@@ -129,14 +114,7 @@ final class AppModel {
                     output: "",
                     refusal: error.localizedDescription
                 ))
-            let backendError = error as? SpisBackendError
-            WisentFailureReporter.shared.report(
-                failurePoint: backendError == nil ? "spis.browse" : "spis.backend-start",
-                code: backendError.map { $0.isMissingInstall ? "config" : "infra_down" }
-                    ?? "unknown",
-                service: "spis",
-                detail: error.localizedDescription
-            )
+            SpisFailure.report(error, at: "spis.browse")
         }
     }
 
