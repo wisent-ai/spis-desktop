@@ -82,8 +82,8 @@ extension CrawlersView {
             HStack {
                 Text("Overall Ready:").fontWeight(.semibold)
                 Spacer()
-                Text(pf.ready ?? false ? "✓ Yes" : "✗ No")
-                    .foregroundColor(pf.ready ?? false ? .green : .red)
+                let overall = readiness(pf.ready, yes: "✓ Yes", no: "✗ No", noTint: .red)
+                Text(overall.text).foregroundColor(overall.tint)
             }
             .font(.caption)
 
@@ -179,8 +179,8 @@ extension CrawlersView {
             HStack {
                 Text("Check \(idx + 1):").fontWeight(.semibold)
                 Spacer()
-                Text(check.ready ?? false ? "✓ Ready" : "✗ Not Ready")
-                    .foregroundColor(check.ready ?? false ? .green : .orange)
+                let state = readiness(check.ready, yes: "✓ Ready", no: "✗ Not Ready", noTint: .orange)
+                Text(state.text).foregroundColor(state.tint)
             }
             if let cmd = check.command {
                 Text("Command: \(cmd.joined(separator: " "))")
@@ -218,9 +218,10 @@ extension CrawlersView {
                     }
                 }
                 Spacer()
-                Text(rc.ready ?? false ? "✓ Ready" : "✗ Not Ready")
+                let state = readiness(rc.ready, yes: "✓ Ready", no: "✗ Not Ready", noTint: .orange)
+                Text(state.text)
                     .font(.caption2)
-                    .foregroundColor(rc.ready ?? false ? .green : .orange)
+                    .foregroundColor(state.tint)
             }
 
             if let binding = rc.account_binding {
@@ -240,8 +241,8 @@ extension CrawlersView {
                         HStack {
                             Text("Check \(idx + 1)").font(.caption2).fontWeight(.semibold)
                             Spacer()
-                            Text(check.ready ?? false ? "✓" : "✗")
-                                .foregroundColor(check.ready ?? false ? .green : .orange)
+                            let state = readiness(check.ready, yes: "✓", no: "✗", noTint: .orange)
+                            Text(state.text).foregroundColor(state.tint)
                         }
                         if let cmd = check.command {
                             Text("Command: \(cmd.joined(separator: " "))").monospaced().lineLimit(
