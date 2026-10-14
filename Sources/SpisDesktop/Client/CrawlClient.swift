@@ -6,13 +6,18 @@ struct SpisCrawlClient: Sendable {
 
     // MARK: - Crawl operations (spis crawl start/status/resume/import)
 
+    /// The argv of one `spis crawl` verb; every operation below starts from it.
+    private static func crawl(_ verb: String) -> [String] {
+        ["crawl", verb]
+    }
+
     /// Start a new crawl operation with catalog, host, and optional admission URL.
     /// Start a new crawl operation with optional catalog selection (empty = all families) and optional host override.
     func crawlStart(
         catalogs: [String], host: String? = nil, record: String? = nil, admissionUrl: String? = nil,
         workingDirectory: URL? = nil
     ) async throws -> CrawlOperation {
-        var args = ["crawl", "start"]
+        var args = Self.crawl("start")
         for catalog in catalogs {
             args.append("--catalog")
             args.append(catalog)
@@ -37,7 +42,7 @@ struct SpisCrawlClient: Sendable {
     func crawlStatus(runId: String, record: String? = nil, workingDirectory: URL? = nil)
         async throws -> CrawlOperation
     {
-        var args = ["crawl", "status", "--run", runId]
+        var args = Self.crawl("status") + ["--run", runId]
         if let record = record {
             args.append("--record")
             args.append(record)
@@ -49,14 +54,14 @@ struct SpisCrawlClient: Sendable {
     /// Resume a paused crawl operation by run ID.
     func crawlResume(runId: String, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         let output = try await runCrawlProcess(
-            args: ["crawl", "resume", "--run", runId], workingDirectory: workingDirectory)
+            args: Self.crawl("resume") + ["--run", runId], workingDirectory: workingDirectory)
         return try parseCrawlOperation(from: output)
     }
 
     /// Import completed crawl results by run ID.
     func crawlImport(runId: String, workingDirectory: URL? = nil) async throws -> CrawlOperation {
         let output = try await runCrawlProcess(
-            args: ["crawl", "import", "--run", runId], workingDirectory: workingDirectory)
+            args: Self.crawl("import") + ["--run", runId], workingDirectory: workingDirectory)
         return try parseCrawlOperation(from: output)
     }
 
@@ -109,8 +114,10 @@ struct SpisCrawlClient: Sendable {
             // Get data from pipe readers (now unblocked with EOF from child)
             let stdoutData = await stdoutTask.value
             let stderrData = await stderrTask.value
-            let stdout = String(data: stdoutData, encoding: .utf8) ?? ""
-            let stderr = String(data: stderrData, encoding: .utf8) ?? ""
+            // Bytes that are not UTF-8 are shown replaced, never dropped
+            // whole: an empty stream read as the command having said nothing.
+            let stdout = String(decoding: stdoutData, as: UTF8.self)
+            let stderr = String(decoding: stderrData, as: UTF8.self)
 
             return ProcessResult(
                 exitCode: process.terminationStatus,
@@ -178,8 +185,8 @@ struct SpisCrawlClient: Sendable {
             "/usr/local/bin/spis",
             "/usr/bin/spis",
             "/opt/homebrew/bin/spis",
-            (ProcessInfo.processInfo.environment["HOME"] ?? "") + "/.local/bin/spis",
-            (ProcessInfo.processInfo.environment["HOME"] ?? "") + "/.cargo/bin/spis",
+            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".local/bin/spis").path,
+            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".cargo/bin/spis").path,
         ]
 
         for path in candidates {
@@ -202,13 +209,15 @@ struct SpisCrawlClient: Sendable {
 
         // Try to find in repository checkout relative to executable location
         let fm = FileManager.default
-        let bundlePath = Bundle.main.executablePath ?? ""
-        let possibleRepos = [
-            fm.currentDirectoryPath + "/target/release/spis",
-            URL(fileURLWithPath: bundlePath).deletingLastPathComponent().path + "/spis",
-            URL(fileURLWithPath: bundlePath).deletingLastPathComponent().deletingLastPathComponent()
-                .path + "/target/release/spis",
-        ]
+        var possibleRepos = [fm.currentDirectoryPath + "/target/release/spis"]
+        // Beside the app's own executable, when the bundle names one; without
+        // it there is no such place, not a path relative to the working directory.
+        if let executable = Bundle.main.executableURL {
+            let directory = executable.deletingLastPathComponent()
+            possibleRepos.append(directory.appendingPathComponent("spis").path)
+            possibleRepos.append(
+                directory.deletingLastPathComponent().appendingPathComponent("target/release/spis").path)
+        }
 
         for path in possibleRepos {
             if fm.fileExists(atPath: path) {
