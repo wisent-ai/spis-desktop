@@ -79,8 +79,8 @@ actor SpisBackendProcess {
     }
 
     /// Waits for the single ready line the backend prints once it has bound
-    /// its port. Any other outcome — exit, timeout, unreadable line — is a
-    /// start failure reported with the backend's own stderr tail.
+    /// its port. Any other outcome — exit, unreadable line — is a start
+    /// failure reported with the backend's own stderr.
     private static func awaitReady(
         process: Process,
         stdout: FileHandle,
@@ -123,30 +123,25 @@ actor SpisBackendProcess {
                     finish(
                         .failure(
                             SpisBackendError.failedToStart(
-                                "Its ready line could not be read." + state.stderrSuffix()
+                                "Its ready line could not be read: "
+                                    + String(decoding: line, as: UTF8.self) + "."
+                                    + state.stderrSuffix()
                             )))
                 }
             }
-            state.scheduleTimeout {
-                process.terminate()
-                finish(
-                    .failure(
-                        SpisBackendError.failedToStart(
-                            "It did not report a port within twenty seconds." + state.stderrSuffix()
-                        )))
-            }
+            // No clock: the backend answers with its ready line, or its exit
+            // closes stdout and is reported with what it wrote on stderr.
         }
     }
 }
 
-/// Lock-guarded state for the ready handshake: stdout buffer, stderr tail,
-/// the timeout, and the once-only resume of the awaiting continuation.
+/// Lock-guarded state for the ready handshake: stdout buffer, stderr, and
+/// the once-only resume of the awaiting continuation.
 private final class ReadyHandshake: @unchecked Sendable {
     private let lock = NSLock()
     private var stdoutBuffer = Data()
     private var stderrTail = ""
     private var resumed = false
-    private var timeoutItem: DispatchWorkItem?
     private var stdoutHandle: FileHandle?
     private var stderrHandle: FileHandle?
 
@@ -168,15 +163,10 @@ private final class ReadyHandshake: @unchecked Sendable {
         return line
     }
 
-    /// The backend's stderr is kept only as a tail this long, enough for one error with context.
-    private static let stderrTailLimit = 2_000
-
+    /// The backend's stderr, kept whole so a failure is said with all of it.
     func appendError(_ text: String) {
         lock.lock()
         stderrTail += text
-        if stderrTail.count > Self.stderrTailLimit {
-            stderrTail = String(stderrTail.suffix(Self.stderrTailLimit))
-        }
         lock.unlock()
     }
 
@@ -188,16 +178,7 @@ private final class ReadyHandshake: @unchecked Sendable {
         return trimmed.isEmpty ? "" : " " + trimmed
     }
 
-    func scheduleTimeout(_ action: @escaping () -> Void) {
-        let item = DispatchWorkItem(block: action)
-        lock.lock()
-        timeoutItem = item
-        lock.unlock()
-        DispatchQueue.global().asyncAfter(deadline: .now() + 20, execute: item)
-    }
-
-    /// Runs `body` exactly once, cancelling the pending timeout and
-    /// detaching both read handlers.
+    /// Runs `body` exactly once, detaching both read handlers.
     func finish(_ body: () -> Void) {
         lock.lock()
         guard !resumed else {
@@ -205,7 +186,6 @@ private final class ReadyHandshake: @unchecked Sendable {
             return
         }
         resumed = true
-        timeoutItem?.cancel()
         let stdout = stdoutHandle
         let stderr = stderrHandle
         lock.unlock()
