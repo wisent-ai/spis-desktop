@@ -43,7 +43,7 @@ final class AppModel {
             catalogs = index.catalogs.sorted { $0.title < $1.title }
             selectedCatalog = catalogs.first
             selectedCatalogForCrawl = catalogs.first
-            contractText = repository.contractText(from: root)
+            contractText = try repository.contractText(from: root)
             loadError = nil
         } catch {
             clear(because: "Spis data could not be loaded: \(error.localizedDescription)")

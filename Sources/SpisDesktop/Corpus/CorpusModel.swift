@@ -169,9 +169,13 @@ struct CorpusRepository {
         return try JSONDecoder().decode(CatalogIndex.self, from: data)
     }
 
-    func contractText(from root: URL) -> String? {
-        try? String(
-            contentsOf: root.appendingPathComponent("full-reference-contract.md"), encoding: .utf8)
+    /// The corpus's reference contract, or nil when the corpus carries none. A
+    /// contract that exists and cannot be read is the load's failure, never
+    /// shown as a corpus without one.
+    func contractText(from root: URL) throws -> String? {
+        let url = root.appendingPathComponent("full-reference-contract.md")
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        return try String(contentsOf: url, encoding: .utf8)
     }
 }
 
