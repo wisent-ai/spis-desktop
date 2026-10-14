@@ -42,8 +42,20 @@ struct CatalogEditor: View {
     @State private var rename = ""
     @State private var confirmingRemoval = false
 
-    private var recordCount: Int {
-        model.types.first { $0.slug == slug }?.count ?? 0
+    /// The records the product type holds, or nil when the listing does not
+    /// name the type or its count: an unknown count is asked about like a
+    /// non-empty one, never read as none.
+    private var recordCount: Int? {
+        model.types.first { $0.slug == slug }?.count
+    }
+
+    private var removalQuestion: String {
+        switch recordCount {
+        case .some(let count):
+            return "Remove \(slug) and its \(count) records?"
+        case .none:
+            return "Remove \(slug) and every record it holds? The listing does not say how many there are."
+        }
     }
 
     var body: some View {
@@ -64,7 +76,7 @@ struct CatalogEditor: View {
             }
             .disabled((title.isEmpty && description.isEmpty && rename.isEmpty) || model.running)
             Button("Remove product type", role: .destructive) {
-                if recordCount > 0 {
+                if recordCount != 0 {
                     confirmingRemoval = true
                 } else {
                     Task { await model.removeCatalog(slug: slug, force: false) }
@@ -73,7 +85,7 @@ struct CatalogEditor: View {
             .disabled(model.running)
         }
         .confirmationDialog(
-            "Remove \(slug) and its \(recordCount) records?",
+            removalQuestion,
             isPresented: $confirmingRemoval
         ) {
             Button("Remove with its records", role: .destructive) {
