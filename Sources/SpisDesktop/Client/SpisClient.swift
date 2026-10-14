@@ -230,7 +230,11 @@ struct SpisClient: Sendable {
             let (type, event) = try Self.streamEvent(line)
             switch type {
             case "log":
-                let chunk = event["chunk"] as? String ?? ""
+                // A log event carries its text; one that does not is a
+                // damaged stream, never an empty line of output.
+                guard let chunk = event["chunk"] as? String else {
+                    throw SpisClientError.unreadableEvent(line)
+                }
                 output += chunk
             case "result":
                 resultStatus = event["status"] as? Int
@@ -247,7 +251,9 @@ struct SpisClient: Sendable {
         } else if let sentence = resultObject?["error"] as? String, !sentence.isEmpty {
             refusal = sentence
         } else {
-            refusal = "The operation failed. Review the output and try again."
+            // The backend stated no reason: say so with its exit status,
+            // never a sentence it did not write.
+            refusal = "spis exited \(status) without stating why; read its output for the cause."
         }
         return SpisOutcome(
             operation: operation,
