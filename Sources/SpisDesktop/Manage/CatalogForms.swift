@@ -25,7 +25,9 @@ struct NewCatalogForm: View {
                     }
                 }
             }
-            .disabled(slug.isEmpty || title.isEmpty || model.running)
+            .disabled(
+                slug.isEmpty || title.isEmpty
+                    || description.trimmingCharacters(in: .whitespaces).isEmpty || model.running)
         }
     }
 }
