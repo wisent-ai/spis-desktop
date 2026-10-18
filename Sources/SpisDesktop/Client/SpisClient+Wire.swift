@@ -24,7 +24,6 @@ enum SpisClientError: LocalizedError {
 extension SpisClient {
     /// The sentence for a refused request: the backend's own `error` when its
     /// JSON envelope carries one, otherwise the status and the body it sent.
-    /// "The request failed. Try again." used to stand in for both.
     static func refusalSentence(status: Int, body: Data) -> String {
         let text = String(decoding: body, as: UTF8.self)
         let parsed: Any
@@ -42,8 +41,7 @@ extension SpisClient {
     }
 
     /// One NDJSON stream line as an event with its type. A line that is not
-    /// one fails the operation naming it: skipped, a damaged result line
-    /// ended as "closed early" and log lines vanished from the output.
+    /// one fails the operation naming it.
     static func streamEvent(_ line: String) throws -> (type: String, event: [String: Any]) {
         let parsed: Any
         do {

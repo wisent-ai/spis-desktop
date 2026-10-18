@@ -59,7 +59,7 @@ struct CorpusRepository {
 
     /// The corpus root the configuration names. A configuration that cannot be
     /// read, is not JSON, has another schema or names no root fails with the
-    /// file and the cause; it used to read as "no corpus configured".
+    /// file and the cause.
     private func configuredRoot() throws -> URL {
         let url = configurationURL
         let data: Data
@@ -101,16 +101,14 @@ struct CorpusRepository {
             return URL(fileURLWithPath: fromEnv)
         }
         // Walk up from the executable: build products live several levels deep.
-        var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
-        for _ in 0...8 {
-            url.deleteLastPathComponent()
+        for directory in executableAncestors() {
             if FileManager.default.fileExists(
-                atPath: url.appendingPathComponent("example-catalogs.json").path)
+                atPath: directory.appendingPathComponent("example-catalogs.json").path)
             {
-                return url
+                return directory
             }
             // Sibling checkout layout: <parent>/spis next to <parent>/spis-desktop.
-            let sibling = url.appendingPathComponent("spis")
+            let sibling = directory.appendingPathComponent("spis")
             if FileManager.default.fileExists(
                 atPath: sibling.appendingPathComponent("example-catalogs.json").path)
             {
@@ -118,6 +116,18 @@ struct CorpusRepository {
             }
         }
         return nil
+    }
+
+    /// The directories above this app's executable, nearest first, up to the
+    /// filesystem root; none when the process has no executable URL.
+    private func executableAncestors() -> [URL] {
+        guard var url = Bundle.main.executableURL?.resolvingSymlinksInPath() else { return [] }
+        var ancestors: [URL] = []
+        while url.path != "/" {
+            url.deleteLastPathComponent()
+            ancestors.append(url)
+        }
+        return ancestors
     }
 
     /// The built `spis` executable of a checkout: the release build, else the
@@ -149,13 +159,11 @@ struct CorpusRepository {
         if let root, spisExecutable(in: root) != nil {
             return root
         }
-        var url = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
-        while url.pathComponents.count > 1 {
-            url.deleteLastPathComponent()
-            if spisExecutable(in: url) != nil {
-                return url
+        for directory in executableAncestors() {
+            if spisExecutable(in: directory) != nil {
+                return directory
             }
-            let sibling = url.appendingPathComponent("spis")
+            let sibling = directory.appendingPathComponent("spis")
             if spisExecutable(in: sibling) != nil {
                 return sibling
             }
