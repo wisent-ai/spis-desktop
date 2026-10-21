@@ -12,10 +12,10 @@ let package = Package(
     ],
     dependencies: [
         // The fleet's failure catalogue, named by version rather than by commit:
-        // tag 1.0.0 points at b01a0c99, the very commit this manifest resolved
-        // before, so this names the same tree it always did. It is taggable
-        // because it declares no dependencies of its own.
-        .package(url: "https://github.com/wisent-ai/wisent-errors.git", exact: "1.0.0"),
+        // 1.1.0 is the release that declares `refused`, the code a refusal the
+        // app reports is filed under. It is taggable because it declares no
+        // dependencies of its own.
+        .package(url: "https://github.com/wisent-ai/wisent-errors.git", exact: "1.1.0"),
         .package(url: "https://github.com/wisent-ai/wisent-desktop-update.git", exact: "0.2.0"),
         // Named by version, not by commit: `wisent-components` 0.9.1 is a
         // tagged release that declares no dependencies of its own, so an exact

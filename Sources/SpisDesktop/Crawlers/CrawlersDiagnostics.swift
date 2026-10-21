@@ -179,7 +179,8 @@ extension CrawlersView {
             HStack {
                 Text("Check \(idx + 1):").fontWeight(.semibold)
                 Spacer()
-                let state = readiness(check.ready, yes: "✓ Ready", no: "✗ Not Ready", noTint: .orange)
+                let state = readiness(
+                    check.ready, yes: "✓ Ready", no: "✗ Not Ready", noTint: .orange)
                 Text(state.text).foregroundColor(state.tint)
             }
             if let cmd = check.command {

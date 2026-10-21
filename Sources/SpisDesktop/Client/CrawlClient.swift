@@ -185,8 +185,12 @@ struct SpisCrawlClient: Sendable {
             "/usr/local/bin/spis",
             "/usr/bin/spis",
             "/opt/homebrew/bin/spis",
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".local/bin/spis").path,
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".cargo/bin/spis").path,
+            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
+                ".local/bin/spis"
+            ).path,
+            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
+                ".cargo/bin/spis"
+            ).path,
         ]
 
         for path in candidates {
@@ -216,7 +220,8 @@ struct SpisCrawlClient: Sendable {
             let directory = executable.deletingLastPathComponent()
             possibleRepos.append(directory.appendingPathComponent("spis").path)
             possibleRepos.append(
-                directory.deletingLastPathComponent().appendingPathComponent("target/release/spis").path)
+                directory.deletingLastPathComponent().appendingPathComponent("target/release/spis")
+                    .path)
         }
 
         for path in possibleRepos {

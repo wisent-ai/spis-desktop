@@ -231,7 +231,9 @@ extension CrawlersView {
     /// A readiness flag as the backend reported it: `yes` when ready, `no`
     /// (in `noTint`) when not, and "Not reported" when the flag is absent,
     /// never an absent flag read as not ready.
-    func readiness(_ ready: Bool?, yes: String, no: String, noTint: Color) -> (text: String, tint: Color) {
+    func readiness(_ ready: Bool?, yes: String, no: String, noTint: Color) -> (
+        text: String, tint: Color
+    ) {
         switch ready {
         case .some(true): return (yes, .green)
         case .some(false): return (no, noTint)

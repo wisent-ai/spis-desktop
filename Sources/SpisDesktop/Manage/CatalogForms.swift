@@ -56,7 +56,8 @@ struct CatalogEditor: View {
         case .some(let count):
             return "Remove \(slug) and its \(count) records?"
         case .none:
-            return "Remove \(slug) and every record it holds? The listing does not say how many there are."
+            return
+                "Remove \(slug) and every record it holds? The listing does not say how many there are."
         }
     }
 
