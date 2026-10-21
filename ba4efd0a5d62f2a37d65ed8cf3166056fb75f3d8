@@ -1,0 +1,46 @@
+The bundle's restart script waits for the application to exit, with no limit
+
+The script quit an application through LaunchServices, then polled
+LaunchServices ten times a second and gave up after a fixed number of
+seconds, both while the old process exited and while the new one
+started. A slow quit was reported as a failure, and the poll interval
+and the limit were numbers nobody measured. The script now reads the
+process id LaunchServices reports, registers the wait in the machine's
+register of open waits (`stado waits open --kind proces`), blocks on
+`caffeinate -w` until exactly that process has exited, and closes the
+registration. `open` returns once LaunchServices has launched the
+bundle, so the launch is checked once and refused by name when no
+process is listed. The option that set the limit is removed: no caller
+passed it. Every refusal names what failed; usage goes to standard
+error.
+
+I read every message and every patch this push adds over the remote, line by line, as a principal engineer who assumes an AI agent wrote every line.
+No pushed line carries a defect: every path I traced does what its caller and the documentation say.
+The push adds no needless abstraction and no second copy of something that already exists.
+No error is swallowed and no missing or failed value is answered with one nobody stated.
+No number is guessed: each comes from a declaration, a caller's argument refused by name when missing, or a measurement.
+No code hides a failure by pausing, waiting or trying again.
+No comment narrates the change or an incident, and no host, account, date or internal id is written into the repository.
+Every test added runs the real product and checks its behaviour, not a mock, a copy or the source text.
+No commit only reformats or patches another commit of this push.
+The documentation this push touches, or should touch, says exactly what the code does.
+No line and no message of this commit carries private information of ours: no host, account, person, address, secret, token, session or defect id, and no detail of an incident; what it says would be the same in a repository anyone can read.
+This commit solves no problem of ours alone: it adds or repairs a general primitive a user outside Wisent could run for their own case, not a fix shaped to one of our machines, accounts, runs or incidents.
+As a very strict, grumpy senior engineer who hates AI, I tried with everything I have to refuse this push: what I attacked, what I checked, and why each attack failed. I attacked the wait on a process that has already exited: caffeinate -w on a process id that no longer exists returns at once with status zero, so a quit that finished before the wait began does not hang. I attacked the launch check racing LaunchServices: the script was run against a running Calculator, which was quit and relaunched under a new process id, and the check found it on the first read. I attacked a broken registration: when stado waits open prints no id the script refuses by name instead of waiting unregistered. I attacked the removed option: no build script in any repository carrying this file passes it. I ran the missing-argument, unknown-option, extra-argument, missing-bundle and not-running paths and read each refusal and exit status.
+
+I read this commit's message and every line of its patch, as a principal engineer who assumes an AI agent wrote every line.
+The claims about the lines this commit adds hold for them as the push leaves them: a defect that a later commit of the push repairs, naming this commit by its subject on a Repairs: line, is a repaired defect, never one left in place.
+No line this commit adds carries a defect: every path I traced does what its caller and the documentation say.
+This commit adds no needless abstraction and no second copy of something that already exists.
+No error is swallowed and no missing or failed value is answered with one nobody stated.
+No number is guessed: each comes from a declaration, a caller's argument refused by name when missing, or a measurement.
+No code hides a failure by pausing, waiting or trying again.
+No comment narrates the change or an incident, and no host, account, date or internal id is written into the repository.
+Every test added runs the real product and checks its behaviour, not a mock, a copy or the source text.
+This commit does not only reformat, and every commit the remote does not have yet whose lines it removes or replaces is named by its subject on a Repairs: line of its message or attestation note, with the defect it repairs there.
+The documentation this commit touches, or should touch, says exactly what the code does.
+No line and no message of this commit carries private information of ours: no host, account, person, address, secret, token, session or defect id, and no detail of an incident; what it says would be the same in a repository anyone can read.
+This commit solves no problem of ours alone: it adds or repairs a general primitive a user outside Wisent could run for their own case, not a fix shaped to one of our machines, accounts, runs or incidents.
+As a very strict, grumpy senior engineer who hates AI, I tried with everything I have to refuse this commit: what I attacked, what I checked, and why each attack failed.
+
+Harsh-Review-Attacked: a restart that waits on a guessed limit; checked that the wait has no limit and is registered with stado waits for as long as it lasts, and that a later commit of this push deletes the copy.
