@@ -73,16 +73,11 @@ struct SpisCrawlClient: Sendable {
         -> ProcessResult
     {
         let process = Process()
-        guard let spisBinary = locateSpisBinary(from: workingDirectory) else {
-            throw NSError(
-                domain: "CrawlOperation", code: 1,
-                userInfo: [
-                    NSLocalizedDescriptionKey:
-                        "Could not locate spis binary. Ensure 'spis' is installed in PATH or accessible from the repository."
-                ])
+        guard let spis = SpisExecutable.locate() else {
+            throw SpisExecutableMissing()
         }
 
-        process.executableURL = URL(fileURLWithPath: spisBinary)
+        process.executableURL = spis.url
         process.arguments = args
         if let workingDirectory = workingDirectory {
             process.currentDirectoryURL = workingDirectory
@@ -165,71 +160,8 @@ struct SpisCrawlClient: Sendable {
                 domain: "CrawlOperation", code: Int(result.exitCode),
                 userInfo: [
                     NSLocalizedDescriptionKey:
-                        "Crawl operation failed with exit code \(result.exitCode)"
+                        "spis crawl exited with code \(result.exitCode) without printing a result or a reason on stdout or stderr"
                 ])
         }
-    }
-
-    /// Locates the `spis` binary in standard search paths and repository checkouts.
-    private func locateSpisBinary(from workingDirectory: URL?) -> String? {
-        // If workingDirectory is provided, look for spis in its release subdirectory
-        if let workingDirectory = workingDirectory {
-            let releaseSpis = workingDirectory.appendingPathComponent("target/release/spis").path
-            if FileManager.default.fileExists(atPath: releaseSpis) {
-                return releaseSpis
-            }
-        }
-
-        // Standard search paths
-        let candidates = [
-            "/usr/local/bin/spis",
-            "/usr/bin/spis",
-            "/opt/homebrew/bin/spis",
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
-                ".local/bin/spis"
-            ).path,
-            FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
-                ".cargo/bin/spis"
-            ).path,
-        ]
-
-        for path in candidates {
-            if FileManager.default.fileExists(atPath: path) {
-                return path
-            }
-        }
-
-        // Search PATH directories
-        if let pathEnv = ProcessInfo.processInfo.environment["PATH"] {
-            let pathDirs = pathEnv.split(separator: ":", omittingEmptySubsequences: true).map(
-                String.init)
-            for dir in pathDirs {
-                let candidate = dir + "/spis"
-                if FileManager.default.fileExists(atPath: candidate) {
-                    return candidate
-                }
-            }
-        }
-
-        // Try to find in repository checkout relative to executable location
-        let fm = FileManager.default
-        var possibleRepos = [fm.currentDirectoryPath + "/target/release/spis"]
-        // Beside the app's own executable, when the bundle names one; without
-        // it there is no such place, not a path relative to the working directory.
-        if let executable = Bundle.main.executableURL {
-            let directory = executable.deletingLastPathComponent()
-            possibleRepos.append(directory.appendingPathComponent("spis").path)
-            possibleRepos.append(
-                directory.deletingLastPathComponent().appendingPathComponent("target/release/spis")
-                    .path)
-        }
-
-        for path in possibleRepos {
-            if fm.fileExists(atPath: path) {
-                return path
-            }
-        }
-
-        return nil
     }
 }

@@ -13,18 +13,31 @@ A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evi
 
 ## Build and run
 
+Spis Desktop runs the `spis` command-line core, so install that first:
+
+```bash
+stado product install spis --surface cli   # installs ~/.stado/bin/spis
+```
+
+([Stado onboarding](https://stado.wisent.com/docs/onboarding) installs `stado`.)
+Then build and open the app (macOS 14+, Swift 5.10 or newer):
+
 ```bash
 swift build
-.build/debug/ReferenceEngine
+.build/debug/Spis
 ```
 
-The app locates a `spis` binary in standard search paths or repository checkouts (e.g., `target/release/spis`), or you can pin one explicitly:
+The app runs the first `spis` it finds, in this order: the checkout
+`REFERENCE_ENGINE_ROOT` names (`target/release/spis`, else `target/debug/spis`),
+a checkout above the app or its `spis` sibling, `~/.stado/bin/spis`, then
+`PATH`. To run a checkout you built yourself:
 
 ```bash
-REFERENCE_ENGINE_ROOT=~/Documents/CodingProjects/Wisent/spis .build/debug/ReferenceEngine
+REFERENCE_ENGINE_ROOT=/path/to/spis .build/debug/Spis
 ```
 
-Requires macOS 14+ and Swift 6 toolchain. The Rust `spis` binary must be executable and discoverable (the app searches `PATH`, repository checkouts, and `target/release/`).
+When none is found, the app names every place it looked and the install
+command above.
 
 The adopted corpus location is stored by Spis core at
 `~/.config/spis/corpus.json` (or under `XDG_CONFIG_HOME`). The original

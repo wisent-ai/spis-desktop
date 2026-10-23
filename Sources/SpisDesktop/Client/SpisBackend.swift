@@ -17,20 +17,16 @@ actor SpisBackendProcess {
         if let process, process.isRunning, let baseURL { return baseURL }
         stop()
 
-        let repository = CorpusRepository()
-        guard let root = repository.locateProductRoot() else {
-            throw SpisBackendError.checkoutMissing
-        }
-        guard let spis = repository.spisExecutable(in: root) else {
-            throw SpisBackendError.backendMissing
+        guard let spis = SpisExecutable.locate() else {
+            throw SpisBackendError.notInstalled
         }
 
         let process = Process()
         let stdout = Pipe()
         let stderr = Pipe()
-        process.executableURL = spis
+        process.executableURL = spis.url
         process.arguments = ["serve", "--port", "0"]
-        process.currentDirectoryURL = root
+        process.currentDirectoryURL = spis.workingDirectory
         process.standardOutput = stdout
         process.standardError = stderr
         do {
@@ -196,16 +192,13 @@ private final class ReadyHandshake: @unchecked Sendable {
 }
 
 enum SpisBackendError: LocalizedError {
-    case checkoutMissing
-    case backendMissing
+    case notInstalled
     case failedToStart(String)
 
     var errorDescription: String? {
         switch self {
-        case .checkoutMissing:
-            return "Spis is not installed. Install Spis, then try again."
-        case .backendMissing:
-            return "Spis is not installed correctly. Reinstall Spis, then try again."
+        case .notInstalled:
+            return SpisExecutableMissing().errorDescription
         case .failedToStart(let cause):
             return "Spis could not start: \(cause)"
         }
@@ -215,7 +208,7 @@ enum SpisBackendError: LocalizedError {
     /// deployment, never a process that ran and died.
     var isMissingInstall: Bool {
         switch self {
-        case .checkoutMissing, .backendMissing:
+        case .notInstalled:
             return true
         case .failedToStart:
             return false
