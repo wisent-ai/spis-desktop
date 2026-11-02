@@ -126,6 +126,14 @@ private struct SpisRootContent: View {
                         },
                         retry: { Task { await onboarding.retry() } }
                     )
+                    // The overlay sits after the `.environment` calls above,
+                    // so it does not inherit them: its last screen embeds
+                    // `SpisCorpusAdoptionView`, which reads `AppModel`, and
+                    // reaching that screen trapped with "No Observable object
+                    // of type AppModel found" on every first use.
+                    .environment(model)
+                    .environment(manageModel)
+                    .environment(onboarding)
                 } else if let failure = onboarding.errorMessage {
                     // Events not sent after first use completed stay visible
                     // once the card is down.

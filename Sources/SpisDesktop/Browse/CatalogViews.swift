@@ -81,6 +81,25 @@ struct CatalogDetail: View {
                         StatCard(label: "Structures", value: "\(catalog.structureCount)")
                     }
 
+                    // The kinds the catalog's records declare, so a catalog
+                    // that groups many kinds (consulting decks, pitch decks,
+                    // thesis defences) shows how many references each has.
+                    if catalog.categories.count > 1 {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Kinds")
+                                .font(.headline)
+                            ForEach(catalog.categories, id: \.category) { kind in
+                                HStack {
+                                    Text(kind.category)
+                                        .font(.system(.body, design: .monospaced))
+                                    Spacer()
+                                    Text("\(kind.count)")
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+
                     if !catalog.measuredProvenance.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Measured provenance")

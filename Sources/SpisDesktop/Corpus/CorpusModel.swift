@@ -1,11 +1,19 @@
 import Foundation
 
+/// How many records of one catalog belong to one category, as
+/// `spis generate-example-catalogs` counts them from the records themselves.
+struct CategoryCount: Decodable, Hashable {
+    let category: String
+    let count: Int
+}
+
 /// One catalog entry decoded from `example-catalogs.json`.
 struct CatalogSummary: Identifiable, Decodable, Hashable {
     let slug: String
     let title: String
     let description: String
     let count: Int
+    let categories: [CategoryCount]
     let imageCount: Int
     let structureCount: Int
     let completeRecordCount: Int
@@ -16,7 +24,7 @@ struct CatalogSummary: Identifiable, Decodable, Hashable {
     var readme: String { "\(slug)/README.md" }
 
     enum CodingKeys: String, CodingKey {
-        case slug, title, description, count
+        case slug, title, description, count, categories
         case imageCount = "image_count"
         case structureCount = "structure_count"
         case completeRecordCount = "complete_record_count"

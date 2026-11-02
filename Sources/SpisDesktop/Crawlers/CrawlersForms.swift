@@ -87,7 +87,7 @@ extension CrawlersView {
                 set: { model.selectedCatalogForCrawl = $0 }
             )
         ) {
-            Text("All 15 product families").tag(nil as CatalogSummary?)
+            Text("All product families").tag(nil as CatalogSummary?)
             Divider()
             ForEach(model.catalogs) { catalog in
                 Text(catalog.title).tag(catalog as CatalogSummary?)
