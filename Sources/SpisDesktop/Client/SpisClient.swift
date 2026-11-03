@@ -195,7 +195,29 @@ struct SpisClient: Sendable {
         guard (200...299).contains(http.statusCode) else {
             throw SpisClientError.refusal(Self.refusalSentence(status: http.statusCode, body: data))
         }
+        // A docs answer that made the GitHub star request carries it beside
+        // the document; the window shows it whichever surface asked.
+        if let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+            let carried = object["star_request"] as? [String: Any]
+        {
+            try await Self.show(starRequest: carried, line: String(decoding: data, as: UTF8.self))
+        }
         return data
+    }
+
+    /// `POST /v1/star-dismiss`: never make the GitHub star request again,
+    /// answered with `spis star dismiss --json`'s document.
+    func starDismiss() async throws -> Data {
+        try await jsonDocument(postRequest("star-dismiss", body: [:]))
+    }
+
+    /// A `star_request` object handed to the window; one that does not carry
+    /// a request is a damaged answer, named with the line it came in.
+    private static func show(starRequest object: [String: Any], line: String) async throws {
+        guard let request = SpisStarRequest(object) else {
+            throw SpisClientError.unreadableEvent(line)
+        }
+        await MainActor.run { SpisStarRequestStore.shared.show(request) }
     }
 
     private func post(
@@ -239,6 +261,8 @@ struct SpisClient: Sendable {
             case "result":
                 resultStatus = event["status"] as? Int
                 resultObject = event["json"] as? [String: Any]
+            case "star_request":
+                try await Self.show(starRequest: event, line: line)
             default:
                 continue
             }

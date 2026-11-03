@@ -162,6 +162,9 @@ struct AppRootView: View {
             .labelsHidden()
             .padding(8)
 
+            // The GitHub star request, whichever surface's job made it.
+            SpisStarRequestPanel(store: SpisStarRequestStore.shared)
+
             switch surface {
             case "browse": ContentView()
             case "docs": DocsCorpusView()
