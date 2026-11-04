@@ -2,7 +2,7 @@
   "$schema": "https://github.com/wisent-ai/wisent-desktop-update/raw/main/release-manifest.schema.json",
   "schema": 1,
   "product": "Spis",
-  "bundle_id": "ai.wisent.spis.desktop",
+  "bundle_id": "com.wisent.spis.desktop",
   "bundle_path": ".build/Spis.app",
   "build_command": "SPIS_INSTALL_AFTER_BUILD=no ./release/bundle/build-app.sh",
   "archive_name": "Spis-{version}.zip",

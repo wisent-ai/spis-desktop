@@ -20,8 +20,8 @@ final class SpisOnboardingController {
         static let firstSuccessFact = "corpus_adopted"
         static let evidenceRevision = "spis-desktop-onboarding-2026-09-05.1"
         static let fallbackVersionID = UUID(uuidString: "5BD5E39A-4D63-4777-9A91-F6EABF9BE9EF")!
-        static let storageNamespace = "ai.wisent.spis.onboarding.2026-09-05.1"
-        static let deviceIDKey = "ai.wisent.spis.onboarding.device-id"
+        static let storageNamespace = "com.wisent.spis.onboarding.2026-09-05.1"
+        static let deviceIDKey = "com.wisent.spis.onboarding.device-id"
         static let resourceName = "spis-desktop-first-use"
     }
 
