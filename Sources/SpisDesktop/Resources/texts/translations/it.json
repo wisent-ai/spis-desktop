@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Scegli la directory del tuo corpus. Il primo utilizzo termina solo quando Spis core ha accettato e salvato la posizione e l'app ne ha letto un catalogo. Un'adozione ripetuta mostra i riferimenti invariati invece di duplicarli.",
+  "spis.first_use.adopt_corpus.title": "Scegli il tuo corpus esistente",
+  "spis.first_use.promise.body": "Spis parte da un corpus di prove che già curi. Legge sul posto i file originali di catalogo, riferimenti, provenienza, schermate, registrazioni e ricevute, invece di copiare una raccolta ridotta.",
+  "spis.first_use.promise.title": "Parti dal tuo corpus di riferimenti esistente",
+  "spis.first_use.read_and_write.body": "Scegli una directory decompressa che contenga il example-catalogs.json canonico, i sources.json e references.json di ogni catalogo e tutti i file di record citati. Spis convalida l'intero grafo prima di salvare il percorso. Gli archivi vengono rifiutati perché nessun file o campo di provenienza venga omesso in silenzio.",
+  "spis.first_use.read_and_write.title": "Adotta un corpus completo e ispezionabile",
+  "walkthrough.accessibility": "Presentazione del primo avvio di Spis",
+  "walkthrough.continue": "Continua",
+  "walkthrough.eyebrow": "CORPUS DI RIFERIMENTI SPIS",
+  "walkthrough.fallback.body": "Segui questo passo per arrivare al primo catalogo su cui Spis può riferire.",
+  "walkthrough.fallback.title": "Continua a configurare Spis",
+  "walkthrough.row.detail": "Guarda la presentazione che questo prodotto mostra al primo avvio.",
+  "walkthrough.row.show_again": "Mostrala di nuovo",
+  "walkthrough.row.starting": "Avvio della presentazione…",
+  "walkthrough.row.title": "Presentazione del primo avvio",
+  "walkthrough.step": "Passo {current} di {total}",
+  "walkthrough.tagline": "Lo stato misurato del corpus, in una sola finestra",
+  "walkthrough.try_again": "Riprova",
+  "walkthrough.unavailable.body": "Non è stato possibile leggere la presentazione inclusa. Nel corpus non è cambiato nulla.",
+  "walkthrough.unavailable.title": "Presentazione del primo avvio non disponibile"
+}

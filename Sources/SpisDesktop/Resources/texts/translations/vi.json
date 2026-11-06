@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Chọn thư mục kho của bạn. Lần dùng đầu tiên chỉ kết thúc sau khi Spis core chấp nhận và lưu vị trí, và ứng dụng đọc được một danh mục từ đó. Tiếp nhận lặp lại sẽ báo các tham chiếu không đổi thay vì nhân đôi chúng.",
+  "spis.first_use.adopt_corpus.title": "Chọn kho hiện có của bạn",
+  "spis.first_use.promise.body": "Spis bắt đầu từ kho bằng chứng bạn đang duy trì. Nó đọc tại chỗ các tệp danh mục, tham chiếu, nguồn gốc, ảnh chụp màn hình, bản ghi và biên nhận gốc, thay vì sao chép một bộ sưu tập rút gọn.",
+  "spis.first_use.promise.title": "Bắt đầu từ kho tham chiếu hiện có của bạn",
+  "spis.first_use.read_and_write.body": "Chọn một thư mục đã giải nén chứa example-catalogs.json chuẩn, sources.json và references.json của từng danh mục cùng mọi tệp bản ghi được tham chiếu. Spis kiểm tra toàn bộ đồ thị trước khi lưu đường dẫn. Tệp nén bị từ chối để không tệp hay trường nguồn gốc nào bị bỏ sót âm thầm.",
+  "spis.first_use.read_and_write.title": "Tiếp nhận một kho đầy đủ, có thể kiểm tra",
+  "walkthrough.accessibility": "Hướng dẫn lần chạy đầu của Spis",
+  "walkthrough.continue": "Tiếp tục",
+  "walkthrough.eyebrow": "KHO THAM CHIẾU SPIS",
+  "walkthrough.fallback.body": "Làm theo bước này để đến danh mục đầu tiên mà Spis có thể báo cáo.",
+  "walkthrough.fallback.title": "Tiếp tục thiết lập Spis",
+  "walkthrough.row.detail": "Xem phần hướng dẫn mà sản phẩm này hiển thị ở lần chạy đầu.",
+  "walkthrough.row.show_again": "Hiển thị lại",
+  "walkthrough.row.starting": "Đang bắt đầu phần hướng dẫn…",
+  "walkthrough.row.title": "Hướng dẫn lần chạy đầu",
+  "walkthrough.step": "Bước {current}/{total}",
+  "walkthrough.tagline": "Trạng thái đã đo của kho, trong một cửa sổ",
+  "walkthrough.try_again": "Thử lại",
+  "walkthrough.unavailable.body": "Không đọc được phần hướng dẫn đi kèm. Không có gì trong kho bị thay đổi.",
+  "walkthrough.unavailable.title": "Không có hướng dẫn lần chạy đầu"
+}

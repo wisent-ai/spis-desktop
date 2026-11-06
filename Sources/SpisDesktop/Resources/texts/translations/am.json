@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "የስብስብዎን ማውጫ ይምረጡ። የመጀመሪያ አጠቃቀም የሚጠናቀቀው Spis core ቦታውን ተቀብሎ ካስቀመጠው እና መተግበሪያው ከእሱ ካታሎግ ካነበበ በኋላ ብቻ ነው። ተደጋጋሚ መቀበል ማጣቀሻዎቹን ከማባዛት ይልቅ ያልተቀየሩ ብሎ ያሳያል።",
+  "spis.first_use.adopt_corpus.title": "ያለዎትን ስብስብ ይምረጡ",
+  "spis.first_use.promise.body": "Spis አስቀድመው ከሚያስተዳድሩት የማስረጃ ስብስብ ይጀምራል። የተቀነሰ ስብስብ ከመገልበጥ ይልቅ የመጀመሪያዎቹን የካታሎግ፣ የማጣቀሻ፣ የመነሻ፣ የቅጽበታዊ ገጽ እይታ፣ የቀረጻ እና የደረሰኝ ፋይሎች ባሉበት ያነባል።",
+  "spis.first_use.promise.title": "ካለዎት የማጣቀሻ ስብስብ ይጀምሩ",
+  "spis.first_use.read_and_write.body": "መደበኛ example-catalogs.json፣ የእያንዳንዱ ካታሎግ sources.json እና references.json እና ሁሉንም የተጠቀሱ የመዝገብ ፋይሎች የያዘ የተፈታ ማውጫ ይምረጡ። Spis መንገዱን ከማስቀመጡ በፊት ሙሉውን ግራፍ ያረጋግጣል። ማንኛውም ፋይል ወይም የመነሻ መስክ በጸጥታ እንዳይቀር ማህደሮች ውድቅ ይደረጋሉ።",
+  "spis.first_use.read_and_write.title": "አንድ ሙሉ፣ ሊመረመር የሚችል ስብስብ ይቀበሉ",
+  "walkthrough.accessibility": "የSpis የመጀመሪያ አጠቃቀም መመሪያ",
+  "walkthrough.continue": "ቀጥል",
+  "walkthrough.eyebrow": "SPIS የማጣቀሻ ስብስብ",
+  "walkthrough.fallback.body": "Spis ሪፖርት ሊያደርግበት ወደሚችለው የመጀመሪያው ካታሎግ ለመድረስ ይህንን ደረጃ ይከተሉ።",
+  "walkthrough.fallback.title": "Spisን ማዋቀር ይቀጥሉ",
+  "walkthrough.row.detail": "ይህ ምርት በመጀመሪያ አጠቃቀም የሚያሳየውን መመሪያ ይመልከቱ።",
+  "walkthrough.row.show_again": "እንደገና አሳይ",
+  "walkthrough.row.starting": "መመሪያውን በማስጀመር ላይ…",
+  "walkthrough.row.title": "የመጀመሪያ አጠቃቀም መመሪያ",
+  "walkthrough.step": "ደረጃ {current} ከ{total}",
+  "walkthrough.tagline": "የስብስቡ የተለካ ሁኔታ፣ በአንድ መስኮት",
+  "walkthrough.try_again": "እንደገና ሞክር",
+  "walkthrough.unavailable.body": "የተካተተው መመሪያ ሊነበብ አልቻለም። በስብስቡ ውስጥ ምንም አልተቀየረም።",
+  "walkthrough.unavailable.title": "የመጀመሪያ አጠቃቀም መመሪያ አይገኝም"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "د خپلې مجموعې پوښۍ وټاکئ. لومړۍ کارونه یوازې هغه وخت پای ته رسېږي چې Spis core ځای ومني او خوندي یې کړي او اپ ترې یو کتلاګ ولولي. تکراري منل حوالې پرته له دوه ځلي کولو بې بدلونه ښيي.",
+  "spis.first_use.adopt_corpus.title": "خپله موجوده مجموعه وټاکئ",
+  "spis.first_use.promise.body": "Spis له هغې شواهدو مجموعې پیلېږي چې تاسو یې دمخه ساتئ. دا د یوې کمې شوې ټولګې د کاپي کولو پر ځای د کتلاګ، حوالو، اصل، د پردې انځورونو، ثبتونو او رسیدونو اصلي فایلونه په خپل ځای کې لولي.",
+  "spis.first_use.promise.title": "د خپلې موجودې حوالې مجموعې څخه پیل وکړئ",
+  "spis.first_use.read_and_write.body": "یوه خلاصه شوې پوښۍ وټاکئ چې معیاري example-catalogs.json، د هر کتلاګ sources.json او references.json او ټول حواله شوي ریکارډ فایلونه ولري. Spis د لارې له خوندي کولو مخکې ټوله ګراف ګوري. آرشیفونه ردېږي ترڅو هېڅ فایل یا د اصل ساحه په چوپتیا پرېښودل نشي.",
+  "spis.first_use.read_and_write.title": "یوه بشپړه او د ازموینې وړ مجموعه ومنئ",
+  "walkthrough.accessibility": "د Spis د لومړي ځل کارونې لارښود",
+  "walkthrough.continue": "دوام",
+  "walkthrough.eyebrow": "د SPIS د حوالو مجموعه",
+  "walkthrough.fallback.body": "دا ګام تعقیب کړئ ترڅو هغه لومړي کتلاګ ته ورسېږئ چې Spis یې راپور ورکولی شي.",
+  "walkthrough.fallback.title": "د Spis تنظیم ته دوام ورکړئ",
+  "walkthrough.row.detail": "هغه لارښود وګورئ چې دا محصول یې د لومړي ځل کارونې پر مهال ښيي.",
+  "walkthrough.row.show_again": "بیا یې وښایاست",
+  "walkthrough.row.starting": "لارښود پیلېږي…",
+  "walkthrough.row.title": "د لومړي ځل کارونې لارښود",
+  "walkthrough.step": "د {total} څخه {current} ګام",
+  "walkthrough.tagline": "د مجموعې اندازه شوی حالت، په یوه کړکۍ کې",
+  "walkthrough.try_again": "بیا هڅه وکړئ",
+  "walkthrough.unavailable.body": "ورسره راغلی لارښود ونه لوستل شو. په مجموعه کې هېڅ نه دي بدل شوي.",
+  "walkthrough.unavailable.title": "د لومړي ځل کارونې لارښود شتون نه لري"
+}

@@ -9,11 +9,12 @@ import WisentOnboarding
 // Split out of `SpisOnboarding.swift`, which had grown past the
 // three-hundred-line limit; the controller stays there.
 
-/// The words come from the journey definition rather than from this file: the
-/// bundled JSON and the central one carry `presentation.title` and
-/// `presentation.body`, so a published revision of the copy reaches the screen
-/// without a new build. The step counter is the definition's too — three
-/// screens, and the position of the current one inside them.
+/// The words come from the journey definition and the app's wisent-texts
+/// catalogue rather than from this file: a screen reads by its `title_key`
+/// and `body_key` in the system's language (`SpisWords`), its English being
+/// the definition's `presentation.title` and `presentation.body`, and the
+/// panel's own lines are catalogue keys too. The step counter is the
+/// definition's — three screens, and the position of the current one.
 struct SpisOnboardingView: View {
     let screen: JourneyScreen?
     let errorMessage: String?
@@ -48,11 +49,11 @@ struct SpisOnboardingView: View {
                         HStack {
                             Spacer()
                             if screen == nil {
-                                Button("Try Again", action: retry)
+                                Button(SpisWords.say("walkthrough.try_again", english: "Try Again"), action: retry)
                                     .buttonStyle(WisentPrimaryButtonStyle())
                                     .keyboardShortcut(.defaultAction)
                             } else {
-                                Button("Continue", action: continueJourney)
+                                Button(SpisWords.say("walkthrough.continue", english: "Continue"), action: continueJourney)
                                     .buttonStyle(WisentPrimaryButtonStyle())
                                     .keyboardShortcut(.defaultAction)
                             }
@@ -63,17 +64,17 @@ struct SpisOnboardingView: View {
             .frame(width: 700)
             .padding(WisentDesign.Space.x8)
         }
-        .accessibilityLabel("Spis first-run walkthrough")
+        .accessibilityLabel(SpisWords.say("walkthrough.accessibility", english: "Spis first-run walkthrough"))
     }
 
     private var header: some View {
         HStack(spacing: WisentDesign.Space.x3) {
             VStack(alignment: .leading, spacing: WisentDesign.Space.x1) {
-                Text("SPIS REFERENCE CORPUS")
+                Text(SpisWords.say("walkthrough.eyebrow", english: "SPIS REFERENCE CORPUS"))
                     .font(WisentTypography.monoSemibold(10))
                     .tracking(0.7)
                     .foregroundStyle(WisentDesign.brand)
-                Text("The measured state of the corpus, in one window")
+                Text(SpisWords.say("walkthrough.tagline", english: "The measured state of the corpus, in one window"))
                     .font(WisentTypography.body(13))
                     .foregroundStyle(WisentDesign.secondary)
             }
@@ -100,20 +101,26 @@ struct SpisOnboardingView: View {
     }
 
     private var titleText: String {
-        if let text = presentationString("title") { return text }
-        return screen == nil ? "First-run walkthrough unavailable" : "Continue setting up Spis"
+        if let text = SpisWords.screen(screen?.titleKey, english: presentationString("title")) { return text }
+        return screen == nil
+            ? SpisWords.say("walkthrough.unavailable.title", english: "First-run walkthrough unavailable")
+            : SpisWords.say("walkthrough.fallback.title", english: "Continue setting up Spis")
     }
 
     private var bodyText: String {
-        if let text = presentationString("body") { return text }
+        if let text = SpisWords.screen(screen?.bodyKey, english: presentationString("body")) { return text }
         return screen == nil
-            ? "The bundled walkthrough could not be read. Nothing in the corpus has been changed."
-            : "Follow this step to reach the first catalog Spis can report on."
+            ? SpisWords.say("walkthrough.unavailable.body", english: "The bundled walkthrough could not be read. Nothing in the corpus has been changed.")
+            : SpisWords.say("walkthrough.fallback.body", english: "Follow this step to reach the first catalog Spis can report on.")
     }
 
     private var stepLabel: String? {
         guard let screen, let index = Self.order.firstIndex(of: screen.screenId) else { return nil }
-        return "Step \(index + 1) of \(Self.order.count)"
+        return SpisWords.say(
+            "walkthrough.step",
+            ["current": "\(index + 1)", "total": "\(Self.order.count)"],
+            english: "Step {current} of {total}"
+        )
     }
 
     private var symbol: String {
@@ -148,12 +155,12 @@ struct SpisFirstRunWalkthroughRow: View {
 
     var body: some View {
         WisentSectionBox(
-            title: "First-run walkthrough",
-            detail: "See the walkthrough this product shows on a first run."
+            title: SpisWords.say("walkthrough.row.title", english: "First-run walkthrough"),
+            detail: SpisWords.say("walkthrough.row.detail", english: "See the walkthrough this product shows on a first run.")
         ) {
             WisentPanel {
                 VStack(alignment: .leading, spacing: WisentDesign.Space.x3) {
-                    Button("Show it again") { showAgain() }
+                    Button(SpisWords.say("walkthrough.row.show_again", english: "Show it again")) { showAgain() }
                         .buttonStyle(WisentSecondaryButtonStyle())
                         .disabled(isReplaying)
                     if outcome != .idle {
@@ -172,7 +179,7 @@ struct SpisFirstRunWalkthroughRow: View {
     /// task below is scheduled, and a second press lands in the gap.
     private func showAgain() {
         guard !isReplaying else { return }
-        outcome = .working("Starting the walkthrough…")
+        outcome = .working(SpisWords.say("walkthrough.row.starting", english: "Starting the walkthrough…"))
         Task { outcome = await onboarding.replay() }
     }
 }

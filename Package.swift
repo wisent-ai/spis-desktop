@@ -33,6 +33,10 @@ let package = Package(
         // validates the bundled definition. Named by version like every other
         // consumer in the fleet.
         .package(url: "https://github.com/wisent-ai/echo.git", exact: "0.3.0"),
+        // The words the walkthrough shows, in every fleet language: the shared
+        // wisent-texts catalogue's Swift runtime, reading texts/ of this
+        // repository as the bundled Resources/texts.json.
+        .package(url: "https://github.com/wisent-ai/wisent-texts.git", exact: "1.0.0"),
     ],
     targets: [
         .executableTarget(
@@ -42,11 +46,24 @@ let package = Package(
                 .product(name: "WisentDesktopUpdate", package: "wisent-desktop-update"),
                 .product(name: "WisentDesignSystem", package: "wisent-components"),
                 .product(name: "WisentOnboarding", package: "echo"),
+                .product(name: "WisentTexts", package: "wisent-texts"),
             ],
             path: "Sources/SpisDesktop",
+            // Resources/texts/ is the wisent-texts root of this app: the
+            // catalogue and translations are its source, bundle.json is what
+            // ships (`node ../wisent-texts/bin/texts.mjs --root
+            // Sources/SpisDesktop/Resources/texts bundle`).
+            exclude: ["Resources/texts/catalogue.json", "Resources/texts/translations"],
             resources: [
                 .process("Resources")
             ]
+        ),
+        // The walkthrough's words in every fleet language, read through the
+        // app's own lookup from the bundle it ships (`swift test`).
+        .testTarget(
+            name: "SpisDesktopTextsTests",
+            dependencies: ["SpisDesktop"],
+            path: "tests/texts"
         )
     ]
 )

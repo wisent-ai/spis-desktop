@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Dooro galka kaydkaaga. Isticmaalka koowaad wuxuu dhammaadaa oo keliya marka Spis core aqbalo oo keydiyo goobta oo app-ku ka akhriyo kaataloog. Qaadashada soo noqnoqota waxay tixraacyada u muujisaa kuwo aan isbeddelin halkii ay laba jibbaari lahayd.",
+  "spis.first_use.adopt_corpus.title": "Dooro kaydkaaga jira",
+  "spis.first_use.promise.body": "Spis wuxuu ka bilaabmaa kayd caddeyn ah oo aad hore u maamuli jirtay. Wuxuu akhriyaa faylasha asalka ah ee kaatalooga, tixraacyada, asalka, sawirrada shaashadda, duubista iyo rasiidhada meeshooda, halkii uu koobiyeyn lahaa ururin la yareeyay.",
+  "spis.first_use.promise.title": "Ka bilow kaydkaaga tixraaca ee jira",
+  "spis.first_use.read_and_write.body": "Dooro gal la furay oo ka kooban example-catalogs.json caadiga ah, sources.json iyo references.json ee kaataloog kasta, iyo dhammaan faylasha diiwaanka ee la tixraacay. Spis wuxuu hubiyaa garaafka oo dhan ka hor inta uusan keydin waddada. Kaydadka waa la diidaa si aan fayl ama goob asal ah si aamusnaan ah looga tegin.",
+  "spis.first_use.read_and_write.title": "Qaado hal kayd oo dhammaystiran oo la baari karo",
+  "walkthrough.accessibility": "Hagitaanka isticmaalka koowaad ee Spis",
+  "walkthrough.continue": "Sii wad",
+  "walkthrough.eyebrow": "KAYDKA TIXRAACA SPIS",
+  "walkthrough.fallback.body": "Raac tallaabadan si aad u gaarto kaatalooga koowaad ee Spis ka warbixin karo.",
+  "walkthrough.fallback.title": "Sii wad dejinta Spis",
+  "walkthrough.row.detail": "Eeg hagitaanka alaabtan ay muujiso isticmaalka koowaad.",
+  "walkthrough.row.show_again": "Mar kale muuji",
+  "walkthrough.row.starting": "Hagitaanka waa la bilaabayaa…",
+  "walkthrough.row.title": "Hagitaanka isticmaalka koowaad",
+  "walkthrough.step": "Tallaabada {current} ee {total}",
+  "walkthrough.tagline": "Xaaladda la cabbiray ee kaydka, hal daaqad",
+  "walkthrough.try_again": "Isku day mar kale",
+  "walkthrough.unavailable.body": "Hagitaanka la socday lama akhrin karin. Waxba lagama beddelin kaydka.",
+  "walkthrough.unavailable.title": "Hagitaanka isticmaalka koowaad lama heli karo"
+}

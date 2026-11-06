@@ -1,0 +1,25 @@
+{
+  "product": "spis-desktop",
+  "texts": {
+    "spis.first_use.promise.title": {"en": "Start from your existing reference corpus", "for": "walkthrough screen 1 title (its English is the screen's presentation in Sources/SpisDesktop/Resources/spis-desktop-first-use.json)"},
+    "spis.first_use.promise.body": {"en": "Spis starts from an evidence corpus you already maintain. It reads the original catalog, reference, provenance, screenshot, recording, and receipt files in place instead of copying a reduced collection.", "for": "walkthrough screen 1 body"},
+    "spis.first_use.read_and_write.title": {"en": "Adopt one complete, inspectable corpus", "for": "walkthrough screen 2 title"},
+    "spis.first_use.read_and_write.body": {"en": "Choose an unpacked directory containing canonical example-catalogs.json, each catalog's sources.json and references.json, and all referenced record files. Spis validates the complete graph before saving the path. Archives are refused so no file or provenance field is silently omitted.", "for": "walkthrough screen 2 body; keep the file names unchanged"},
+    "spis.first_use.adopt_corpus.title": {"en": "Choose your existing corpus", "for": "walkthrough screen 3 title"},
+    "spis.first_use.adopt_corpus.body": {"en": "Choose your corpus directory. First use finishes only after Spis core accepts and persists the location and the app decodes a catalog from it. Repeated adoption reports the references unchanged rather than duplicating them.", "for": "walkthrough screen 3 body"},
+    "walkthrough.eyebrow": {"en": "SPIS REFERENCE CORPUS", "for": "small capitals label above the walkthrough; Spis is the product name"},
+    "walkthrough.tagline": {"en": "The measured state of the corpus, in one window", "for": "line under the label: what the app shows"},
+    "walkthrough.step": {"en": "Step {current} of {total}", "places": ["current", "total"], "for": "badge: which walkthrough screen this is"},
+    "walkthrough.continue": {"en": "Continue", "for": "button to the next walkthrough screen"},
+    "walkthrough.try_again": {"en": "Try Again", "for": "button that reloads a walkthrough that could not be read"},
+    "walkthrough.unavailable.title": {"en": "First-run walkthrough unavailable", "for": "title when the bundled walkthrough could not be read"},
+    "walkthrough.unavailable.body": {"en": "The bundled walkthrough could not be read. Nothing in the corpus has been changed.", "for": "body when the bundled walkthrough could not be read"},
+    "walkthrough.fallback.title": {"en": "Continue setting up Spis", "for": "title of a screen whose definition carries no title"},
+    "walkthrough.fallback.body": {"en": "Follow this step to reach the first catalog Spis can report on.", "for": "body of a screen whose definition carries no body"},
+    "walkthrough.accessibility": {"en": "Spis first-run walkthrough", "for": "accessibility label of the walkthrough panel"},
+    "walkthrough.row.title": {"en": "First-run walkthrough", "for": "section title on the Manage surface"},
+    "walkthrough.row.detail": {"en": "See the walkthrough this product shows on a first run.", "for": "section description on the Manage surface"},
+    "walkthrough.row.show_again": {"en": "Show it again", "for": "button that shows the walkthrough again"},
+    "walkthrough.row.starting": {"en": "Starting the walkthrough…", "for": "status while the walkthrough is being restarted"}
+  }
+}

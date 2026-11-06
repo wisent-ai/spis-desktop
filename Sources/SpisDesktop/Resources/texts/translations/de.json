@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Wählen Sie das Verzeichnis Ihres Korpus. Die erste Nutzung ist erst abgeschlossen, wenn Spis core den Speicherort angenommen und gespeichert hat und die App daraus einen Katalog liest. Eine wiederholte Übernahme meldet die Referenzen als unverändert, statt sie zu verdoppeln.",
+  "spis.first_use.adopt_corpus.title": "Wählen Sie Ihr vorhandenes Korpus",
+  "spis.first_use.promise.body": "Spis beginnt mit einem Belegkorpus, das Sie bereits pflegen. Es liest die originalen Katalog-, Referenz-, Herkunfts-, Bildschirmfoto-, Aufnahme- und Belegdateien an Ort und Stelle, statt eine reduzierte Sammlung zu kopieren.",
+  "spis.first_use.promise.title": "Beginnen Sie mit Ihrem vorhandenen Referenzkorpus",
+  "spis.first_use.read_and_write.body": "Wählen Sie ein entpacktes Verzeichnis mit der kanonischen example-catalogs.json, der sources.json und references.json jedes Katalogs und allen referenzierten Datensatzdateien. Spis prüft den gesamten Graphen, bevor es den Pfad speichert. Archive werden abgelehnt, damit keine Datei und kein Herkunftsfeld stillschweigend fehlt.",
+  "spis.first_use.read_and_write.title": "Übernehmen Sie ein vollständiges, prüfbares Korpus",
+  "walkthrough.accessibility": "Spis-Einführung beim ersten Start",
+  "walkthrough.continue": "Weiter",
+  "walkthrough.eyebrow": "SPIS-REFERENZKORPUS",
+  "walkthrough.fallback.body": "Folgen Sie diesem Schritt bis zum ersten Katalog, über den Spis berichten kann.",
+  "walkthrough.fallback.title": "Spis weiter einrichten",
+  "walkthrough.row.detail": "Sehen Sie die Einführung, die dieses Produkt beim ersten Start zeigt.",
+  "walkthrough.row.show_again": "Erneut anzeigen",
+  "walkthrough.row.starting": "Einführung wird gestartet…",
+  "walkthrough.row.title": "Einführung beim ersten Start",
+  "walkthrough.step": "Schritt {current} von {total}",
+  "walkthrough.tagline": "Der gemessene Zustand des Korpus in einem Fenster",
+  "walkthrough.try_again": "Erneut versuchen",
+  "walkthrough.unavailable.body": "Die mitgelieferte Einführung konnte nicht gelesen werden. Am Korpus wurde nichts geändert.",
+  "walkthrough.unavailable.title": "Einführung beim ersten Start nicht verfügbar"
+}

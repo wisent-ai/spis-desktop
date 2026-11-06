@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "ඔබගේ සංග්‍රහ නාමාවලිය තෝරන්න. Spis core ස්ථානය පිළිගෙන සුරකින අතර යෙදුම එයින් නාමාවලියක් කියවූ පසුව පමණක් පළමු භාවිතය අවසන් වේ. නැවත ගැනීම යොමු අනුපිටපත් නොකර වෙනස් නොවූ ලෙස පෙන්වයි.",
+  "spis.first_use.adopt_corpus.title": "ඔබගේ පවතින සංග්‍රහය තෝරන්න",
+  "spis.first_use.promise.body": "Spis ඔබ දැනටමත් නඩත්තු කරන සාක්ෂි සංග්‍රහයකින් අරඹයි. අඩු කළ එකතුවක් පිටපත් කිරීම වෙනුවට මුල් නාමාවලි, යොමු, මූලාරම්භ, තිර රූප, පටිගත කිරීම් සහ රිසිට්පත් ගොනු ඒවා ඇති තැනම කියවයි.",
+  "spis.first_use.promise.title": "ඔබගේ පවතින යොමු සංග්‍රහයෙන් අරඹන්න",
+  "spis.first_use.read_and_write.body": "සම්මත example-catalogs.json, සෑම නාමාවලියකම sources.json සහ references.json සහ යොමු කළ සියලු වාර්තා ගොනු අඩංගු විවෘත කළ නාමාවලියක් තෝරන්න. මාර්ගය සුරැකීමට පෙර Spis සම්පූර්ණ ප්‍රස්තාරය තහවුරු කරයි. කිසිදු ගොනුවක් හෝ මූලාරම්භ ක්ෂේත්‍රයක් නිහඬව අත්හැරී නොයන ලෙස සංරක්ෂණ ප්‍රතික්ෂේප කෙරේ.",
+  "spis.first_use.read_and_write.title": "සම්පූර්ණ, පරීක්ෂා කළ හැකි එක් සංග්‍රහයක් ගන්න",
+  "walkthrough.accessibility": "Spis පළමු භාවිත හඳුන්වාදීම",
+  "walkthrough.continue": "ඉදිරියට",
+  "walkthrough.eyebrow": "SPIS යොමු සංග්‍රහය",
+  "walkthrough.fallback.body": "Spis හට වාර්තා කළ හැකි පළමු නාමාවලියට ළඟා වීමට මෙම පියවර අනුගමනය කරන්න.",
+  "walkthrough.fallback.title": "Spis සැකසීම දිගටම කරගෙන යන්න",
+  "walkthrough.row.detail": "මෙම නිෂ්පාදනය පළමු භාවිතයේදී පෙන්වන හඳුන්වාදීම බලන්න.",
+  "walkthrough.row.show_again": "නැවත පෙන්වන්න",
+  "walkthrough.row.starting": "හඳුන්වාදීම ආරම්භ කරමින්…",
+  "walkthrough.row.title": "පළමු භාවිත හඳුන්වාදීම",
+  "walkthrough.step": "පියවර {current}/{total}",
+  "walkthrough.tagline": "සංග්‍රහයේ මනින ලද තත්ත්වය, එක් කවුළුවක",
+  "walkthrough.try_again": "නැවත උත්සාහ කරන්න",
+  "walkthrough.unavailable.body": "ඇතුළත් හඳුන්වාදීම කියවිය නොහැකි විය. සංග්‍රහයේ කිසිවක් වෙනස් කර නැත.",
+  "walkthrough.unavailable.title": "පළමු භාවිත හඳුන්වාදීම ලබා ගත නොහැක"
+}

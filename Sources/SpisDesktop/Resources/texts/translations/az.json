@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Korpus qovluğunuzu seçin. İlk istifadə yalnız Spis core yeri qəbul edib saxladıqdan və tətbiq ondan kataloq oxuduqdan sonra başa çatır. Təkrar qəbul istinadları dublikat etmək əvəzinə dəyişməmiş kimi göstərir.",
+  "spis.first_use.adopt_corpus.title": "Mövcud korpusunuzu seçin",
+  "spis.first_use.promise.body": "Spis artıq idarə etdiyiniz sübut korpusundan başlayır. O, kiçildilmiş toplu köçürmək əvəzinə orijinal kataloq, istinad, mənşə, ekran görüntüsü, yazı və qəbz fayllarını olduqları yerdə oxuyur.",
+  "spis.first_use.promise.title": "Mövcud istinad korpusunuzdan başlayın",
+  "spis.first_use.read_and_write.body": "Kanonik example-catalogs.json, hər kataloqun sources.json və references.json fayllarını və bütün istinad edilən qeyd fayllarını saxlayan açılmış qovluğu seçin. Spis yolu saxlamazdan əvvəl bütün qrafı yoxlayır. Heç bir fayl və ya mənşə sahəsi səssizcə buraxılmasın deyə arxivlər rədd edilir.",
+  "spis.first_use.read_and_write.title": "Bir tam, yoxlanıla bilən korpus qəbul edin",
+  "walkthrough.accessibility": "Spis ilk istifadə bələdçisi",
+  "walkthrough.continue": "Davam et",
+  "walkthrough.eyebrow": "SPIS İSTİNAD KORPUSU",
+  "walkthrough.fallback.body": "Spis-in hesabat verə biləcəyi ilk kataloqa çatmaq üçün bu addımı izləyin.",
+  "walkthrough.fallback.title": "Spis-in quraşdırılmasını davam etdirin",
+  "walkthrough.row.detail": "Bu məhsulun ilk istifadədə göstərdiyi bələdçiyə baxın.",
+  "walkthrough.row.show_again": "Yenidən göstər",
+  "walkthrough.row.starting": "Bələdçi başladılır…",
+  "walkthrough.row.title": "İlk istifadə bələdçisi",
+  "walkthrough.step": "Addım {current} / {total}",
+  "walkthrough.tagline": "Korpusun ölçülmüş vəziyyəti, bir pəncərədə",
+  "walkthrough.try_again": "Yenidən cəhd et",
+  "walkthrough.unavailable.body": "Daxili bələdçi oxuna bilmədi. Korpusda heç nə dəyişməyib.",
+  "walkthrough.unavailable.title": "İlk istifadə bələdçisi əlçatan deyil"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "コーパスのディレクトリを選びます。初回利用は、Spis core が場所を受け入れて保存し、アプリがそこからカタログを読み込んだ後にのみ完了します。繰り返し取り込んでも参照は重複せず、変更なしと表示されます。",
+  "spis.first_use.adopt_corpus.title": "既存のコーパスを選ぶ",
+  "spis.first_use.promise.body": "Spis は、すでに管理している証拠コーパスから始まります。縮小したコレクションをコピーするのではなく、元のカタログ、参照、来歴、スクリーンショット、録画、レシートのファイルをその場所のまま読み込みます。",
+  "spis.first_use.promise.title": "既存のリファレンスコーパスから始める",
+  "spis.first_use.read_and_write.body": "正規の example-catalogs.json、各カタログの sources.json と references.json、参照されるすべてのレコードファイルを含む展開済みのディレクトリを選びます。Spis はパスを保存する前にグラフ全体を検証します。ファイルや来歴フィールドが黙って抜け落ちないよう、アーカイブは拒否されます。",
+  "spis.first_use.read_and_write.title": "完全で検査できるコーパスを 1 つ取り込む",
+  "walkthrough.accessibility": "Spis の初回起動ウォークスルー",
+  "walkthrough.continue": "続ける",
+  "walkthrough.eyebrow": "SPIS リファレンスコーパス",
+  "walkthrough.fallback.body": "この手順に従って、Spis がレポートできる最初のカタログまで進みます。",
+  "walkthrough.fallback.title": "Spis の設定を続ける",
+  "walkthrough.row.detail": "この製品が初回起動時に表示するウォークスルーを確認します。",
+  "walkthrough.row.show_again": "もう一度表示",
+  "walkthrough.row.starting": "ウォークスルーを開始しています…",
+  "walkthrough.row.title": "初回起動のウォークスルー",
+  "walkthrough.step": "ステップ {current}/{total}",
+  "walkthrough.tagline": "コーパスの測定済みの状態を 1 つのウィンドウで",
+  "walkthrough.try_again": "再試行",
+  "walkthrough.unavailable.body": "同梱のウォークスルーを読み込めませんでした。コーパスは何も変更されていません。",
+  "walkthrough.unavailable.title": "初回起動のウォークスルーを利用できません"
+}

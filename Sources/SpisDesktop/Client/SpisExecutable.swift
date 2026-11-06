@@ -1,11 +1,12 @@
 import Foundation
 
 /// The one place the app looks for the `spis` command-line core, in order:
-/// the checkout `REFERENCE_ENGINE_ROOT` names, a checkout above this app (or
-/// its `spis` sibling), `~/.stado/bin/spis` where `stado product install spis
-/// --surface cli` puts it, then every directory on `PATH`. Both the loopback
-/// backend and the crawl operations run what this finds, so they never
-/// disagree about which `spis` is installed.
+/// the checkout `REFERENCE_ENGINE_ROOT` names, `~/.stado/bin/spis` where
+/// `stado product install spis --surface cli` puts it, then every directory on
+/// `PATH`. The folders above this app are never searched: on macOS that reads
+/// the folder the app sits in and makes the system ask for access to it. Both
+/// the loopback backend and the crawl operations run what this finds, so they
+/// never disagree about which `spis` is installed.
 struct SpisExecutable {
     /// The executable to run.
     let url: URL
@@ -25,7 +26,6 @@ struct SpisExecutable {
                 root.appendingPathComponent($0.executablePath).path
             }
         }
-        places.append("target/{release,debug}/spis of a checkout above this app")
         places.append(installedPath.path)
         places.append("spis on PATH (\(pathEnvironment))")
         return places

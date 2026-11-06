@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Velg mappen med korpuset ditt. Første bruk avsluttes først når Spis core har godtatt og lagret plasseringen og appen har lest en katalog derfra. Gjentatt overtakelse viser referansene som uendret i stedet for å duplisere dem.",
+  "spis.first_use.adopt_corpus.title": "Velg det eksisterende korpuset ditt",
+  "spis.first_use.promise.body": "Spis starter fra et bevismateriale du allerede vedlikeholder. Det leser de originale katalog-, referanse-, opprinnelses-, skjermbilde-, opptaks- og kvitteringsfilene der de ligger, i stedet for å kopiere en redusert samling.",
+  "spis.first_use.promise.title": "Start fra det eksisterende referansekorpuset ditt",
+  "spis.first_use.read_and_write.body": "Velg en utpakket mappe med den kanoniske example-catalogs.json, hver katalogs sources.json og references.json og alle postfilene det vises til. Spis validerer hele grafen før stien lagres. Arkiver avvises, slik at ingen fil eller opprinnelsesfelt utelates i stillhet.",
+  "spis.first_use.read_and_write.title": "Ta i bruk ett fullstendig korpus som kan kontrolleres",
+  "walkthrough.accessibility": "Spis' gjennomgang ved første oppstart",
+  "walkthrough.continue": "Fortsett",
+  "walkthrough.eyebrow": "SPIS REFERANSEKORPUS",
+  "walkthrough.fallback.body": "Følg dette trinnet for å nå den første katalogen Spis kan rapportere om.",
+  "walkthrough.fallback.title": "Fortsett oppsettet av Spis",
+  "walkthrough.row.detail": "Se gjennomgangen dette produktet viser ved første oppstart.",
+  "walkthrough.row.show_again": "Vis den igjen",
+  "walkthrough.row.starting": "Starter gjennomgangen…",
+  "walkthrough.row.title": "Gjennomgang ved første oppstart",
+  "walkthrough.step": "Trinn {current} av {total}",
+  "walkthrough.tagline": "Korpusets målte tilstand i ett vindu",
+  "walkthrough.try_again": "Prøv igjen",
+  "walkthrough.unavailable.body": "Den medfølgende gjennomgangen kunne ikke leses. Ingenting i korpuset er endret.",
+  "walkthrough.unavailable.title": "Gjennomgangen ved første oppstart er ikke tilgjengelig"
+}

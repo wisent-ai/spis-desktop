@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Vyberte adresář svého korpusu. První použití končí až poté, co Spis core přijme a uloží umístění a aplikace z něj načte katalog. Opakované převzetí ukáže reference beze změny, místo aby je zdvojilo.",
+  "spis.first_use.adopt_corpus.title": "Vyberte svůj stávající korpus",
+  "spis.first_use.promise.body": "Spis začíná z korpusu důkazů, který už spravujete. Čte původní soubory katalogu, referencí, původu, snímků obrazovky, nahrávek a potvrzení na místě, místo aby kopíroval zmenšenou sbírku.",
+  "spis.first_use.promise.title": "Začněte ze svého stávajícího korpusu referencí",
+  "spis.first_use.read_and_write.body": "Vyberte rozbalený adresář s kanonickým example-catalogs.json, s sources.json a references.json každého katalogu a se všemi odkazovanými soubory záznamů. Spis před uložením cesty ověří celý graf. Archivy jsou odmítnuty, aby žádný soubor ani pole původu nebylo potichu vynecháno.",
+  "spis.first_use.read_and_write.title": "Převezměte jeden úplný, ověřitelný korpus",
+  "walkthrough.accessibility": "Průvodce prvním spuštěním Spis",
+  "walkthrough.continue": "Pokračovat",
+  "walkthrough.eyebrow": "KORPUS REFERENCÍ SPIS",
+  "walkthrough.fallback.body": "Postupujte tímto krokem k prvnímu katalogu, o kterém může Spis podávat zprávy.",
+  "walkthrough.fallback.title": "Pokračujte v nastavení Spis",
+  "walkthrough.row.detail": "Zobrazte průvodce, kterého tento produkt ukazuje při prvním spuštění.",
+  "walkthrough.row.show_again": "Zobrazit znovu",
+  "walkthrough.row.starting": "Spouštění průvodce…",
+  "walkthrough.row.title": "Průvodce prvním spuštěním",
+  "walkthrough.step": "Krok {current} z {total}",
+  "walkthrough.tagline": "Změřený stav korpusu v jednom okně",
+  "walkthrough.try_again": "Zkusit znovu",
+  "walkthrough.unavailable.body": "Přibaleného průvodce se nepodařilo přečíst. V korpusu se nic nezměnilo.",
+  "walkthrough.unavailable.title": "Průvodce prvním spuštěním není k dispozici"
+}

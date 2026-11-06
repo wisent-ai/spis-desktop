@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Vælg mappen med dit korpus. Første brug afsluttes først, når Spis core har accepteret og gemt placeringen, og appen har læst et katalog derfra. Gentaget overtagelse viser referencerne som uændrede i stedet for at duplikere dem.",
+  "spis.first_use.adopt_corpus.title": "Vælg dit eksisterende korpus",
+  "spis.first_use.promise.body": "Spis starter fra et bevismateriale, du allerede vedligeholder. Det læser de originale katalog-, reference-, oprindelses-, skærmbillede-, optagelses- og kvitteringsfiler, hvor de ligger, i stedet for at kopiere en reduceret samling.",
+  "spis.first_use.promise.title": "Start fra dit eksisterende referencekorpus",
+  "spis.first_use.read_and_write.body": "Vælg en udpakket mappe med den kanoniske example-catalogs.json, hvert katalogs sources.json og references.json og alle refererede postfiler. Spis validerer hele grafen, før stien gemmes. Arkiver afvises, så ingen fil eller oprindelsesfelt udelades i stilhed.",
+  "spis.first_use.read_and_write.title": "Overtag ét komplet korpus, der kan efterses",
+  "walkthrough.accessibility": "Spis' gennemgang ved første start",
+  "walkthrough.continue": "Fortsæt",
+  "walkthrough.eyebrow": "SPIS REFERENCEKORPUS",
+  "walkthrough.fallback.body": "Følg dette trin for at nå det første katalog, Spis kan rapportere om.",
+  "walkthrough.fallback.title": "Fortsæt opsætningen af Spis",
+  "walkthrough.row.detail": "Se den gennemgang, dette produkt viser ved første start.",
+  "walkthrough.row.show_again": "Vis den igen",
+  "walkthrough.row.starting": "Starter gennemgangen…",
+  "walkthrough.row.title": "Gennemgang ved første start",
+  "walkthrough.step": "Trin {current} af {total}",
+  "walkthrough.tagline": "Korpussets målte tilstand i ét vindue",
+  "walkthrough.try_again": "Prøv igen",
+  "walkthrough.unavailable.body": "Den medfølgende gennemgang kunne ikke læses. Intet i korpusset er ændret.",
+  "walkthrough.unavailable.title": "Gennemgangen ved første start er ikke tilgængelig"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "আপনার সংগ্রহের ডিরেক্টরি বেছে নিন। Spis core অবস্থানটি গ্রহণ ও সংরক্ষণ করার এবং অ্যাপটি সেখান থেকে একটি ক্যাটালগ পড়ার পরেই কেবল প্রথম ব্যবহার শেষ হয়। বারবার গ্রহণ করলে রেফারেন্সগুলো নকল না হয়ে অপরিবর্তিত দেখায়।",
+  "spis.first_use.adopt_corpus.title": "আপনার বিদ্যমান সংগ্রহ বেছে নিন",
+  "spis.first_use.promise.body": "Spis আপনি আগে থেকে রক্ষণাবেক্ষণ করেন এমন প্রমাণ-সংগ্রহ থেকে শুরু করে। এটি সংক্ষিপ্ত সংগ্রহ কপি না করে মূল ক্যাটালগ, রেফারেন্স, উৎস, স্ক্রিনশট, রেকর্ডিং ও রসিদ ফাইলগুলো তাদের জায়গাতেই পড়ে।",
+  "spis.first_use.promise.title": "আপনার বিদ্যমান রেফারেন্স সংগ্রহ থেকে শুরু করুন",
+  "spis.first_use.read_and_write.body": "প্রামাণিক example-catalogs.json, প্রতিটি ক্যাটালগের sources.json ও references.json এবং সব উল্লিখিত রেকর্ড-ফাইলসহ একটি খোলা ডিরেক্টরি বেছে নিন। পথ সংরক্ষণের আগে Spis পুরো গ্রাফ যাচাই করে। কোনো ফাইল বা উৎস-ক্ষেত্র যাতে নীরবে বাদ না পড়ে সেজন্য আর্কাইভ প্রত্যাখ্যাত হয়।",
+  "spis.first_use.read_and_write.title": "একটি সম্পূর্ণ, পরীক্ষাযোগ্য সংগ্রহ গ্রহণ করুন",
+  "walkthrough.accessibility": "Spis প্রথম ব্যবহারের পরিচিতি",
+  "walkthrough.continue": "চালিয়ে যান",
+  "walkthrough.eyebrow": "SPIS রেফারেন্স সংগ্রহ",
+  "walkthrough.fallback.body": "Spis যে প্রথম ক্যাটালগ নিয়ে রিপোর্ট করতে পারে সেখানে পৌঁছাতে এই ধাপটি অনুসরণ করুন।",
+  "walkthrough.fallback.title": "Spis সেটআপ চালিয়ে যান",
+  "walkthrough.row.detail": "এই পণ্যটি প্রথম ব্যবহারে যে পরিচিতি দেখায় তা দেখুন।",
+  "walkthrough.row.show_again": "আবার দেখান",
+  "walkthrough.row.starting": "পরিচিতি শুরু হচ্ছে…",
+  "walkthrough.row.title": "প্রথম ব্যবহারের পরিচিতি",
+  "walkthrough.step": "ধাপ {current}/{total}",
+  "walkthrough.tagline": "সংগ্রহের পরিমাপ করা অবস্থা, এক উইন্ডোতে",
+  "walkthrough.try_again": "আবার চেষ্টা করুন",
+  "walkthrough.unavailable.body": "সংযুক্ত পরিচিতি পড়া যায়নি। সংগ্রহে কিছুই বদলানো হয়নি।",
+  "walkthrough.unavailable.title": "প্রথম ব্যবহারের পরিচিতি পাওয়া যাচ্ছে না"
+}

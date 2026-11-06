@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Valitse korpuksesi hakemisto. Ensikäyttö päättyy vasta, kun Spis core on hyväksynyt ja tallentanut sijainnin ja sovellus lukee siitä luettelon. Toistuva käyttöönotto näyttää viittaukset muuttumattomina eikä monista niitä.",
+  "spis.first_use.adopt_corpus.title": "Valitse olemassa oleva korpuksesi",
+  "spis.first_use.promise.body": "Spis aloittaa todistekorpuksesta, jota jo ylläpidät. Se lukee alkuperäiset luettelo-, viite-, alkuperä-, kuvakaappaus-, tallenne- ja kuittitiedostot paikallaan eikä kopioi supistettua kokoelmaa.",
+  "spis.first_use.promise.title": "Aloita olemassa olevasta viitekorpuksestasi",
+  "spis.first_use.read_and_write.body": "Valitse purettu hakemisto, joka sisältää kanonisen example-catalogs.json-tiedoston, kunkin luettelon sources.json- ja references.json-tiedostot sekä kaikki viitatut tietuetiedostot. Spis tarkistaa koko graafin ennen polun tallentamista. Arkistot hylätään, jotta mitään tiedostoa tai alkuperäkenttää ei jätetä huomaamatta pois.",
+  "spis.first_use.read_and_write.title": "Ota käyttöön yksi kokonainen, tarkastettava korpus",
+  "walkthrough.accessibility": "Spisin ensikäytön esittely",
+  "walkthrough.continue": "Jatka",
+  "walkthrough.eyebrow": "SPIS-VIITEKORPUS",
+  "walkthrough.fallback.body": "Seuraa tätä vaihetta päästäksesi ensimmäiseen luetteloon, josta Spis voi raportoida.",
+  "walkthrough.fallback.title": "Jatka Spisin käyttöönottoa",
+  "walkthrough.row.detail": "Katso esittely, jonka tämä tuote näyttää ensikäytössä.",
+  "walkthrough.row.show_again": "Näytä uudelleen",
+  "walkthrough.row.starting": "Esittely käynnistyy…",
+  "walkthrough.row.title": "Ensikäytön esittely",
+  "walkthrough.step": "Vaihe {current}/{total}",
+  "walkthrough.tagline": "Korpuksen mitattu tila yhdessä ikkunassa",
+  "walkthrough.try_again": "Yritä uudelleen",
+  "walkthrough.unavailable.body": "Mukana tulevaa esittelyä ei voitu lukea. Korpukseen ei ole muutettu mitään.",
+  "walkthrough.unavailable.title": "Ensikäytön esittely ei ole saatavilla"
+}

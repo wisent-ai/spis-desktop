@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Odaberite direktorij svog korpusa. Prva upotreba završava tek kada Spis core prihvati i sačuva lokaciju, a aplikacija iz nje pročita katalog. Ponovljeno preuzimanje prikazuje reference nepromijenjenim umjesto da ih udvostruči.",
+  "spis.first_use.adopt_corpus.title": "Odaberite svoj postojeći korpus",
+  "spis.first_use.promise.body": "Spis počinje od korpusa dokaza koji već održavate. Čita originalne datoteke kataloga, referenci, porijekla, snimaka ekrana, snimaka i potvrda na njihovom mjestu umjesto da kopira smanjenu zbirku.",
+  "spis.first_use.promise.title": "Počnite od svog postojećeg korpusa referenci",
+  "spis.first_use.read_and_write.body": "Odaberite raspakovani direktorij s kanonskim example-catalogs.json, sources.json i references.json svakog kataloga i svim referenciranim datotekama zapisa. Spis provjerava cijeli graf prije nego što sačuva putanju. Arhive se odbijaju kako nijedna datoteka ni polje porijekla ne bi bili tiho izostavljeni.",
+  "spis.first_use.read_and_write.title": "Preuzmite jedan potpun korpus koji se može provjeriti",
+  "walkthrough.accessibility": "Spis uvod pri prvom pokretanju",
+  "walkthrough.continue": "Nastavi",
+  "walkthrough.eyebrow": "SPIS KORPUS REFERENCI",
+  "walkthrough.fallback.body": "Slijedite ovaj korak da dođete do prvog kataloga o kojem Spis može izvještavati.",
+  "walkthrough.fallback.title": "Nastavite postavljanje Spisa",
+  "walkthrough.row.detail": "Pogledajte uvod koji ovaj proizvod prikazuje pri prvom pokretanju.",
+  "walkthrough.row.show_again": "Prikaži ponovo",
+  "walkthrough.row.starting": "Pokretanje uvoda…",
+  "walkthrough.row.title": "Uvod pri prvom pokretanju",
+  "walkthrough.step": "Korak {current} od {total}",
+  "walkthrough.tagline": "Izmjereno stanje korpusa u jednom prozoru",
+  "walkthrough.try_again": "Pokušaj ponovo",
+  "walkthrough.unavailable.body": "Ugrađeni uvod nije mogao biti pročitan. Ništa u korpusu nije promijenjeno.",
+  "walkthrough.unavailable.title": "Uvod pri prvom pokretanju nije dostupan"
+}

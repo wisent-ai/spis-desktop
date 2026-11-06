@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Izberite imenik svojega korpusa. Prva uporaba se konča šele, ko Spis core sprejme in shrani lokacijo in aplikacija iz nje prebere katalog. Ponovni prevzem prikaže sklice nespremenjene, namesto da bi jih podvojil.",
+  "spis.first_use.adopt_corpus.title": "Izberite svoj obstoječi korpus",
+  "spis.first_use.promise.body": "Spis začne s korpusom dokazov, ki ga že vzdržujete. Izvirne datoteke kataloga, sklicev, izvora, posnetkov zaslona, posnetkov in potrdil bere na mestu, namesto da bi kopiral okrnjeno zbirko.",
+  "spis.first_use.promise.title": "Začnite s svojim obstoječim korpusom sklicev",
+  "spis.first_use.read_and_write.body": "Izberite razširjen imenik s kanoničnim example-catalogs.json, s sources.json in references.json vsakega kataloga ter z vsemi navedenimi datotekami zapisov. Spis pred shranjevanjem poti preveri celoten graf. Arhivi so zavrnjeni, da nobena datoteka ali polje izvora ni tiho izpuščeno.",
+  "spis.first_use.read_and_write.title": "Prevzemite en celoten korpus, ki ga je mogoče preveriti",
+  "walkthrough.accessibility": "Predstavitev ob prvem zagonu Spis",
+  "walkthrough.continue": "Nadaljuj",
+  "walkthrough.eyebrow": "KORPUS SKLICEV SPIS",
+  "walkthrough.fallback.body": "Sledite temu koraku do prvega kataloga, o katerem lahko Spis poroča.",
+  "walkthrough.fallback.title": "Nadaljujte z nastavitvijo Spis",
+  "walkthrough.row.detail": "Oglejte si predstavitev, ki jo ta izdelek prikaže ob prvem zagonu.",
+  "walkthrough.row.show_again": "Prikaži znova",
+  "walkthrough.row.starting": "Zaganjanje predstavitve…",
+  "walkthrough.row.title": "Predstavitev ob prvem zagonu",
+  "walkthrough.step": "Korak {current} od {total}",
+  "walkthrough.tagline": "Izmerjeno stanje korpusa v enem oknu",
+  "walkthrough.try_again": "Poskusi znova",
+  "walkthrough.unavailable.body": "Priložene predstavitve ni bilo mogoče prebrati. V korpusu se ni nič spremenilo.",
+  "walkthrough.unavailable.title": "Predstavitev ob prvem zagonu ni na voljo"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Vel mappuna við tínum savni. Fyrsta nýtsla er bert liðug, tá ið Spis core hevur tikið við og goymt staðsetingina, og appin hevur lisið eina skrá úr henni. Endurtikin upptøka vísir tilvísingarnar óbroyttar heldur enn at tvífalda tær.",
+  "spis.first_use.adopt_corpus.title": "Vel títt verandi savn",
+  "spis.first_use.promise.body": "Spis byrjar við einum prógvsavni, tú longu viðlíkahelt. Tað lesur upprunaligu skrá-, tilvísingar-, uppruna-, skíggjamyndar-, upptøku- og kvittanarfílurnar, har tær liggja, heldur enn at avrita eitt minkað savn.",
+  "spis.first_use.promise.title": "Byrja við tínum verandi tilvísingarsavni",
+  "spis.first_use.read_and_write.body": "Vel eina útpakkaða mappu við kanonisku example-catalogs.json, sources.json og references.json hjá hvørjari skrá og øllum vístu skrásetingarfílunum. Spis kannar alla grafin, áðrenn leiðin verður goymd. Skjalasøvn verða avvíst, so eingin fíla ella upprunateigur verður loyniliga útihildin.",
+  "spis.first_use.read_and_write.title": "Tak eitt fullfíggjað savn í brúk, sum kann kannast",
+  "walkthrough.accessibility": "Gjøgnumgongd hjá Spis við fyrstu nýtslu",
+  "walkthrough.continue": "Halt fram",
+  "walkthrough.eyebrow": "SPIS TILVÍSINGARSAVN",
+  "walkthrough.fallback.body": "Fylg hesum stigi fyri at koma til fyrstu skránna, sum Spis kann fráboða um.",
+  "walkthrough.fallback.title": "Halt fram at seta Spis upp",
+  "walkthrough.row.detail": "Sí ta gjøgnumgongd, sum hendan vøran vísir við fyrstu nýtslu.",
+  "walkthrough.row.show_again": "Vís aftur",
+  "walkthrough.row.starting": "Byrjar gjøgnumgongdina…",
+  "walkthrough.row.title": "Gjøgnumgongd við fyrstu nýtslu",
+  "walkthrough.step": "Stig {current} av {total}",
+  "walkthrough.tagline": "Mátaða støðan í savninum í einum vindeyga",
+  "walkthrough.try_again": "Royn aftur",
+  "walkthrough.unavailable.body": "Gjøgnumgongdin, sum fylgir við, bar ikki til at lesa. Einki í savninum er broytt.",
+  "walkthrough.unavailable.title": "Gjøgnumgongdin við fyrstu nýtslu er ikki tøk"
+}

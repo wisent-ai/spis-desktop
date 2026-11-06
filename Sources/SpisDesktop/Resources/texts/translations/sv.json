@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Välj katalogen med ditt korpus. Första användningen avslutas först när Spis core har godtagit och sparat platsen och appen har läst en katalog därifrån. Upprepat övertagande visar referenserna som oförändrade i stället för att duplicera dem.",
+  "spis.first_use.adopt_corpus.title": "Välj ditt befintliga korpus",
+  "spis.first_use.promise.body": "Spis börjar från ett bevismaterial som du redan förvaltar. Det läser de ursprungliga katalog-, referens-, ursprungs-, skärmbilds-, inspelnings- och kvittofilerna där de ligger, i stället för att kopiera en reducerad samling.",
+  "spis.first_use.promise.title": "Börja från ditt befintliga referenskorpus",
+  "spis.first_use.read_and_write.body": "Välj en uppackad katalog med den kanoniska example-catalogs.json, varje katalogs sources.json och references.json och alla postfiler som det hänvisas till. Spis validerar hela grafen innan sökvägen sparas. Arkiv avvisas så att ingen fil eller ursprungsfält utelämnas i tysthet.",
+  "spis.first_use.read_and_write.title": "Ta över ett fullständigt korpus som kan granskas",
+  "walkthrough.accessibility": "Spis genomgång vid första start",
+  "walkthrough.continue": "Fortsätt",
+  "walkthrough.eyebrow": "SPIS REFERENSKORPUS",
+  "walkthrough.fallback.body": "Följ det här steget för att nå den första katalogen som Spis kan rapportera om.",
+  "walkthrough.fallback.title": "Fortsätt konfigurera Spis",
+  "walkthrough.row.detail": "Se genomgången som den här produkten visar vid första start.",
+  "walkthrough.row.show_again": "Visa igen",
+  "walkthrough.row.starting": "Startar genomgången…",
+  "walkthrough.row.title": "Genomgång vid första start",
+  "walkthrough.step": "Steg {current} av {total}",
+  "walkthrough.tagline": "Korpusets uppmätta tillstånd i ett fönster",
+  "walkthrough.try_again": "Försök igen",
+  "walkthrough.unavailable.body": "Den medföljande genomgången kunde inte läsas. Inget i korpuset har ändrats.",
+  "walkthrough.unavailable.title": "Genomgången vid första start är inte tillgänglig"
+}

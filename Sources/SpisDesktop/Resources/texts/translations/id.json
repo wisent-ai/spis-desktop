@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Pilih direktori korpus Anda. Penggunaan pertama baru selesai setelah Spis core menerima dan menyimpan lokasinya dan aplikasi membaca katalog darinya. Adopsi berulang menampilkan referensi tidak berubah alih-alih menggandakannya.",
+  "spis.first_use.adopt_corpus.title": "Pilih korpus yang sudah ada",
+  "spis.first_use.promise.body": "Spis dimulai dari korpus bukti yang sudah Anda kelola. Spis membaca file katalog, referensi, asal-usul, tangkapan layar, rekaman, dan tanda terima asli di tempatnya, alih-alih menyalin koleksi yang dikurangi.",
+  "spis.first_use.promise.title": "Mulai dari korpus referensi yang sudah ada",
+  "spis.first_use.read_and_write.body": "Pilih direktori yang sudah diekstrak yang berisi example-catalogs.json kanonis, sources.json dan references.json setiap katalog, serta semua file rekaman yang dirujuk. Spis memvalidasi seluruh graf sebelum menyimpan jalurnya. Arsip ditolak agar tidak ada file atau kolom asal-usul yang terlewat diam-diam.",
+  "spis.first_use.read_and_write.title": "Adopsi satu korpus yang lengkap dan dapat diperiksa",
+  "walkthrough.accessibility": "Panduan penggunaan pertama Spis",
+  "walkthrough.continue": "Lanjutkan",
+  "walkthrough.eyebrow": "KORPUS REFERENSI SPIS",
+  "walkthrough.fallback.body": "Ikuti langkah ini untuk mencapai katalog pertama yang dapat dilaporkan oleh Spis.",
+  "walkthrough.fallback.title": "Lanjutkan menyiapkan Spis",
+  "walkthrough.row.detail": "Lihat panduan yang ditampilkan produk ini pada penggunaan pertama.",
+  "walkthrough.row.show_again": "Tampilkan lagi",
+  "walkthrough.row.starting": "Memulai panduan…",
+  "walkthrough.row.title": "Panduan penggunaan pertama",
+  "walkthrough.step": "Langkah {current} dari {total}",
+  "walkthrough.tagline": "Keadaan korpus yang terukur, dalam satu jendela",
+  "walkthrough.try_again": "Coba lagi",
+  "walkthrough.unavailable.body": "Panduan bawaan tidak dapat dibaca. Tidak ada yang diubah dalam korpus.",
+  "walkthrough.unavailable.title": "Panduan penggunaan pertama tidak tersedia"
+}

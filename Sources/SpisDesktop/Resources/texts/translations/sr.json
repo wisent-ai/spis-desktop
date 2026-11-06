@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Изаберите директоријум свог корпуса. Прво коришћење завршава се тек када Spis core прихвати и сачува локацију, а апликација из ње прочита каталог. Поновљено преузимање приказује референце непромењеним уместо да их удвостручи.",
+  "spis.first_use.adopt_corpus.title": "Изаберите свој постојећи корпус",
+  "spis.first_use.promise.body": "Spis почиње од корпуса доказа који већ одржавате. Чита оригиналне датотеке каталога, референци, порекла, снимака екрана, снимака и потврда на њиховом месту уместо да копира смањену збирку.",
+  "spis.first_use.promise.title": "Почните од свог постојећег корпуса референци",
+  "spis.first_use.read_and_write.body": "Изаберите распаковани директоријум са канонским example-catalogs.json, sources.json и references.json сваког каталога и свим наведеним датотекама записа. Spis проверава цео граф пре чувања путање. Архиве се одбијају како ниједна датотека ни поље порекла не би било тихо изостављено.",
+  "spis.first_use.read_and_write.title": "Преузмите један потпун корпус који може да се провери",
+  "walkthrough.accessibility": "Spis увод при првом покретању",
+  "walkthrough.continue": "Настави",
+  "walkthrough.eyebrow": "SPIS КОРПУС РЕФЕРЕНЦИ",
+  "walkthrough.fallback.body": "Пратите овај корак до првог каталога о којем Spis може да извештава.",
+  "walkthrough.fallback.title": "Наставите подешавање Spis-а",
+  "walkthrough.row.detail": "Погледајте увод који овај производ приказује при првом покретању.",
+  "walkthrough.row.show_again": "Прикажи поново",
+  "walkthrough.row.starting": "Покретање увода…",
+  "walkthrough.row.title": "Увод при првом покретању",
+  "walkthrough.step": "Корак {current} од {total}",
+  "walkthrough.tagline": "Измерено стање корпуса у једном прозору",
+  "walkthrough.try_again": "Покушај поново",
+  "walkthrough.unavailable.body": "Уграђени увод није могао да се прочита. Ништа у корпусу није промењено.",
+  "walkthrough.unavailable.title": "Увод при првом покретању није доступан"
+}

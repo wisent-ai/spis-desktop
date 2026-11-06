@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Escolha o diretório do seu corpus. A primeira utilização só termina depois de o Spis core aceitar e guardar a localização e de a aplicação ler dela um catálogo. Uma adoção repetida mostra as referências inalteradas em vez de as duplicar.",
+  "spis.first_use.adopt_corpus.title": "Escolha o seu corpus existente",
+  "spis.first_use.promise.body": "O Spis começa a partir de um corpus de evidências que já mantém. Lê no próprio lugar os ficheiros originais de catálogo, referências, proveniência, capturas de ecrã, gravações e recibos, em vez de copiar uma coleção reduzida.",
+  "spis.first_use.promise.title": "Comece pelo seu corpus de referências existente",
+  "spis.first_use.read_and_write.body": "Escolha um diretório descompactado que contenha o example-catalogs.json canónico, os sources.json e references.json de cada catálogo e todos os ficheiros de registo referenciados. O Spis valida todo o grafo antes de guardar o caminho. Os arquivos são recusados para que nenhum ficheiro ou campo de proveniência seja omitido em silêncio.",
+  "spis.first_use.read_and_write.title": "Adote um corpus completo e verificável",
+  "walkthrough.accessibility": "Apresentação da primeira utilização do Spis",
+  "walkthrough.continue": "Continuar",
+  "walkthrough.eyebrow": "CORPUS DE REFERÊNCIAS SPIS",
+  "walkthrough.fallback.body": "Siga este passo para chegar ao primeiro catálogo sobre o qual o Spis pode reportar.",
+  "walkthrough.fallback.title": "Continue a configurar o Spis",
+  "walkthrough.row.detail": "Veja a apresentação que este produto mostra na primeira utilização.",
+  "walkthrough.row.show_again": "Mostrar novamente",
+  "walkthrough.row.starting": "A iniciar a apresentação…",
+  "walkthrough.row.title": "Apresentação da primeira utilização",
+  "walkthrough.step": "Passo {current} de {total}",
+  "walkthrough.tagline": "O estado medido do corpus, numa só janela",
+  "walkthrough.try_again": "Tentar novamente",
+  "walkthrough.unavailable.body": "Não foi possível ler a apresentação incluída. Nada no corpus foi alterado.",
+  "walkthrough.unavailable.title": "Apresentação da primeira utilização indisponível"
+}

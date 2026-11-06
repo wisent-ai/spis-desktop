@@ -1,5 +1,5 @@
 {
-  "originHash" : "e0a1c3a0d80f685da1f04fe3d34ba9e11033fe17b3c538329837f6fdfd922770",
+  "originHash" : "ec539e212cc38b9be25f806fc7d13585d6006cad38e596ba23fd59d665ee9c18",
   "pins" : [
     {
       "identity" : "echo",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "be5aaa00231bcfdacc7664ee871f135e229a0524",
         "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "wisent-texts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wisent-ai/wisent-texts.git",
+      "state" : {
+        "revision" : "cc3a922ddea8a6d538a40abd7e3988644f607f20",
+        "version" : "1.0.0"
       }
     }
   ],

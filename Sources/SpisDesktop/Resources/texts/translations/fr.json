@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Choisissez le répertoire de votre corpus. La première utilisation ne se termine qu'une fois que Spis core a accepté et enregistré l'emplacement et que l'application en a lu un catalogue. Une adoption répétée indique les références inchangées au lieu de les dupliquer.",
+  "spis.first_use.adopt_corpus.title": "Choisissez votre corpus existant",
+  "spis.first_use.promise.body": "Spis part d'un corpus de preuves que vous entretenez déjà. Il lit sur place les fichiers d'origine de catalogue, de références, de provenance, de captures d'écran, d'enregistrements et de reçus, au lieu de copier une collection réduite.",
+  "spis.first_use.promise.title": "Partez de votre corpus de références existant",
+  "spis.first_use.read_and_write.body": "Choisissez un répertoire décompressé contenant le example-catalogs.json canonique, les sources.json et references.json de chaque catalogue et tous les fichiers d'enregistrement référencés. Spis valide tout le graphe avant d'enregistrer le chemin. Les archives sont refusées pour qu'aucun fichier ni champ de provenance ne soit omis en silence.",
+  "spis.first_use.read_and_write.title": "Adoptez un corpus complet et vérifiable",
+  "walkthrough.accessibility": "Présentation de première utilisation de Spis",
+  "walkthrough.continue": "Continuer",
+  "walkthrough.eyebrow": "CORPUS DE RÉFÉRENCES SPIS",
+  "walkthrough.fallback.body": "Suivez cette étape pour atteindre le premier catalogue dont Spis peut rendre compte.",
+  "walkthrough.fallback.title": "Poursuivez la configuration de Spis",
+  "walkthrough.row.detail": "Voir la présentation que ce produit affiche à la première utilisation.",
+  "walkthrough.row.show_again": "L'afficher à nouveau",
+  "walkthrough.row.starting": "Démarrage de la présentation…",
+  "walkthrough.row.title": "Présentation de première utilisation",
+  "walkthrough.step": "Étape {current} sur {total}",
+  "walkthrough.tagline": "L'état mesuré du corpus, dans une seule fenêtre",
+  "walkthrough.try_again": "Réessayer",
+  "walkthrough.unavailable.body": "La présentation fournie n'a pas pu être lue. Rien n'a été modifié dans le corpus.",
+  "walkthrough.unavailable.title": "Présentation de première utilisation indisponible"
+}

@@ -9,7 +9,7 @@ A macOS application over [`Spis`](https://github.com/wisent-ai/spis) — the evi
 - **Manage product types** — **Manage → New product type** adds a catalog with zero records (`spis catalog-type add`); with a type selected, **Save product type** changes its title, description or slug and **Remove product type** deletes it (`catalog-type edit|remove`). Removing a type that holds records asks first and then passes `--force`. Every refusal shows in the outcome panel in Spis's own words.
 - **Corpus adoption** — first use and **Manage → Use an existing corpus** open a native directory picker and call Spis core's `corpus adopt` operation through the loopback API. The app does not parse or copy the corpus.
 - **Crawlers** — run native crawl operations across every product family using six engines (mobile, desktop, web, TUI, CLI, docs) via Rust `spis crawl start|status|resume|import` commands. Pick a product family (all of them or one), optionally specify a record (or crawl all), set Stado host target, and Stado-resolved Weles admission endpoint. Operations: (1) start a crawl and reattach manually by entering its run ID in "Load Existing Run" after app restart; (2) check status with per-catalog breakdown and record metrics (complete, partial, failed); (3) resume paused/failed runs; (4) import results (mutating operation that updates corpus records from crawl artifacts). Diagnostics: preflight checks per catalog (schema, engine, host, Weles connectivity, no-permission-prompts flag), per-record readiness and permission requirements, artifact locations (artifact_uri for service references, output_uri for external data), record gaps, and error details. Crawl sessions are persisted by Spis core via their run IDs; reattach by pasting the run ID in the "Load Existing Run" field.
-- **First-run walkthrough** — three screens explain the evidence boundary and finish only after Spis core validates and persists an unpacked canonical corpus and the app decodes one of its catalogs. Replay it from **Manage → First-run walkthrough → Show it again**.
+- **First-run walkthrough** — three screens explain the evidence boundary and finish only after Spis core validates and persists an unpacked canonical corpus and the app decodes one of its catalogs. Replay it from **Manage → First-run walkthrough → Show it again**. It reads in the system's preferred language, in every Wisent fleet language: each screen by its `title_key` and `body_key`, and the panel's own lines, come from `Sources/SpisDesktop/Resources/texts/` (the shared wisent-texts catalogue, its `bundle.json` shipped in the app's resources); a language the fleet lacks reads the journey's English. `node ../wisent-texts/bin/texts.mjs --root Sources/SpisDesktop/Resources/texts check` refuses a key a language lacks or a stale bundle.
 
 ## Build and run
 
@@ -29,8 +29,11 @@ swift build
 
 The app runs the first `spis` it finds, in this order: the checkout
 `REFERENCE_ENGINE_ROOT` names (`target/release/spis`, else `target/debug/spis`),
-a checkout above the app or its `spis` sibling, `~/.stado/bin/spis`, then
-`PATH`. To run a checkout you built yourself:
+`~/.stado/bin/spis`, then `PATH`. It never searches the folders above itself:
+on macOS that would read whatever folder the app sits in (Documents, Desktop,
+Downloads) and make the system ask for access to it. The corpus likewise comes
+only from the location Spis core saved, `REFERENCE_ENGINE_ROOT` or `SPIS_ROOT`.
+To run a checkout you built yourself:
 
 ```bash
 REFERENCE_ENGINE_ROOT=/path/to/spis .build/debug/Spis

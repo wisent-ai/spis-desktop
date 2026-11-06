@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Valige oma korpuse kataloog. Esmakasutus lõpeb alles siis, kui Spis core on asukoha vastu võtnud ja salvestanud ning rakendus on sellest kataloogi lugenud. Korduv kasutuselevõtt näitab viiteid muutumatuna, mitte ei dubleeri neid.",
+  "spis.first_use.adopt_corpus.title": "Valige oma olemasolev korpus",
+  "spis.first_use.promise.body": "Spis alustab tõendite korpusest, mida te juba haldate. See loeb algseid kataloogi-, viite-, päritolu-, kuvatõmmise-, salvestus- ja kviitungifaile nende asukohas, selle asemel et kopeerida vähendatud kogu.",
+  "spis.first_use.promise.title": "Alustage oma olemasolevast viitekorpusest",
+  "spis.first_use.read_and_write.body": "Valige lahtipakitud kataloog, mis sisaldab kanoonilist example-catalogs.json-i, iga kataloogi sources.json-i ja references.json-i ning kõiki viidatud kirjefaile. Spis kontrollib kogu graafi enne tee salvestamist. Arhiivid lükatakse tagasi, et ükski fail ega päritoluväli vaikselt välja ei jääks.",
+  "spis.first_use.read_and_write.title": "Võtke kasutusele üks täielik, kontrollitav korpus",
+  "walkthrough.accessibility": "Spisi esmakasutuse tutvustus",
+  "walkthrough.continue": "Jätka",
+  "walkthrough.eyebrow": "SPISI VIITEKORPUS",
+  "walkthrough.fallback.body": "Järgige seda sammu, et jõuda esimese kataloogini, mille kohta Spis saab aru anda.",
+  "walkthrough.fallback.title": "Jätkake Spisi seadistamist",
+  "walkthrough.row.detail": "Vaadake tutvustust, mida see toode esmakasutusel näitab.",
+  "walkthrough.row.show_again": "Näita uuesti",
+  "walkthrough.row.starting": "Tutvustus käivitub…",
+  "walkthrough.row.title": "Esmakasutuse tutvustus",
+  "walkthrough.step": "Samm {current}/{total}",
+  "walkthrough.tagline": "Korpuse mõõdetud olek ühes aknas",
+  "walkthrough.try_again": "Proovi uuesti",
+  "walkthrough.unavailable.body": "Kaasasolevat tutvustust ei õnnestunud lugeda. Korpuses ei muudetud midagi.",
+  "walkthrough.unavailable.title": "Esmakasutuse tutvustus pole saadaval"
+}

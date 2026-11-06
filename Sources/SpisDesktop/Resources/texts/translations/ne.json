@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "आफ्नो सङ्ग्रहको डाइरेक्टरी छान्नुहोस्। Spis core ले स्थान स्वीकार गरी सुरक्षित गरेपछि र एपले त्यहाँबाट क्याटलग पढेपछि मात्र पहिलो प्रयोग सकिन्छ। बारम्बार अपनाउँदा सन्दर्भहरू दोहोरिँदैनन्, अपरिवर्तित देखिन्छन्।",
+  "spis.first_use.adopt_corpus.title": "आफ्नो विद्यमान सङ्ग्रह छान्नुहोस्",
+  "spis.first_use.promise.body": "Spis तपाईंले पहिल्यै राख्दै आउनुभएको प्रमाण-सङ्ग्रहबाट सुरु हुन्छ। यसले घटाइएको सङ्ग्रह प्रतिलिपि गर्नुको सट्टा मूल क्याटलग, सन्दर्भ, उद्गम, स्क्रिनसट, रेकर्डिङ र रसिद फाइलहरू तिनकै ठाउँमा पढ्छ।",
+  "spis.first_use.promise.title": "आफ्नो विद्यमान सन्दर्भ सङ्ग्रहबाट सुरु गर्नुहोस्",
+  "spis.first_use.read_and_write.body": "मानक example-catalogs.json, हरेक क्याटलगको sources.json र references.json तथा सबै सन्दर्भित रेकर्ड-फाइलहरू भएको अनप्याक गरिएको डाइरेक्टरी छान्नुहोस्। मार्ग सुरक्षित गर्नुअघि Spis ले पूरा ग्राफ जाँच्छ। कुनै फाइल वा उद्गम-क्षेत्र चुपचाप नछुटोस् भनेर आर्काइभहरू अस्वीकार गरिन्छन्।",
+  "spis.first_use.read_and_write.title": "एउटा पूर्ण, जाँच्न सकिने सङ्ग्रह अपनाउनुहोस्",
+  "walkthrough.accessibility": "Spis पहिलो प्रयोग परिचय",
+  "walkthrough.continue": "जारी राख्नुहोस्",
+  "walkthrough.eyebrow": "SPIS सन्दर्भ सङ्ग्रह",
+  "walkthrough.fallback.body": "Spis ले रिपोर्ट गर्न सक्ने पहिलो क्याटलगसम्म पुग्न यो चरण पछ्याउनुहोस्।",
+  "walkthrough.fallback.title": "Spis सेटअप जारी राख्नुहोस्",
+  "walkthrough.row.detail": "यो उत्पादनले पहिलो प्रयोगमा देखाउने परिचय हेर्नुहोस्।",
+  "walkthrough.row.show_again": "फेरि देखाउनुहोस्",
+  "walkthrough.row.starting": "परिचय सुरु हुँदैछ…",
+  "walkthrough.row.title": "पहिलो प्रयोग परिचय",
+  "walkthrough.step": "चरण {current}/{total}",
+  "walkthrough.tagline": "सङ्ग्रहको मापिएको अवस्था, एउटै विन्डोमा",
+  "walkthrough.try_again": "फेरि प्रयास गर्नुहोस्",
+  "walkthrough.unavailable.body": "साथमा आएको परिचय पढ्न सकिएन। सङ्ग्रहमा केही पनि परिवर्तन गरिएको छैन।",
+  "walkthrough.unavailable.title": "पहिलो प्रयोग परिचय उपलब्ध छैन"
+}

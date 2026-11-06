@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "בחרו את תיקיית האוסף שלכם. השימוש הראשון מסתיים רק לאחר ש-Spis core מקבל ושומר את המיקום והאפליקציה קוראת ממנו קטלוג. אימוץ חוזר מציג את ההפניות ללא שינוי במקום לשכפל אותן.",
+  "spis.first_use.adopt_corpus.title": "בחרו את האוסף הקיים שלכם",
+  "spis.first_use.promise.body": "Spis מתחיל מאוסף ראיות שאתם כבר מתחזקים. הוא קורא במקומם את קובצי הקטלוג, ההפניות, המקור, צילומי המסך, ההקלטות והקבלות המקוריים, במקום להעתיק אוסף מצומצם.",
+  "spis.first_use.promise.title": "התחילו מאוסף ההפניות הקיים שלכם",
+  "spis.first_use.read_and_write.body": "בחרו תיקייה שחולצה ומכילה את example-catalogs.json הקנוני, את sources.json ו-references.json של כל קטלוג ואת כל קובצי הרשומות שאליהם מפנים. Spis בודק את הגרף כולו לפני שמירת הנתיב. ארכיונים נדחים כדי שאף קובץ או שדה מקור לא יושמט בשקט.",
+  "spis.first_use.read_and_write.title": "אמצו אוסף שלם אחד שניתן לבדוק",
+  "walkthrough.accessibility": "הדרכת ההפעלה הראשונה של Spis",
+  "walkthrough.continue": "המשך",
+  "walkthrough.eyebrow": "אוסף ההפניות של SPIS",
+  "walkthrough.fallback.body": "עקבו אחר שלב זה כדי להגיע לקטלוג הראשון ש-Spis יכול לדווח עליו.",
+  "walkthrough.fallback.title": "המשיכו בהגדרת Spis",
+  "walkthrough.row.detail": "צפו בהדרכה שהמוצר הזה מציג בהפעלה הראשונה.",
+  "walkthrough.row.show_again": "הצג שוב",
+  "walkthrough.row.starting": "מתחיל את ההדרכה…",
+  "walkthrough.row.title": "הדרכת הפעלה ראשונה",
+  "walkthrough.step": "שלב {current} מתוך {total}",
+  "walkthrough.tagline": "המצב הנמדד של האוסף בחלון אחד",
+  "walkthrough.try_again": "נסו שוב",
+  "walkthrough.unavailable.body": "לא ניתן היה לקרוא את ההדרכה המצורפת. דבר לא שונה באוסף.",
+  "walkthrough.unavailable.title": "הדרכת ההפעלה הראשונה אינה זמינה"
+}

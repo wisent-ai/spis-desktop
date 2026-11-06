@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Pilih direktori korpus anda. Penggunaan pertama hanya selesai selepas Spis core menerima dan menyimpan lokasi itu dan apl membaca katalog daripadanya. Penggunaan semula menunjukkan rujukan tidak berubah dan bukannya menduakannya.",
+  "spis.first_use.adopt_corpus.title": "Pilih korpus sedia ada anda",
+  "spis.first_use.promise.body": "Spis bermula daripada korpus bukti yang sudah anda selenggara. Ia membaca fail katalog, rujukan, asal usul, tangkapan skrin, rakaman dan resit asal di tempatnya, bukannya menyalin koleksi yang dikurangkan.",
+  "spis.first_use.promise.title": "Mulakan daripada korpus rujukan sedia ada anda",
+  "spis.first_use.read_and_write.body": "Pilih direktori yang telah dinyahmampat yang mengandungi example-catalogs.json kanonik, sources.json dan references.json setiap katalog, serta semua fail rekod yang dirujuk. Spis mengesahkan keseluruhan graf sebelum menyimpan laluan. Arkib ditolak supaya tiada fail atau medan asal usul tertinggal secara senyap.",
+  "spis.first_use.read_and_write.title": "Gunakan satu korpus yang lengkap dan boleh diperiksa",
+  "walkthrough.accessibility": "Panduan penggunaan pertama Spis",
+  "walkthrough.continue": "Teruskan",
+  "walkthrough.eyebrow": "KORPUS RUJUKAN SPIS",
+  "walkthrough.fallback.body": "Ikuti langkah ini untuk sampai ke katalog pertama yang boleh dilaporkan oleh Spis.",
+  "walkthrough.fallback.title": "Teruskan menyediakan Spis",
+  "walkthrough.row.detail": "Lihat panduan yang dipaparkan produk ini pada penggunaan pertama.",
+  "walkthrough.row.show_again": "Tunjukkan semula",
+  "walkthrough.row.starting": "Memulakan panduan…",
+  "walkthrough.row.title": "Panduan penggunaan pertama",
+  "walkthrough.step": "Langkah {current} daripada {total}",
+  "walkthrough.tagline": "Keadaan korpus yang diukur, dalam satu tetingkap",
+  "walkthrough.try_again": "Cuba lagi",
+  "walkthrough.unavailable.body": "Panduan yang disertakan tidak dapat dibaca. Tiada apa-apa dalam korpus diubah.",
+  "walkthrough.unavailable.title": "Panduan penggunaan pertama tidak tersedia"
+}

@@ -98,6 +98,11 @@ struct CorpusRepository {
 
     private static let locationSchema = "spis.corpus-location.v1"
 
+    /// The corpus root, from explicit sources only: the location Spis core
+    /// saved (`corpus.json`), `REFERENCE_ENGINE_ROOT`, then `SPIS_ROOT`. The
+    /// app never walks the folders above itself looking for one: on macOS that
+    /// reads whatever folder the app happens to sit in (Documents, Desktop,
+    /// Downloads) and makes the system ask the person for access to it.
     func locate() throws -> URL? {
         if FileManager.default.fileExists(atPath: configurationURL.path) {
             return try configuredRoot()
@@ -108,34 +113,7 @@ struct CorpusRepository {
         {
             return URL(fileURLWithPath: fromEnv)
         }
-        // Walk up from the executable: build products live several levels deep.
-        for directory in executableAncestors() {
-            if FileManager.default.fileExists(
-                atPath: directory.appendingPathComponent("example-catalogs.json").path)
-            {
-                return directory
-            }
-            // Sibling checkout layout: <parent>/spis next to <parent>/spis-desktop.
-            let sibling = directory.appendingPathComponent("spis")
-            if FileManager.default.fileExists(
-                atPath: sibling.appendingPathComponent("example-catalogs.json").path)
-            {
-                return sibling
-            }
-        }
         return nil
-    }
-
-    /// The directories above this app's executable, nearest first, up to the
-    /// filesystem root; none when the process has no executable URL.
-    private func executableAncestors() -> [URL] {
-        guard var url = Bundle.main.executableURL?.resolvingSymlinksInPath() else { return [] }
-        var ancestors: [URL] = []
-        while url.path != "/" {
-            url.deleteLastPathComponent()
-            ancestors.append(url)
-        }
-        return ancestors
     }
 
     /// The built `spis` executable of a checkout: the release build, else the
@@ -159,22 +137,12 @@ struct CorpusRepository {
         }
     }
 
-    /// Locate the installed Spis checkout that owns the loopback API: the
-    /// configured root, else a directory above this app (or its `spis`
-    /// sibling) that holds a built `spis`. An adopted corpus is data, not an
-    /// executable installation.
+    /// The Spis checkout `REFERENCE_ENGINE_ROOT` names, when it holds a built
+    /// `spis`. An adopted corpus is data, not an executable installation, and
+    /// the folders above this app are never searched (see `locate`).
     func locateProductRoot() -> URL? {
         if let root, spisExecutable(in: root) != nil {
             return root
-        }
-        for directory in executableAncestors() {
-            if spisExecutable(in: directory) != nil {
-                return directory
-            }
-            let sibling = directory.appendingPathComponent("spis")
-            if spisExecutable(in: sibling) != nil {
-                return sibling
-            }
         }
         return nil
     }

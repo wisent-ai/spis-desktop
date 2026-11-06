@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Válassza ki a korpusza könyvtárát. Az első használat csak akkor fejeződik be, amikor a Spis core elfogadta és mentette a helyet, és az alkalmazás kiolvas belőle egy katalógust. Az ismételt átvétel a hivatkozásokat változatlannak mutatja ahelyett, hogy megkettőzné őket.",
+  "spis.first_use.adopt_corpus.title": "Válassza ki a meglévő korpuszát",
+  "spis.first_use.promise.body": "A Spis egy már gondozott bizonyítékkorpuszból indul. Az eredeti katalógus-, hivatkozás-, eredet-, képernyőkép-, felvétel- és nyugtafájlokat a helyükön olvassa, ahelyett hogy egy szűkített gyűjteményt másolna.",
+  "spis.first_use.promise.title": "Induljon a meglévő referenciakorpuszából",
+  "spis.first_use.read_and_write.body": "Válasszon egy kicsomagolt könyvtárat, amely tartalmazza a kanonikus example-catalogs.json-t, minden katalógus sources.json és references.json fájlját és az összes hivatkozott rekordfájlt. A Spis az útvonal mentése előtt ellenőrzi a teljes gráfot. Az archívumokat elutasítja, hogy egyetlen fájl vagy eredetmező se maradjon ki csendben.",
+  "spis.first_use.read_and_write.title": "Vegyen át egy teljes, ellenőrizhető korpuszt",
+  "walkthrough.accessibility": "A Spis első indítási bemutatója",
+  "walkthrough.continue": "Tovább",
+  "walkthrough.eyebrow": "SPIS REFERENCIAKORPUSZ",
+  "walkthrough.fallback.body": "Kövesse ezt a lépést az első katalógusig, amelyről a Spis jelentést tud adni.",
+  "walkthrough.fallback.title": "Folytassa a Spis beállítását",
+  "walkthrough.row.detail": "Tekintse meg a bemutatót, amelyet ez a termék az első indításkor mutat.",
+  "walkthrough.row.show_again": "Megjelenítés újra",
+  "walkthrough.row.starting": "A bemutató indul…",
+  "walkthrough.row.title": "Első indítási bemutató",
+  "walkthrough.step": "{current}/{total}. lépés",
+  "walkthrough.tagline": "A korpusz mért állapota egy ablakban",
+  "walkthrough.try_again": "Újra",
+  "walkthrough.unavailable.body": "A mellékelt bemutatót nem sikerült beolvasni. A korpuszban semmi sem változott.",
+  "walkthrough.unavailable.title": "Az első indítási bemutató nem érhető el"
+}

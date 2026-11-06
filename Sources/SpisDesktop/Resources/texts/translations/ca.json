@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Trieu el directori del vostre corpus. El primer ús només acaba quan Spis core accepta i desa la ubicació i l'aplicació en llegeix un catàleg. Una adopció repetida mostra les referències sense canvis en lloc de duplicar-les.",
+  "spis.first_use.adopt_corpus.title": "Trieu el vostre corpus existent",
+  "spis.first_use.promise.body": "Spis comença des d'un corpus de proves que ja manteniu. Llegeix al seu lloc els fitxers originals de catàleg, referències, procedència, captures de pantalla, enregistraments i rebuts, en lloc de copiar una col·lecció reduïda.",
+  "spis.first_use.promise.title": "Comenceu des del vostre corpus de referències existent",
+  "spis.first_use.read_and_write.body": "Trieu un directori descomprimit que contingui l'example-catalogs.json canònic, els sources.json i references.json de cada catàleg i tots els fitxers de registre referenciats. Spis valida tot el graf abans de desar el camí. Els arxius es rebutgen perquè cap fitxer ni camp de procedència no s'ometi en silenci.",
+  "spis.first_use.read_and_write.title": "Adopteu un corpus complet i inspeccionable",
+  "walkthrough.accessibility": "Recorregut del primer ús de Spis",
+  "walkthrough.continue": "Continua",
+  "walkthrough.eyebrow": "CORPUS DE REFERÈNCIES SPIS",
+  "walkthrough.fallback.body": "Seguiu aquest pas per arribar al primer catàleg sobre el qual Spis pot informar.",
+  "walkthrough.fallback.title": "Continueu configurant Spis",
+  "walkthrough.row.detail": "Vegeu el recorregut que aquest producte mostra en el primer ús.",
+  "walkthrough.row.show_again": "Torna-ho a mostrar",
+  "walkthrough.row.starting": "S'està iniciant el recorregut…",
+  "walkthrough.row.title": "Recorregut del primer ús",
+  "walkthrough.step": "Pas {current} de {total}",
+  "walkthrough.tagline": "L'estat mesurat del corpus, en una sola finestra",
+  "walkthrough.try_again": "Torna-ho a provar",
+  "walkthrough.unavailable.body": "No s'ha pogut llegir el recorregut inclòs. No s'ha canviat res del corpus.",
+  "walkthrough.unavailable.title": "El recorregut del primer ús no està disponible"
+}

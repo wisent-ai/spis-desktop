@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Odaberite direktorij svog korpusa. Prva upotreba završava tek kada Spis core prihvati i spremi lokaciju, a aplikacija iz nje pročita katalog. Ponovljeno preuzimanje prikazuje reference nepromijenjenima umjesto da ih udvostruči.",
+  "spis.first_use.adopt_corpus.title": "Odaberite svoj postojeći korpus",
+  "spis.first_use.promise.body": "Spis počinje od korpusa dokaza koji već održavate. Čita izvorne datoteke kataloga, referenci, podrijetla, snimki zaslona, snimki i potvrda na njihovu mjestu umjesto da kopira smanjenu zbirku.",
+  "spis.first_use.promise.title": "Počnite od svog postojećeg korpusa referenci",
+  "spis.first_use.read_and_write.body": "Odaberite raspakirani direktorij s kanonskim example-catalogs.json, sources.json i references.json svakog kataloga i svim referenciranim datotekama zapisa. Spis provjerava cijeli graf prije spremanja putanje. Arhive se odbijaju kako nijedna datoteka ni polje podrijetla ne bi bilo tiho izostavljeno.",
+  "spis.first_use.read_and_write.title": "Preuzmite jedan potpun korpus koji se može provjeriti",
+  "walkthrough.accessibility": "Spis uvod pri prvom pokretanju",
+  "walkthrough.continue": "Nastavi",
+  "walkthrough.eyebrow": "SPIS KORPUS REFERENCI",
+  "walkthrough.fallback.body": "Slijedite ovaj korak do prvog kataloga o kojem Spis može izvještavati.",
+  "walkthrough.fallback.title": "Nastavite postavljanje Spisa",
+  "walkthrough.row.detail": "Pogledajte uvod koji ovaj proizvod prikazuje pri prvom pokretanju.",
+  "walkthrough.row.show_again": "Prikaži ponovno",
+  "walkthrough.row.starting": "Pokretanje uvoda…",
+  "walkthrough.row.title": "Uvod pri prvom pokretanju",
+  "walkthrough.step": "Korak {current} od {total}",
+  "walkthrough.tagline": "Izmjereno stanje korpusa u jednom prozoru",
+  "walkthrough.try_again": "Pokušaj ponovno",
+  "walkthrough.unavailable.body": "Ugrađeni uvod nije bilo moguće pročitati. Ništa u korpusu nije promijenjeno.",
+  "walkthrough.unavailable.title": "Uvod pri prvom pokretanju nije dostupan"
+}

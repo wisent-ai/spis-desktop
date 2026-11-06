@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Pasirinkite savo korpuso katalogą. Pirmasis naudojimas baigiasi tik tada, kai Spis core priima ir išsaugo vietą, o programa iš jos nuskaito katalogą. Pakartotinis perėmimas rodo nuorodas nepakitusias, o ne jas dubliuoja.",
+  "spis.first_use.adopt_corpus.title": "Pasirinkite esamą korpusą",
+  "spis.first_use.promise.body": "Spis pradeda nuo įrodymų korpuso, kurį jau prižiūrite. Jis skaito originalius katalogo, nuorodų, kilmės, ekrano kopijų, įrašų ir kvitų failus jų vietoje, o ne kopijuoja sumažintą rinkinį.",
+  "spis.first_use.promise.title": "Pradėkite nuo esamo nuorodų korpuso",
+  "spis.first_use.read_and_write.body": "Pasirinkite išpakuotą katalogą su kanoniniu example-catalogs.json, kiekvieno katalogo sources.json ir references.json bei visais nurodytais įrašų failais. Spis prieš išsaugodamas kelią patikrina visą grafą. Archyvai atmetami, kad joks failas ar kilmės laukas nebūtų tyliai praleistas.",
+  "spis.first_use.read_and_write.title": "Perimkite vieną išsamų, patikrinamą korpusą",
+  "walkthrough.accessibility": "Spis pirmojo paleidimo įvadas",
+  "walkthrough.continue": "Tęsti",
+  "walkthrough.eyebrow": "SPIS NUORODŲ KORPUSAS",
+  "walkthrough.fallback.body": "Atlikite šį žingsnį, kad pasiektumėte pirmąjį katalogą, apie kurį Spis gali pranešti.",
+  "walkthrough.fallback.title": "Tęskite Spis sąranką",
+  "walkthrough.row.detail": "Peržiūrėkite įvadą, kurį šis produktas rodo pirmą kartą paleistas.",
+  "walkthrough.row.show_again": "Rodyti dar kartą",
+  "walkthrough.row.starting": "Paleidžiamas įvadas…",
+  "walkthrough.row.title": "Pirmojo paleidimo įvadas",
+  "walkthrough.step": "{current} žingsnis iš {total}",
+  "walkthrough.tagline": "Išmatuota korpuso būsena viename lange",
+  "walkthrough.try_again": "Bandyti dar kartą",
+  "walkthrough.unavailable.body": "Pridėto įvado nepavyko perskaityti. Korpuse niekas nepakeista.",
+  "walkthrough.unavailable.title": "Pirmojo paleidimo įvadas nepasiekiamas"
+}

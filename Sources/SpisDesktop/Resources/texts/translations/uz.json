@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Korpusingiz katalogini tanlang. Birinchi foydalanish faqat Spis core joylashuvni qabul qilib saqlagandan va ilova undan katalog o‘qigandan keyin yakunlanadi. Qayta qabul qilish havolalarni ikkilantirmay, o‘zgarmagan deb ko‘rsatadi.",
+  "spis.first_use.adopt_corpus.title": "Mavjud korpusingizni tanlang",
+  "spis.first_use.promise.body": "Spis siz allaqachon yuritayotgan dalillar korpusidan boshlanadi. U qisqartirilgan to‘plamni nusxalash o‘rniga katalog, havolalar, kelib chiqish, ekran rasmlari, yozuvlar va kvitansiyalarning asl fayllarini o‘z joyida o‘qiydi.",
+  "spis.first_use.promise.title": "Mavjud havolalar korpusingizdan boshlang",
+  "spis.first_use.read_and_write.body": "Kanonik example-catalogs.json, har bir katalogning sources.json va references.json fayllari hamda havola qilingan barcha yozuv fayllarini o‘z ichiga olgan ochilgan katalogni tanlang. Spis yo‘lni saqlashdan oldin butun grafni tekshiradi. Hech bir fayl yoki kelib chiqish maydoni jimgina tushib qolmasligi uchun arxivlar rad etiladi.",
+  "spis.first_use.read_and_write.title": "Bitta to‘liq, tekshirib bo‘ladigan korpusni qabul qiling",
+  "walkthrough.accessibility": "Spis birinchi ishga tushirish tanishtiruvi",
+  "walkthrough.continue": "Davom etish",
+  "walkthrough.eyebrow": "SPIS HAVOLALAR KORPUSI",
+  "walkthrough.fallback.body": "Spis hisobot bera oladigan birinchi katalogga yetish uchun ushbu qadamni bajaring.",
+  "walkthrough.fallback.title": "Spis sozlashni davom ettiring",
+  "walkthrough.row.detail": "Ushbu mahsulot birinchi ishga tushirilganda ko‘rsatadigan tanishtiruvni ko‘ring.",
+  "walkthrough.row.show_again": "Qayta ko‘rsatish",
+  "walkthrough.row.starting": "Tanishtiruv boshlanmoqda…",
+  "walkthrough.row.title": "Birinchi ishga tushirish tanishtiruvi",
+  "walkthrough.step": "{total} qadamdan {current}-qadam",
+  "walkthrough.tagline": "Korpusning o‘lchangan holati bitta oynada",
+  "walkthrough.try_again": "Qayta urinish",
+  "walkthrough.unavailable.body": "Ilova qilingan tanishtiruvni o‘qib bo‘lmadi. Korpusda hech narsa o‘zgartirilmadi.",
+  "walkthrough.unavailable.title": "Birinchi ishga tushirish tanishtiruvi mavjud emas"
+}

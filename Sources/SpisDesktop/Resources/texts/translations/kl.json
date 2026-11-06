@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Katersanni allagaateqarfik toqqaruk. Siullermik atuineq Spis core-ip inissisimaffik akuerereerpagu toqqoreerpagulu, qinnuteqaatillu tassannga nalunaarsuiffimmik atuareerpat taamaallaat naammassisarpoq. Atulerteqqittarneq innersuussutit marlunngorsarnagit allanngorsimanngitsutut takutittarpai.",
+  "spis.first_use.adopt_corpus.title": "Katersat pigisatit toqqarukkit",
+  "spis.first_use.promise.body": "Spis uppernarsaatit katersaanit aqutareersannit aallartittarpoq. Katersat annikillisat assilinnagit nalunaarsuiffiup, innersuussutit, aallaaviit, saqqummersitsiviup assiliartaasa, immiussat ilisimatitsissutillu allagaataat aallaaviusut inissisimaffimminni atuartarpai.",
+  "spis.first_use.promise.title": "Innersuussutit katersaasa pigisavit aallaavigalugit aallartigit",
+  "spis.first_use.read_and_write.body": "Allagaateqarfik ammarneqarsimasoq toqqaruk, tassanilu example-catalogs.json pisariaqartoq, nalunaarsuiffiit tamarmik sources.json-iat references.json-iallu, nalunaarsukkallu innersuussutigisat allagaataat tamarmik ilaapput. Spis-ip aqqut toqqortinnagu titartagaq tamaat misissortarpaa. Paasissutissanik toqqorsiviit itigartinneqartarput, allagaat aallaavimmulluunniit immersugassaq nipaatsumik ilanngunnginnissaa pillugu.",
+  "spis.first_use.read_and_write.title": "Katersat ataatsit naammassisut misissorneqarsinnaasullu atulerukkit",
+  "walkthrough.accessibility": "Spis-imik siullermik atuinermi ilitsersuut",
+  "walkthrough.continue": "Ingerlaqqigit",
+  "walkthrough.eyebrow": "SPIS INNERSUUSSUTIT KATERSAI",
+  "walkthrough.fallback.body": "Spis-ip nalunaarutigisinnaasaanut nalunaarsuiffimmut siullermut anguniarlutit alloriarneq una malinnaaguk.",
+  "walkthrough.fallback.title": "Spis aaqqissunneqarnera ingerlatiinnaruk",
+  "walkthrough.row.detail": "Nioqqutissap matuma siullermik atorneqarnermini ilitsersuutaa takuuk.",
+  "walkthrough.row.show_again": "Takutiteqqiuk",
+  "walkthrough.row.starting": "Ilitsersuut aallartinneqarpoq…",
+  "walkthrough.row.title": "Siullermik atuinermi ilitsersuut",
+  "walkthrough.step": "Alloriarneq {current} / {total}",
+  "walkthrough.tagline": "Katersat uuttorneqarsimasut qanoq inneri, matumi ataatsimi",
+  "walkthrough.try_again": "Misiliqqigit",
+  "walkthrough.unavailable.body": "Ilitsersuut ilaasoq atuarneqarsinnaanngilaq. Katersani sumilluunniit allanngortitsisoqanngilaq.",
+  "walkthrough.unavailable.title": "Siullermik atuinermi ilitsersuut pissarsiarineqarsinnaanngilaq"
+}

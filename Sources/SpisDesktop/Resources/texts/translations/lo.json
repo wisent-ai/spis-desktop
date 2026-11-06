@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "ເລືອກໂຟນເດີຂອງຊຸດຂອງທ່ານ. ການໃຊ້ຄັ້ງທຳອິດຈະສິ້ນສຸດຫຼັງຈາກ Spis core ຮັບ ແລະ ບັນທຶກທີ່ຕັ້ງ ແລະ ແອັບອ່ານແຄັດຕາລັອກຈາກມັນແລ້ວເທົ່ານັ້ນ. ການຮັບເອົາຊ້ຳຈະສະແດງການອ້າງອີງວ່າບໍ່ປ່ຽນແປງ ແທນທີ່ຈະເຮັດຊ້ຳ.",
+  "spis.first_use.adopt_corpus.title": "ເລືອກຊຸດທີ່ທ່ານມີຢູ່",
+  "spis.first_use.promise.body": "Spis ເລີ່ມຈາກຊຸດຫຼັກຖານທີ່ທ່ານດູແລຢູ່ແລ້ວ. ມັນອ່ານໄຟລ໌ແຄັດຕາລັອກ, ການອ້າງອີງ, ທີ່ມາ, ພາບໜ້າຈໍ, ການບັນທຶກ ແລະ ໃບຮັບຕົ້ນສະບັບຢູ່ບ່ອນເດີມ ແທນທີ່ຈະສຳເນົາຊຸດທີ່ຫຼຸດລົງ.",
+  "spis.first_use.promise.title": "ເລີ່ມຈາກຊຸດອ້າງອີງທີ່ທ່ານມີຢູ່",
+  "spis.first_use.read_and_write.body": "ເລືອກໂຟນເດີທີ່ແຕກໄຟລ໌ແລ້ວທີ່ມີ example-catalogs.json ມາດຕະຖານ, sources.json ແລະ references.json ຂອງແຕ່ລະແຄັດຕາລັອກ ແລະ ໄຟລ໌ບັນທຶກທີ່ອ້າງອີງທັງໝົດ. Spis ກວດສອບກຣາຟທັງໝົດກ່ອນບັນທຶກເສັ້ນທາງ. ໄຟລ໌ບີບອັດຖືກປະຕິເສດເພື່ອບໍ່ໃຫ້ໄຟລ໌ ຫຼື ຊ່ອງທີ່ມາໃດຖືກຂ້າມໄປຢ່າງງຽບໆ.",
+  "spis.first_use.read_and_write.title": "ຮັບເອົາຊຸດທີ່ຄົບຖ້ວນ ແລະ ກວດສອບໄດ້ໜຶ່ງຊຸດ",
+  "walkthrough.accessibility": "ການແນະນຳການໃຊ້ Spis ຄັ້ງທຳອິດ",
+  "walkthrough.continue": "ສືບຕໍ່",
+  "walkthrough.eyebrow": "ຊຸດອ້າງອີງ SPIS",
+  "walkthrough.fallback.body": "ເຮັດຕາມຂັ້ນຕອນນີ້ເພື່ອໄປເຖິງແຄັດຕາລັອກທຳອິດທີ່ Spis ສາມາດລາຍງານໄດ້.",
+  "walkthrough.fallback.title": "ສືບຕໍ່ຕັ້ງຄ່າ Spis",
+  "walkthrough.row.detail": "ເບິ່ງການແນະນຳທີ່ຜະລິດຕະພັນນີ້ສະແດງເມື່ອໃຊ້ຄັ້ງທຳອິດ.",
+  "walkthrough.row.show_again": "ສະແດງອີກຄັ້ງ",
+  "walkthrough.row.starting": "ກຳລັງເລີ່ມການແນະນຳ…",
+  "walkthrough.row.title": "ການແນະນຳການໃຊ້ຄັ້ງທຳອິດ",
+  "walkthrough.step": "ຂັ້ນຕອນ {current} ຈາກ {total}",
+  "walkthrough.tagline": "ສະຖານະທີ່ວັດແທກແລ້ວຂອງຊຸດ ໃນໜ້າຕ່າງດຽວ",
+  "walkthrough.try_again": "ລອງໃໝ່",
+  "walkthrough.unavailable.body": "ບໍ່ສາມາດອ່ານການແນະນຳທີ່ມາພ້ອມໄດ້. ບໍ່ມີຫຍັງໃນຊຸດຖືກປ່ຽນແປງ.",
+  "walkthrough.unavailable.title": "ການແນະນຳການໃຊ້ຄັ້ງທຳອິດບໍ່ພ້ອມໃຊ້"
+}

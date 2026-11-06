@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "เลือกไดเรกทอรีของคลังของคุณ การใช้งานครั้งแรกจะเสร็จสิ้นหลังจาก Spis core ยอมรับและบันทึกตำแหน่ง และแอปอ่านแค็ตตาล็อกจากที่นั่นแล้วเท่านั้น การรับมาใช้ซ้ำจะแสดงการอ้างอิงว่าไม่เปลี่ยนแปลงแทนที่จะทำซ้ำ",
+  "spis.first_use.adopt_corpus.title": "เลือกคลังที่คุณมีอยู่",
+  "spis.first_use.promise.body": "Spis เริ่มจากคลังหลักฐานที่คุณดูแลอยู่แล้ว โดยอ่านไฟล์แค็ตตาล็อก การอ้างอิง ที่มา ภาพหน้าจอ การบันทึก และใบเสร็จต้นฉบับในตำแหน่งเดิม แทนการคัดลอกชุดที่ลดทอนลง",
+  "spis.first_use.promise.title": "เริ่มจากคลังอ้างอิงที่คุณมีอยู่",
+  "spis.first_use.read_and_write.body": "เลือกไดเรกทอรีที่แตกไฟล์แล้วซึ่งมี example-catalogs.json มาตรฐาน sources.json และ references.json ของแต่ละแค็ตตาล็อก และไฟล์ระเบียนที่อ้างอิงทั้งหมด Spis ตรวจสอบกราฟทั้งหมดก่อนบันทึกเส้นทาง ไฟล์บีบอัดจะถูกปฏิเสธเพื่อไม่ให้ไฟล์หรือช่องที่มาใดถูกละไว้อย่างเงียบ ๆ",
+  "spis.first_use.read_and_write.title": "รับคลังที่สมบูรณ์และตรวจสอบได้หนึ่งชุดมาใช้",
+  "walkthrough.accessibility": "การแนะนำการใช้ Spis ครั้งแรก",
+  "walkthrough.continue": "ดำเนินการต่อ",
+  "walkthrough.eyebrow": "คลังอ้างอิง SPIS",
+  "walkthrough.fallback.body": "ทำตามขั้นตอนนี้เพื่อไปยังแค็ตตาล็อกแรกที่ Spis สามารถรายงานได้",
+  "walkthrough.fallback.title": "ตั้งค่า Spis ต่อ",
+  "walkthrough.row.detail": "ดูการแนะนำที่ผลิตภัณฑ์นี้แสดงเมื่อใช้ครั้งแรก",
+  "walkthrough.row.show_again": "แสดงอีกครั้ง",
+  "walkthrough.row.starting": "กำลังเริ่มการแนะนำ…",
+  "walkthrough.row.title": "การแนะนำการใช้ครั้งแรก",
+  "walkthrough.step": "ขั้นตอนที่ {current} จาก {total}",
+  "walkthrough.tagline": "สถานะที่วัดแล้วของคลัง ในหน้าต่างเดียว",
+  "walkthrough.try_again": "ลองอีกครั้ง",
+  "walkthrough.unavailable.body": "ไม่สามารถอ่านการแนะนำที่มาพร้อมได้ ไม่มีสิ่งใดในคลังถูกเปลี่ยนแปลง",
+  "walkthrough.unavailable.title": "ไม่สามารถใช้การแนะนำการใช้ครั้งแรกได้"
+}

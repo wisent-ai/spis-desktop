@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Korpusyňyzyň bukjasyny saýlaň. Ilkinji ulanylyş diňe Spis core ýerleşýän ýeri kabul edip, ýatda saklandan we programma ondan katalog okandan soň tamamlanýar. Gaýtadan kabul etmek salgylanmalary köpeltmän, üýtgemedik görkezýär.",
+  "spis.first_use.adopt_corpus.title": "Bar bolan korpusyňyzy saýlaň",
+  "spis.first_use.promise.body": "Spis eýýäm alyp barýan subutnama korpusyňyzdan başlaýar. Ol gysgaldylan ýygyndyny göçürmegiň ýerine katalogyň, salgylanmalaryň, gelip çykyşyň, ekran suratlarynyň, ýazgylaryň we kwitansiýalaryň asyl faýllaryny öz ýerinde okaýar.",
+  "spis.first_use.promise.title": "Bar bolan salgylanma korpusyňyzdan başlaň",
+  "spis.first_use.read_and_write.body": "Kanoniki example-catalogs.json, her katalogyň sources.json we references.json faýllaryny hem-de salgylanýan ähli ýazgy faýllaryny saklaýan açylan bukjany saýlaň. Spis ýoly ýatda saklamazdan öň tutuş grafy barlaýar. Hiç bir faýl ýa-da gelip çykyş meýdançasy sessiz galdyrylmaz ýaly arhiwler ret edilýär.",
+  "spis.first_use.read_and_write.title": "Bir doly, barlap bolýan korpusy kabul ediň",
+  "walkthrough.accessibility": "Spis ilkinji ulanylyş tanyşdyryşy",
+  "walkthrough.continue": "Dowam et",
+  "walkthrough.eyebrow": "SPIS SALGYLANMA KORPUSY",
+  "walkthrough.fallback.body": "Spis-iň hasabat berip biljek ilkinji kataloguna ýetmek üçin bu ädime eýeriň.",
+  "walkthrough.fallback.title": "Spis-i sazlamagy dowam etdiriň",
+  "walkthrough.row.detail": "Bu önümiň ilkinji ulanylyşda görkezýän tanyşdyryşyny görüň.",
+  "walkthrough.row.show_again": "Gaýtadan görkez",
+  "walkthrough.row.starting": "Tanyşdyryş başlanýar…",
+  "walkthrough.row.title": "Ilkinji ulanylyş tanyşdyryşy",
+  "walkthrough.step": "{total} ädimden {current}-nji ädim",
+  "walkthrough.tagline": "Korpusyň ölçelen ýagdaýy bir penjirede",
+  "walkthrough.try_again": "Gaýtadan synanyş",
+  "walkthrough.unavailable.body": "Goşulan tanyşdyryşy okap bolmady. Korpusda hiç zat üýtgedilmedi.",
+  "walkthrough.unavailable.title": "Ilkinji ulanylyş tanyşdyryşy elýeterli däl"
+}

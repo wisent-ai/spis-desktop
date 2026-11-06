@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "अपने संग्रह की निर्देशिका चुनें। पहला उपयोग तभी पूरा होता है जब Spis core स्थान को स्वीकार कर सहेज ले और ऐप उससे एक कैटलॉग पढ़ ले। बार-बार अपनाने पर संदर्भ दोहराए नहीं जाते, अपरिवर्तित दिखते हैं।",
+  "spis.first_use.adopt_corpus.title": "अपना मौजूदा संग्रह चुनें",
+  "spis.first_use.promise.body": "Spis उस प्रमाण-संग्रह से शुरू करता है जिसे आप पहले से रखते हैं। यह छोटा संग्रह कॉपी करने के बजाय मूल कैटलॉग, संदर्भ, उद्गम, स्क्रीनशॉट, रिकॉर्डिंग और रसीद फ़ाइलों को उनकी जगह पर ही पढ़ता है।",
+  "spis.first_use.promise.title": "अपने मौजूदा संदर्भ संग्रह से शुरू करें",
+  "spis.first_use.read_and_write.body": "मानक example-catalogs.json, हर कैटलॉग के sources.json और references.json तथा सभी संदर्भित रिकॉर्ड-फ़ाइलों वाली एक अनपैक निर्देशिका चुनें। पथ सहेजने से पहले Spis पूरा ग्राफ़ जाँचता है। आर्काइव अस्वीकार किए जाते हैं ताकि कोई फ़ाइल या उद्गम-क्षेत्र चुपचाप छूट न जाए।",
+  "spis.first_use.read_and_write.title": "एक पूरा, जाँचने योग्य संग्रह अपनाएँ",
+  "walkthrough.accessibility": "Spis पहले उपयोग का परिचय",
+  "walkthrough.continue": "जारी रखें",
+  "walkthrough.eyebrow": "SPIS संदर्भ संग्रह",
+  "walkthrough.fallback.body": "पहले कैटलॉग तक पहुँचने के लिए यह चरण अपनाएँ जिस पर Spis रिपोर्ट कर सकता है।",
+  "walkthrough.fallback.title": "Spis सेट अप करना जारी रखें",
+  "walkthrough.row.detail": "यह उत्पाद पहले उपयोग पर जो परिचय दिखाता है उसे देखें।",
+  "walkthrough.row.show_again": "फिर से दिखाएँ",
+  "walkthrough.row.starting": "परिचय शुरू हो रहा है…",
+  "walkthrough.row.title": "पहले उपयोग का परिचय",
+  "walkthrough.step": "चरण {current}/{total}",
+  "walkthrough.tagline": "संग्रह की मापी गई स्थिति, एक विंडो में",
+  "walkthrough.try_again": "फिर से कोशिश करें",
+  "walkthrough.unavailable.body": "साथ आया परिचय पढ़ा नहीं जा सका। संग्रह में कुछ नहीं बदला गया।",
+  "walkthrough.unavailable.title": "पहले उपयोग का परिचय उपलब्ध नहीं है"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "选择你的语料库目录。只有在 Spis core 接受并保存该位置、且应用从中读取到一个目录之后，首次使用才会完成。重复采用会报告引用未改变，而不会重复添加。",
+  "spis.first_use.adopt_corpus.title": "选择你现有的语料库",
+  "spis.first_use.promise.body": "Spis 从你已在维护的证据语料库开始。它就地读取原始的目录、引用、来源、截图、录制和收据文件，而不是复制一个精简的集合。",
+  "spis.first_use.promise.title": "从你现有的参考语料库开始",
+  "spis.first_use.read_and_write.body": "选择一个已解压的目录，其中包含规范的 example-catalogs.json、每个目录的 sources.json 和 references.json，以及所有被引用的记录文件。Spis 会在保存路径之前验证整个图。压缩包会被拒绝，以免任何文件或来源字段被悄悄遗漏。",
+  "spis.first_use.read_and_write.title": "采用一个完整、可检查的语料库",
+  "walkthrough.accessibility": "Spis 首次运行引导",
+  "walkthrough.continue": "继续",
+  "walkthrough.eyebrow": "SPIS 参考语料库",
+  "walkthrough.fallback.body": "按照此步骤操作，到达 Spis 能够报告的第一个目录。",
+  "walkthrough.fallback.title": "继续设置 Spis",
+  "walkthrough.row.detail": "查看本产品首次运行时显示的引导。",
+  "walkthrough.row.show_again": "再次显示",
+  "walkthrough.row.starting": "正在启动引导…",
+  "walkthrough.row.title": "首次运行引导",
+  "walkthrough.step": "第 {current} 步，共 {total} 步",
+  "walkthrough.tagline": "语料库的实测状态，尽在一个窗口",
+  "walkthrough.try_again": "重试",
+  "walkthrough.unavailable.body": "无法读取随附的引导。语料库中没有任何更改。",
+  "walkthrough.unavailable.title": "首次运行引导不可用"
+}

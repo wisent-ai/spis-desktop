@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "اختر مجلد مجموعتك. لا ينتهي الاستخدام الأول إلا بعد أن يقبل Spis core الموقع ويحفظه ويقرأ التطبيق منه كتالوجًا. ويُظهر الاعتماد المتكرر المراجع دون تغيير بدلًا من تكرارها.",
+  "spis.first_use.adopt_corpus.title": "اختر مجموعتك الحالية",
+  "spis.first_use.promise.body": "يبدأ Spis من مجموعة أدلة تديرها بالفعل. فهو يقرأ ملفات الكتالوج والمراجع والمصدر ولقطات الشاشة والتسجيلات والإيصالات الأصلية في مكانها بدلًا من نسخ مجموعة مختصرة.",
+  "spis.first_use.promise.title": "ابدأ من مجموعة المراجع التي لديك",
+  "spis.first_use.read_and_write.body": "اختر مجلدًا غير مضغوط يحتوي على example-catalogs.json القياسي، وsources.json وreferences.json لكل كتالوج، وجميع ملفات السجلات المشار إليها. يتحقق Spis من البنية كاملة قبل حفظ المسار. وتُرفض الأرشيفات حتى لا يُحذف أي ملف أو حقل مصدر دون علمك.",
+  "spis.first_use.read_and_write.title": "اعتمد مجموعة واحدة كاملة قابلة للفحص",
+  "walkthrough.accessibility": "جولة Spis التعريفية عند أول تشغيل",
+  "walkthrough.continue": "متابعة",
+  "walkthrough.eyebrow": "مجموعة مراجع SPIS",
+  "walkthrough.fallback.body": "اتبع هذه الخطوة للوصول إلى أول كتالوج يستطيع Spis الإبلاغ عنه.",
+  "walkthrough.fallback.title": "تابع إعداد Spis",
+  "walkthrough.row.detail": "اطّلع على الجولة التي يعرضها هذا المنتج عند أول تشغيل.",
+  "walkthrough.row.show_again": "اعرضها مرة أخرى",
+  "walkthrough.row.starting": "جارٍ بدء الجولة…",
+  "walkthrough.row.title": "جولة أول تشغيل",
+  "walkthrough.step": "الخطوة {current} من {total}",
+  "walkthrough.tagline": "الحالة المقيسة للمجموعة في نافذة واحدة",
+  "walkthrough.try_again": "حاول مرة أخرى",
+  "walkthrough.unavailable.body": "تعذّرت قراءة الجولة المضمّنة. لم يتغيّر شيء في المجموعة.",
+  "walkthrough.unavailable.title": "جولة أول تشغيل غير متاحة"
+}

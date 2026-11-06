@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Elija el directorio de su corpus. El primer uso solo termina cuando Spis core acepta y guarda la ubicación y la aplicación lee de ella un catálogo. Una adopción repetida muestra las referencias sin cambios en vez de duplicarlas.",
+  "spis.first_use.adopt_corpus.title": "Elija su corpus existente",
+  "spis.first_use.promise.body": "Spis empieza desde un corpus de evidencias que ya mantiene. Lee en su lugar los archivos originales de catálogo, referencias, procedencia, capturas de pantalla, grabaciones y recibos, en vez de copiar una colección reducida.",
+  "spis.first_use.promise.title": "Empiece desde su corpus de referencias existente",
+  "spis.first_use.read_and_write.body": "Elija un directorio descomprimido que contenga el example-catalogs.json canónico, los sources.json y references.json de cada catálogo y todos los archivos de registro referenciados. Spis valida todo el grafo antes de guardar la ruta. Los archivos comprimidos se rechazan para que ningún archivo ni campo de procedencia se omita en silencio.",
+  "spis.first_use.read_and_write.title": "Adopte un corpus completo e inspeccionable",
+  "walkthrough.accessibility": "Recorrido del primer uso de Spis",
+  "walkthrough.continue": "Continuar",
+  "walkthrough.eyebrow": "CORPUS DE REFERENCIAS SPIS",
+  "walkthrough.fallback.body": "Siga este paso para llegar al primer catálogo sobre el que Spis puede informar.",
+  "walkthrough.fallback.title": "Siga configurando Spis",
+  "walkthrough.row.detail": "Vea el recorrido que este producto muestra en el primer uso.",
+  "walkthrough.row.show_again": "Mostrarlo de nuevo",
+  "walkthrough.row.starting": "Iniciando el recorrido…",
+  "walkthrough.row.title": "Recorrido del primer uso",
+  "walkthrough.step": "Paso {current} de {total}",
+  "walkthrough.tagline": "El estado medido del corpus, en una sola ventana",
+  "walkthrough.try_again": "Reintentar",
+  "walkthrough.unavailable.body": "No se pudo leer el recorrido incluido. No se ha cambiado nada del corpus.",
+  "walkthrough.unavailable.title": "El recorrido del primer uso no está disponible"
+}

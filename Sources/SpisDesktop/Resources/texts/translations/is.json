@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Veldu möppuna með safninu þínu. Fyrstu notkun lýkur aðeins eftir að Spis core hefur samþykkt og vistað staðsetninguna og forritið les skrá úr henni. Endurtekin upptaka sýnir tilvísanirnar óbreyttar í stað þess að tvöfalda þær.",
+  "spis.first_use.adopt_corpus.title": "Veldu safnið sem þú átt",
+  "spis.first_use.promise.body": "Spis byrjar á sönnunarsafni sem þú heldur nú þegar við. Það les upprunalegu skrár-, tilvísana-, uppruna-, skjámynda-, upptöku- og kvittanaskrárnar þar sem þær eru, í stað þess að afrita minnkað safn.",
+  "spis.first_use.promise.title": "Byrjaðu á tilvísanasafninu sem þú átt",
+  "spis.first_use.read_and_write.body": "Veldu afþjappaða möppu sem inniheldur staðlaða example-catalogs.json, sources.json og references.json hverrar skrár og allar færsluskrár sem vísað er í. Spis staðfestir allt grafið áður en slóðin er vistuð. Söfnum er hafnað svo engin skrá eða upprunareitur falli hljóðlaust út.",
+  "spis.first_use.read_and_write.title": "Taktu upp eitt heilt safn sem hægt er að skoða",
+  "walkthrough.accessibility": "Kynning Spis við fyrstu notkun",
+  "walkthrough.continue": "Halda áfram",
+  "walkthrough.eyebrow": "SPIS TILVÍSANASAFN",
+  "walkthrough.fallback.body": "Fylgdu þessu skrefi til að ná fyrstu skránni sem Spis getur gefið skýrslu um.",
+  "walkthrough.fallback.title": "Haltu áfram að setja upp Spis",
+  "walkthrough.row.detail": "Sjáðu kynninguna sem þessi vara sýnir við fyrstu notkun.",
+  "walkthrough.row.show_again": "Sýna aftur",
+  "walkthrough.row.starting": "Ræsir kynninguna…",
+  "walkthrough.row.title": "Kynning við fyrstu notkun",
+  "walkthrough.step": "Skref {current} af {total}",
+  "walkthrough.tagline": "Mælt staða safnsins í einum glugga",
+  "walkthrough.try_again": "Reyna aftur",
+  "walkthrough.unavailable.body": "Ekki tókst að lesa innbyggðu kynninguna. Engu var breytt í safninu.",
+  "walkthrough.unavailable.title": "Kynning við fyrstu notkun er ekki tiltæk"
+}

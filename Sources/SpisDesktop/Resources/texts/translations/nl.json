@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Kies de map van uw corpus. Het eerste gebruik eindigt pas nadat Spis core de locatie heeft geaccepteerd en opgeslagen en de app er een catalogus uit leest. Herhaalde overname meldt de verwijzingen als ongewijzigd in plaats van ze te verdubbelen.",
+  "spis.first_use.adopt_corpus.title": "Kies uw bestaande corpus",
+  "spis.first_use.promise.body": "Spis begint met een bewijscorpus dat u al bijhoudt. Het leest de oorspronkelijke catalogus-, verwijzings-, herkomst-, schermafbeeldings-, opname- en ontvangstbewijsbestanden ter plekke, in plaats van een beperkte verzameling te kopiëren.",
+  "spis.first_use.promise.title": "Begin met uw bestaande referentiecorpus",
+  "spis.first_use.read_and_write.body": "Kies een uitgepakte map met de canonieke example-catalogs.json, de sources.json en references.json van elke catalogus en alle records waarnaar wordt verwezen. Spis controleert de hele graaf voordat het pad wordt opgeslagen. Archieven worden geweigerd, zodat geen bestand of herkomstveld stilzwijgend ontbreekt.",
+  "spis.first_use.read_and_write.title": "Neem één volledig, controleerbaar corpus over",
+  "walkthrough.accessibility": "Spis-rondleiding bij het eerste gebruik",
+  "walkthrough.continue": "Doorgaan",
+  "walkthrough.eyebrow": "SPIS-REFERENTIECORPUS",
+  "walkthrough.fallback.body": "Volg deze stap om de eerste catalogus te bereiken waarover Spis kan rapporteren.",
+  "walkthrough.fallback.title": "Ga verder met het instellen van Spis",
+  "walkthrough.row.detail": "Bekijk de rondleiding die dit product bij het eerste gebruik toont.",
+  "walkthrough.row.show_again": "Opnieuw tonen",
+  "walkthrough.row.starting": "Rondleiding wordt gestart…",
+  "walkthrough.row.title": "Rondleiding bij het eerste gebruik",
+  "walkthrough.step": "Stap {current} van {total}",
+  "walkthrough.tagline": "De gemeten toestand van het corpus, in één venster",
+  "walkthrough.try_again": "Opnieuw proberen",
+  "walkthrough.unavailable.body": "De meegeleverde rondleiding kon niet worden gelezen. Er is niets in het corpus gewijzigd.",
+  "walkthrough.unavailable.title": "Rondleiding bij het eerste gebruik niet beschikbaar"
+}

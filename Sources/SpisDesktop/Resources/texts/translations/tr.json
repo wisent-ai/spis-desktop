@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Derleminizin dizinini seçin. İlk kullanım ancak Spis core konumu kabul edip kaydettikten ve uygulama oradan bir katalog okuduktan sonra tamamlanır. Yinelenen benimseme, başvuruları çoğaltmak yerine değişmemiş olarak gösterir.",
+  "spis.first_use.adopt_corpus.title": "Mevcut derleminizi seçin",
+  "spis.first_use.promise.body": "Spis, zaten sürdürdüğünüz bir kanıt derleminden başlar. Küçültülmüş bir koleksiyonu kopyalamak yerine özgün katalog, başvuru, köken, ekran görüntüsü, kayıt ve makbuz dosyalarını bulundukları yerde okur.",
+  "spis.first_use.promise.title": "Mevcut referans derleminizden başlayın",
+  "spis.first_use.read_and_write.body": "Kanonik example-catalogs.json, her kataloğun sources.json ve references.json dosyalarını ve başvurulan tüm kayıt dosyalarını içeren açılmış bir dizin seçin. Spis yolu kaydetmeden önce grafiğin tamamını doğrular. Hiçbir dosya veya köken alanı sessizce atlanmasın diye arşivler reddedilir.",
+  "spis.first_use.read_and_write.title": "Eksiksiz ve incelenebilir tek bir derlemi benimseyin",
+  "walkthrough.accessibility": "Spis ilk kullanım tanıtımı",
+  "walkthrough.continue": "Devam",
+  "walkthrough.eyebrow": "SPIS REFERANS DERLEMİ",
+  "walkthrough.fallback.body": "Spis'in raporlayabileceği ilk kataloğa ulaşmak için bu adımı izleyin.",
+  "walkthrough.fallback.title": "Spis kurulumuna devam edin",
+  "walkthrough.row.detail": "Bu ürünün ilk kullanımda gösterdiği tanıtımı görün.",
+  "walkthrough.row.show_again": "Yeniden göster",
+  "walkthrough.row.starting": "Tanıtım başlatılıyor…",
+  "walkthrough.row.title": "İlk kullanım tanıtımı",
+  "walkthrough.step": "Adım {current}/{total}",
+  "walkthrough.tagline": "Derlemin ölçülmüş durumu, tek pencerede",
+  "walkthrough.try_again": "Yeniden dene",
+  "walkthrough.unavailable.body": "Paketteki tanıtım okunamadı. Derlemde hiçbir şey değiştirilmedi.",
+  "walkthrough.unavailable.title": "İlk kullanım tanıtımı kullanılamıyor"
+}

@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "پوشهٔ مجموعهٔ خود را انتخاب کنید. نخستین استفاده تنها زمانی پایان می‌یابد که Spis core مکان را بپذیرد و ذخیره کند و برنامه از آن یک کاتالوگ بخواند. پذیرش تکراری ارجاع‌ها را بدون تغییر نشان می‌دهد و آن‌ها را تکرار نمی‌کند.",
+  "spis.first_use.adopt_corpus.title": "مجموعهٔ موجود خود را انتخاب کنید",
+  "spis.first_use.promise.body": "Spis از مجموعه شواهدی شروع می‌کند که از پیش نگه می‌دارید. فایل‌های اصلی کاتالوگ، ارجاع، منشأ، تصویر صفحه، ضبط و رسید را در جای خود می‌خواند و مجموعه‌ای کوچک‌شده کپی نمی‌کند.",
+  "spis.first_use.promise.title": "از مجموعهٔ مرجع موجود خود شروع کنید",
+  "spis.first_use.read_and_write.body": "پوشه‌ای ازحالت‌فشرده‌خارج‌شده انتخاب کنید که example-catalogs.json استاندارد، sources.json و references.json هر کاتالوگ و همهٔ فایل‌های رکورد ارجاع‌شده را دارد. Spis پیش از ذخیرهٔ مسیر کل گراف را بررسی می‌کند. بایگانی‌ها رد می‌شوند تا هیچ فایل یا فیلد منشأیی بی‌صدا حذف نشود.",
+  "spis.first_use.read_and_write.title": "یک مجموعهٔ کامل و قابل بررسی بپذیرید",
+  "walkthrough.accessibility": "راهنمای نخستین اجرای Spis",
+  "walkthrough.continue": "ادامه",
+  "walkthrough.eyebrow": "مجموعهٔ مرجع SPIS",
+  "walkthrough.fallback.body": "این گام را دنبال کنید تا به نخستین کاتالوگی برسید که Spis می‌تواند گزارش دهد.",
+  "walkthrough.fallback.title": "راه‌اندازی Spis را ادامه دهید",
+  "walkthrough.row.detail": "راهنمایی را که این محصول در نخستین اجرا نشان می‌دهد ببینید.",
+  "walkthrough.row.show_again": "نمایش دوباره",
+  "walkthrough.row.starting": "در حال آغاز راهنما…",
+  "walkthrough.row.title": "راهنمای نخستین اجرا",
+  "walkthrough.step": "گام {current} از {total}",
+  "walkthrough.tagline": "وضعیت سنجیده‌شدهٔ مجموعه در یک پنجره",
+  "walkthrough.try_again": "تلاش دوباره",
+  "walkthrough.unavailable.body": "راهنمای همراه خوانده نشد. چیزی در مجموعه تغییر نکرده است.",
+  "walkthrough.unavailable.title": "راهنمای نخستین اجرا در دسترس نیست"
+}

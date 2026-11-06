@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Wybierz katalog swojego korpusu. Pierwsze użycie kończy się dopiero wtedy, gdy Spis core przyjmie i utrwali lokalizację, a aplikacja odczyta z niej katalog. Ponowne przyjęcie pokazuje referencje bez zmian zamiast je dublować.",
+  "spis.first_use.adopt_corpus.title": "Wybierz swój istniejący korpus",
+  "spis.first_use.promise.body": "Spis zaczyna od korpusu dowodów, który już prowadzisz. Czyta oryginalne pliki katalogu, referencji, pochodzenia, zrzutów ekranu, nagrań i potwierdzeń tam, gdzie leżą, zamiast kopiować okrojony zbiór.",
+  "spis.first_use.promise.title": "Zacznij od swojego istniejącego korpusu referencji",
+  "spis.first_use.read_and_write.body": "Wybierz rozpakowany katalog z kanonicznym example-catalogs.json, plikami sources.json i references.json każdego katalogu oraz wszystkimi wskazanymi plikami rekordów. Spis sprawdza cały graf przed zapisaniem ścieżki. Archiwa są odrzucane, aby żaden plik ani pole pochodzenia nie zostało po cichu pominięte.",
+  "spis.first_use.read_and_write.title": "Przyjmij jeden kompletny korpus, który da się sprawdzić",
+  "walkthrough.accessibility": "Przewodnik pierwszego uruchomienia Spis",
+  "walkthrough.continue": "Dalej",
+  "walkthrough.eyebrow": "KORPUS REFERENCJI SPIS",
+  "walkthrough.fallback.body": "Wykonaj ten krok, aby dojść do pierwszego katalogu, o którym Spis może raportować.",
+  "walkthrough.fallback.title": "Kontynuuj konfigurację Spis",
+  "walkthrough.row.detail": "Zobacz przewodnik, który ten produkt pokazuje przy pierwszym uruchomieniu.",
+  "walkthrough.row.show_again": "Pokaż ponownie",
+  "walkthrough.row.starting": "Uruchamianie przewodnika…",
+  "walkthrough.row.title": "Przewodnik pierwszego uruchomienia",
+  "walkthrough.step": "Krok {current} z {total}",
+  "walkthrough.tagline": "Zmierzony stan korpusu w jednym oknie",
+  "walkthrough.try_again": "Spróbuj ponownie",
+  "walkthrough.unavailable.body": "Nie udało się odczytać dołączonego przewodnika. W korpusie nic nie zostało zmienione.",
+  "walkthrough.unavailable.title": "Przewodnik pierwszego uruchomienia jest niedostępny"
+}

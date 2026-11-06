@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "ជ្រើសថតសំណុំរបស់អ្នក។ ការប្រើដំបូងបញ្ចប់តែបន្ទាប់ពី Spis core ទទួលយក និងរក្សាទុកទីតាំង ហើយកម្មវិធីអានកាតាឡុកពីវាប៉ុណ្ណោះ។ ការទទួលយកម្ដងទៀតបង្ហាញឯកសារយោងថាមិនផ្លាស់ប្ដូរ ជំនួសឱ្យការចម្លងស្ទួន។",
+  "spis.first_use.adopt_corpus.title": "ជ្រើសសំណុំដែលអ្នកមាន",
+  "spis.first_use.promise.body": "Spis ចាប់ផ្ដើមពីសំណុំភស្តុតាងដែលអ្នកថែទាំរួចហើយ។ វាអានឯកសារកាតាឡុក ឯកសារយោង ប្រភពដើម រូបថតអេក្រង់ ការថត និងបង្កាន់ដៃដើមនៅនឹងកន្លែង ជំនួសឱ្យការចម្លងបណ្ដុំដែលបានកាត់បន្ថយ។",
+  "spis.first_use.promise.title": "ចាប់ផ្ដើមពីសំណុំឯកសារយោងដែលអ្នកមាន",
+  "spis.first_use.read_and_write.body": "ជ្រើសថតដែលបានពន្លា ដែលមាន example-catalogs.json ស្តង់ដារ sources.json និង references.json របស់កាតាឡុកនីមួយៗ និងឯកសារកំណត់ត្រាដែលបានយោងទាំងអស់។ Spis ផ្ទៀងផ្ទាត់ក្រាហ្វទាំងមូល មុនពេលរក្សាទុកផ្លូវ។ បណ្ណសារត្រូវបានបដិសេធ ដើម្បីកុំឱ្យឯកសារ ឬវាលប្រភពដើមណាមួយត្រូវបានលុបចោលដោយស្ងាត់ៗ។",
+  "spis.first_use.read_and_write.title": "ទទួលយកសំណុំពេញលេញមួយ ដែលអាចពិនិត្យបាន",
+  "walkthrough.accessibility": "ការណែនាំពេលប្រើ Spis ដំបូង",
+  "walkthrough.continue": "បន្ត",
+  "walkthrough.eyebrow": "សំណុំឯកសារយោង SPIS",
+  "walkthrough.fallback.body": "អនុវត្តជំហាននេះ ដើម្បីទៅដល់កាតាឡុកដំបូងដែល Spis អាចរាយការណ៍បាន។",
+  "walkthrough.fallback.title": "បន្តរៀបចំ Spis",
+  "walkthrough.row.detail": "មើលការណែនាំដែលផលិតផលនេះបង្ហាញនៅពេលប្រើដំបូង។",
+  "walkthrough.row.show_again": "បង្ហាញម្ដងទៀត",
+  "walkthrough.row.starting": "កំពុងចាប់ផ្ដើមការណែនាំ…",
+  "walkthrough.row.title": "ការណែនាំពេលប្រើដំបូង",
+  "walkthrough.step": "ជំហាន {current} នៃ {total}",
+  "walkthrough.tagline": "ស្ថានភាពដែលបានវាស់នៃសំណុំ នៅក្នុងផ្ទាំងតែមួយ",
+  "walkthrough.try_again": "ព្យាយាមម្ដងទៀត",
+  "walkthrough.unavailable.body": "មិនអាចអានការណែនាំដែលភ្ជាប់មកបានទេ។ គ្មានអ្វីក្នុងសំណុំត្រូវបានផ្លាស់ប្ដូរទេ។",
+  "walkthrough.unavailable.title": "ការណែនាំពេលប្រើដំបូងមិនអាចប្រើបាន"
+}

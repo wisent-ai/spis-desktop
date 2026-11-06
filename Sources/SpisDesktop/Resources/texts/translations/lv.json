@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Izvēlieties sava korpusa direktoriju. Pirmā lietošana beidzas tikai pēc tam, kad Spis core pieņem un saglabā atrašanās vietu un lietotne no tās nolasa katalogu. Atkārtota pārņemšana uzrāda atsauces kā nemainītas, nevis tās dublē.",
+  "spis.first_use.adopt_corpus.title": "Izvēlieties savu esošo korpusu",
+  "spis.first_use.promise.body": "Spis sāk ar pierādījumu korpusu, ko jūs jau uzturat. Tas lasa oriģinālās kataloga, atsauču, izcelsmes, ekrānuzņēmumu, ierakstu un kvīšu datnes to atrašanās vietā, nevis kopē samazinātu kolekciju.",
+  "spis.first_use.promise.title": "Sāciet ar savu esošo atsauču korpusu",
+  "spis.first_use.read_and_write.body": "Izvēlieties izpakotu direktoriju ar kanonisko example-catalogs.json, katra kataloga sources.json un references.json un visām norādītajām ierakstu datnēm. Spis pirms ceļa saglabāšanas pārbauda visu grafu. Arhīvi tiek noraidīti, lai neviena datne vai izcelsmes lauks netiktu klusi izlaists.",
+  "spis.first_use.read_and_write.title": "Pārņemiet vienu pilnīgu, pārbaudāmu korpusu",
+  "walkthrough.accessibility": "Spis pirmās palaišanas ievads",
+  "walkthrough.continue": "Turpināt",
+  "walkthrough.eyebrow": "SPIS ATSAUČU KORPUSS",
+  "walkthrough.fallback.body": "Izpildiet šo soli, lai nonāktu līdz pirmajam katalogam, par kuru Spis var ziņot.",
+  "walkthrough.fallback.title": "Turpiniet Spis iestatīšanu",
+  "walkthrough.row.detail": "Skatiet ievadu, ko šis produkts rāda pirmajā palaišanā.",
+  "walkthrough.row.show_again": "Rādīt vēlreiz",
+  "walkthrough.row.starting": "Sāk ievadu…",
+  "walkthrough.row.title": "Pirmās palaišanas ievads",
+  "walkthrough.step": "{current}. solis no {total}",
+  "walkthrough.tagline": "Korpusa izmērītais stāvoklis vienā logā",
+  "walkthrough.try_again": "Mēģināt vēlreiz",
+  "walkthrough.unavailable.body": "Pievienoto ievadu neizdevās nolasīt. Korpusā nekas nav mainīts.",
+  "walkthrough.unavailable.title": "Pirmās palaišanas ievads nav pieejams"
+}

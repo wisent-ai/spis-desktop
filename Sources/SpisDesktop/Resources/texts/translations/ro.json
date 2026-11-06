@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Alegeți directorul corpusului. Prima utilizare se încheie doar după ce Spis core acceptă și salvează locația, iar aplicația citește un catalog din ea. Adoptarea repetată arată referințele neschimbate în loc să le dubleze.",
+  "spis.first_use.adopt_corpus.title": "Alegeți corpusul existent",
+  "spis.first_use.promise.body": "Spis pornește de la un corpus de dovezi pe care îl întrețineți deja. Citește pe loc fișierele originale de catalog, referințe, proveniență, capturi de ecran, înregistrări și chitanțe, în loc să copieze o colecție redusă.",
+  "spis.first_use.promise.title": "Porniți de la corpusul de referințe existent",
+  "spis.first_use.read_and_write.body": "Alegeți un director dezarhivat care conține example-catalogs.json canonic, fișierele sources.json și references.json ale fiecărui catalog și toate fișierele de înregistrări la care se face trimitere. Spis validează întregul graf înainte de a salva calea. Arhivele sunt refuzate, ca niciun fișier sau câmp de proveniență să nu fie omis pe tăcute.",
+  "spis.first_use.read_and_write.title": "Adoptați un corpus complet, care poate fi verificat",
+  "walkthrough.accessibility": "Prezentarea la prima rulare a Spis",
+  "walkthrough.continue": "Continuă",
+  "walkthrough.eyebrow": "CORPUSUL DE REFERINȚE SPIS",
+  "walkthrough.fallback.body": "Urmați acest pas pentru a ajunge la primul catalog despre care Spis poate raporta.",
+  "walkthrough.fallback.title": "Continuați configurarea Spis",
+  "walkthrough.row.detail": "Vedeți prezentarea pe care acest produs o afișează la prima rulare.",
+  "walkthrough.row.show_again": "Afișează din nou",
+  "walkthrough.row.starting": "Se pornește prezentarea…",
+  "walkthrough.row.title": "Prezentarea la prima rulare",
+  "walkthrough.step": "Pasul {current} din {total}",
+  "walkthrough.tagline": "Starea măsurată a corpusului, într-o singură fereastră",
+  "walkthrough.try_again": "Încearcă din nou",
+  "walkthrough.unavailable.body": "Prezentarea inclusă nu a putut fi citită. Nimic din corpus nu a fost modificat.",
+  "walkthrough.unavailable.title": "Prezentarea la prima rulare nu este disponibilă"
+}

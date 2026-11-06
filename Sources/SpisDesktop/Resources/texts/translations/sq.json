@@ -1,0 +1,22 @@
+{
+  "spis.first_use.adopt_corpus.body": "Zgjidhni direktorinë e korpusit tuaj. Përdorimi i parë përfundon vetëm pasi Spis core të pranojë dhe ruajë vendndodhjen dhe aplikacioni të lexojë prej saj një katalog. Adoptimi i përsëritur i tregon referencat të pandryshuara në vend që t'i dyfishojë.",
+  "spis.first_use.adopt_corpus.title": "Zgjidhni korpusin tuaj ekzistues",
+  "spis.first_use.promise.body": "Spis nis nga një korpus provash që e mirëmbani tashmë. I lexon në vend skedarët origjinalë të katalogut, referencave, prejardhjes, pamjeve të ekranit, regjistrimeve dhe faturave, në vend që të kopjojë një koleksion të cunguar.",
+  "spis.first_use.promise.title": "Nisni nga korpusi juaj ekzistues i referencave",
+  "spis.first_use.read_and_write.body": "Zgjidhni një direktori të shpaketuar që përmban example-catalogs.json kanonik, sources.json dhe references.json të çdo katalogu dhe të gjithë skedarët e regjistrimeve që përmenden. Spis verifikon të gjithë grafin para se të ruajë shtegun. Arkivat refuzohen që asnjë skedar apo fushë prejardhjeje të mos lihet jashtë në heshtje.",
+  "spis.first_use.read_and_write.title": "Adoptoni një korpus të plotë që mund të verifikohet",
+  "walkthrough.accessibility": "Prezantimi i nisjes së parë të Spis",
+  "walkthrough.continue": "Vazhdo",
+  "walkthrough.eyebrow": "KORPUSI I REFERENCAVE SPIS",
+  "walkthrough.fallback.body": "Ndiqni këtë hap për të arritur te katalogu i parë për të cilin Spis mund të raportojë.",
+  "walkthrough.fallback.title": "Vazhdoni konfigurimin e Spis",
+  "walkthrough.row.detail": "Shihni prezantimin që ky produkt shfaq në nisjen e parë.",
+  "walkthrough.row.show_again": "Shfaqe sërish",
+  "walkthrough.row.starting": "Po nis prezantimi…",
+  "walkthrough.row.title": "Prezantimi i nisjes së parë",
+  "walkthrough.step": "Hapi {current} nga {total}",
+  "walkthrough.tagline": "Gjendja e matur e korpusit, në një dritare",
+  "walkthrough.try_again": "Provo sërish",
+  "walkthrough.unavailable.body": "Prezantimi i përfshirë nuk u lexua. Asgjë në korpus nuk u ndryshua.",
+  "walkthrough.unavailable.title": "Prezantimi i nisjes së parë nuk është i disponueshëm"
+}
